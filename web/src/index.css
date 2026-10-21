@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-primary: #0066b3;
+  --color-primary-dark: #00528f;
+  --color-ink: #111827;
+  --color-danger: #e00000;
+  --color-surface: #f4f4f4;
+  --color-field: #f4f4f4;
+}
+
+body {
+  @apply bg-surface text-ink font-sans antialiased;
+}

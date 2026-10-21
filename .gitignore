@@ -1,0 +1,10 @@
+transcripts/*.wav
+.DS_Store
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/expo-env.d.ts
+
+# Gravacao da reuniao: acima do limite de 100 MB do GitHub
+*.mp4

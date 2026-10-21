@@ -1,0 +1,45 @@
+export const colors = {
+  bg: '#FFFFFF',
+  ink: '#1C2433',
+  navy: '#1B3A6B',
+  primary: '#4F74E8',
+  primaryDark: '#3D5FCF',
+  primarySoft: '#E8EEFC',
+  accent: '#4A90D9',
+  muted: '#5B6472',
+  line: '#E5E7EB',
+  field: '#F4F6FA',
+  danger: '#991B1B',
+  success: '#0F766E',
+  chip: '#EEF3FF',
+  overlay: '#D9E8F7',
+  leaf: '#A8D5C2',
+  textSecondary: '#515B6C',
+  textTertiary: '#8691A5',
+  primary600: '#3C72CC',
+  primary900: '#0F2A5E',
+  primary100: '#E4F1FF',
+  surfaceMuted: '#F6F8FB',
+  borderSubtle: '#E6EAF2',
+  teal600: '#2E9B8E',
+  teal100: '#E3F5F3',
+  warning700: '#8A5300',
+  warning100: '#FFF4E0',
+  danger600: '#D93C3C',
+} as const;
+
+export const type = {
+  title: { fontSize: 28, lineHeight: 34, fontWeight: '700' as const },
+  heading: { fontSize: 22, lineHeight: 28, fontWeight: '700' as const },
+  body: { fontSize: 16, lineHeight: 24, fontWeight: '400' as const },
+  secondary: { fontSize: 14, lineHeight: 21, fontWeight: '400' as const },
+  caption: { fontSize: 12, lineHeight: 16, fontWeight: '500' as const },
+  button: { fontSize: 16, lineHeight: 24, fontWeight: '600' as const },
+};
+
+export const space = {
+  screenX: 24,
+  gap: 16,
+  radius: 16,
+  radiusPill: 999,
+};
