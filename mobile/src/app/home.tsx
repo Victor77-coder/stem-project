@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TabBar, TABS, type TabId } from '@/components/TabBar';
+import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
+import { TabBar, type TabId } from '@/components/TabBar';
 import {
   ArticleList,
   CampaignCard,
@@ -28,7 +29,7 @@ function resolveProfile(query: string | string[] | undefined, saved: ProfileType
   return saved ?? 'doador';
 }
 
-function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
+function DonorHome({ name, sex, open }: { name: string; sex: Sexo; open: (route: LearnRoute) => void }) {
   return (
     <>
       <HomeHeader
@@ -50,7 +51,13 @@ function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
-          { title: 'Aprender sobre\ncélulas-tronco', icon: 'book-outline', iconColor: colors.primary600, well: colors.primary100 },
+          {
+            title: 'Aprender sobre\ncélulas-tronco',
+            icon: 'book-outline',
+            iconColor: colors.primary600,
+            well: colors.primary100,
+            onPress: () => open({ name: 'library' }),
+          },
           { title: 'Centros perto de\nmim', icon: 'location-outline', iconColor: colors.teal600, well: colors.teal100 },
           { title: 'Questionário de\norientação', icon: 'clipboard-outline', iconColor: colors.warning700, well: colors.warning100 },
           { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
@@ -58,7 +65,9 @@ function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
       />
       <SectionTitle link="Ver todas">Campanhas perto de você</SectionTitle>
       <CampaignCard />
-      <SectionTitle link="Ver mais">Recomendado para você</SectionTitle>
+      <SectionTitle link="Ver mais" onLink={() => open({ name: 'library' })}>
+        Recomendado para você
+      </SectionTitle>
       <ArticleList
         items={[
           {
@@ -67,6 +76,7 @@ function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
             icon: 'git-network-outline',
             iconColor: colors.primary600,
             well: colors.primary100,
+            onPress: () => open({ name: 'article', id: 'doacao-passo-a-passo' }),
           },
           {
             title: 'Mitos e verdades sobre doar células-tronco',
@@ -74,6 +84,7 @@ function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
             icon: 'bulb-outline',
             iconColor: colors.warning700,
             well: colors.warning100,
+            onPress: () => open({ name: 'myths' }),
           },
         ]}
       />
@@ -81,7 +92,7 @@ function DonorHome({ name, sex }: { name: string; sex: Sexo }) {
   );
 }
 
-function ReceptorHome({ name, sex }: { name: string; sex: Sexo }) {
+function ReceptorHome({ name, sex, open }: { name: string; sex: Sexo; open: (route: LearnRoute) => void }) {
   return (
     <>
       <HomeHeader
@@ -105,12 +116,32 @@ function ReceptorHome({ name, sex }: { name: string; sex: Sexo }) {
       <QuickGrid
         items={[
           { title: 'Centros\ntransplantadores', icon: 'document-text-outline', iconColor: colors.teal600, well: colors.teal100 },
-          { title: 'Entenda seu\ntratamento', icon: 'book-outline', iconColor: colors.primary600, well: colors.primary100 },
-          { title: 'Direitos e leis no\nBrasil', icon: 'scale-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
-          { title: 'Apoio e dúvidas\nfrequentes', icon: 'help-circle-outline', iconColor: colors.warning700, well: colors.warning100 },
+          {
+            title: 'Entenda seu\ntratamento',
+            icon: 'book-outline',
+            iconColor: colors.primary600,
+            well: colors.primary100,
+            onPress: () => open({ name: 'library' }),
+          },
+          {
+            title: 'Direitos e leis no\nBrasil',
+            icon: 'scale-outline',
+            iconColor: colors.textSecondary,
+            well: colors.surfaceMuted,
+            onPress: () => open({ name: 'library', category: 'Leis no Brasil' }),
+          },
+          {
+            title: 'Apoio e dúvidas\nfrequentes',
+            icon: 'help-circle-outline',
+            iconColor: colors.warning700,
+            well: colors.warning100,
+            onPress: () => open({ name: 'faq' }),
+          },
         ]}
       />
-      <SectionTitle link="Ver mais">Recomendado para você</SectionTitle>
+      <SectionTitle link="Ver mais" onLink={() => open({ name: 'library' })}>
+        Recomendado para você
+      </SectionTitle>
       <ArticleList
         items={[
           {
@@ -119,6 +150,7 @@ function ReceptorHome({ name, sex }: { name: string; sex: Sexo }) {
             icon: 'pulse-outline',
             iconColor: colors.teal600,
             well: colors.teal100,
+            onPress: () => open({ name: 'article', id: 'tcth' }),
           },
           {
             title: 'Como funciona a fila de transplantes no SUS',
@@ -126,6 +158,7 @@ function ReceptorHome({ name, sex }: { name: string; sex: Sexo }) {
             icon: 'scale-outline',
             iconColor: colors.textSecondary,
             well: colors.surfaceMuted,
+            onPress: () => open({ name: 'article', id: 'fila-sus' }),
           },
         ]}
       />
@@ -133,7 +166,7 @@ function ReceptorHome({ name, sex }: { name: string; sex: Sexo }) {
   );
 }
 
-function LeigoHome() {
+function LeigoHome({ open }: { open: (route: LearnRoute) => void }) {
   return (
     <>
       <HomeHeader
@@ -150,12 +183,25 @@ function LeigoHome() {
         title="O que são células-tronco?"
         body="Entenda em 3 minutos como elas funcionam e por que salvam vidas."
         action="Ler agora"
+        onAction={() => open({ name: 'article', id: 'o-que-sao' })}
       />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
-          { title: 'Biblioteca de\nconteúdos', icon: 'book-outline', iconColor: colors.primary600, well: colors.primary100 },
-          { title: 'Mitos e verdades', icon: 'bulb-outline', iconColor: colors.warning700, well: colors.warning100 },
+          {
+            title: 'Biblioteca de\nconteúdos',
+            icon: 'book-outline',
+            iconColor: colors.primary600,
+            well: colors.primary100,
+            onPress: () => open({ name: 'library' }),
+          },
+          {
+            title: 'Mitos e verdades',
+            icon: 'bulb-outline',
+            iconColor: colors.warning700,
+            well: colors.warning100,
+            onPress: () => open({ name: 'myths' }),
+          },
           { title: 'Centros e\ncampanhas', icon: 'location-outline', iconColor: colors.teal600, well: colors.teal100 },
           { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
         ]}
@@ -171,8 +217,19 @@ export default function HomeScreen() {
   const { draft } = useRegistration();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const [tab, setTab] = useState<TabId>('inicio');
+  const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
   const profile = resolveProfile(perfil, draft.profile);
-  const section = TABS.find((item) => item.id === tab)?.label ?? 'Início';
+  const learn = learnStack[learnStack.length - 1];
+
+  function openLearn(route: LearnRoute) {
+    setLearnStack(route.name === 'library' ? [route] : [{ name: 'library' }, route]);
+    setTab('aprender');
+  }
+
+  function onTab(id: TabId) {
+    setTab(id);
+    if (id === 'aprender') setLearnStack([{ name: 'library' }]);
+  }
 
   return (
     <View style={shell.shell}>
@@ -180,17 +237,23 @@ export default function HomeScreen() {
         {tab === 'inicio' ? (
           <ScrollView style={shell.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={shell.content}>
             {profile === 'receptor' ? (
-              <ReceptorHome name={draft.name} sex={draft.sex} />
+              <ReceptorHome name={draft.name} sex={draft.sex} open={openLearn} />
             ) : profile === 'leigo' ? (
-              <LeigoHome />
+              <LeigoHome open={openLearn} />
             ) : (
-              <DonorHome name={draft.name} sex={draft.sex} />
+              <DonorHome name={draft.name} sex={draft.sex} open={openLearn} />
             )}
           </ScrollView>
+        ) : tab === 'aprender' ? (
+          <LearnFlow
+            route={learn}
+            onChange={(route) => setLearnStack((current) => [...current, route])}
+            onBack={() => setLearnStack((current) => (current.length > 1 ? current.slice(0, -1) : current))}
+          />
         ) : (
-          <Soon title={section} />
+          <Soon title={tab === 'jornada' ? 'Jornada' : tab === 'centros' ? 'Centros' : 'Perfil'} />
         )}
-        <TabBar value={tab} onChange={setTab} />
+        <TabBar value={tab} onChange={onTab} />
       </SafeAreaView>
     </View>
   );
