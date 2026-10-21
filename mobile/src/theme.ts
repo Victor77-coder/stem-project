@@ -19,6 +19,7 @@ export const colors = {
   primary600: '#3C72CC',
   primary900: '#0F2A5E',
   primary100: '#E4F1FF',
+  primary50: '#F2F7FF',
   surfaceMuted: '#F6F8FB',
   borderSubtle: '#E6EAF2',
   teal600: '#2E9B8E',
@@ -26,6 +27,9 @@ export const colors = {
   warning700: '#8A5300',
   warning100: '#FFF4E0',
   danger600: '#D93C3C',
+  danger100: '#FDECEC',
+  success600: '#1E9E6A',
+  success100: '#E5F6EE',
 } as const;
 
 export const type = {
