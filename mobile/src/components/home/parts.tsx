@@ -44,6 +44,7 @@ export function JourneyCard({
   body,
   progress,
   action,
+  onAction,
 }: {
   background: string;
   accent: string;
@@ -52,6 +53,7 @@ export function JourneyCard({
   body: string;
   progress?: `${number}%`;
   action: string;
+  onAction?: () => void;
 }) {
   return (
     <View style={[styles.journey, { backgroundColor: background }]}>
@@ -63,7 +65,7 @@ export function JourneyCard({
           <View style={[styles.trackFill, { width: progress }]} />
         </View>
       ) : null}
-      <Pressable accessibilityRole="button" style={styles.journeyButton}>
+      <Pressable accessibilityRole="button" onPress={onAction} style={styles.journeyButton}>
         <Text style={[styles.journeyButtonText, { color: accent }]}>{action}</Text>
         <Ionicons name="chevron-forward" size={16} color={accent} />
       </Pressable>
@@ -71,12 +73,12 @@ export function JourneyCard({
   );
 }
 
-export function SectionTitle({ children, link }: { children: string; link?: string }) {
+export function SectionTitle({ children, link, onLink }: { children: string; link?: string; onLink?: () => void }) {
   if (!link) return <Text style={[styles.sectionTitle, styles.blockTitle]}>{children}</Text>;
   return (
     <View style={styles.sectionHead}>
       <Text style={styles.sectionTitle}>{children}</Text>
-      <Pressable accessibilityRole="button">
+      <Pressable accessibilityRole="button" onPress={onLink}>
         <Text style={styles.link}>{link}</Text>
       </Pressable>
     </View>
@@ -86,12 +88,12 @@ export function SectionTitle({ children, link }: { children: string; link?: stri
 export function QuickGrid({
   items,
 }: {
-  items: { title: string; icon: Ion; iconColor: string; well: string }[];
+  items: { title: string; icon: Ion; iconColor: string; well: string; onPress?: () => void }[];
 }) {
   return (
     <View style={styles.grid}>
       {items.map((item) => (
-        <Pressable key={item.title} accessibilityRole="button" style={styles.quickCard}>
+        <Pressable key={item.title} accessibilityRole="button" onPress={item.onPress} style={styles.quickCard}>
           <View style={[styles.well, { backgroundColor: item.well }]}>
             <Ionicons name={item.icon} size={20} color={item.iconColor} />
           </View>
@@ -130,12 +132,12 @@ export function CampaignCard() {
 export function ArticleList({
   items,
 }: {
-  items: { title: string; meta: string; icon: Ion; iconColor: string; well: string }[];
+  items: { title: string; meta: string; icon: Ion; iconColor: string; well: string; onPress?: () => void }[];
 }) {
   return (
     <>
       {items.map((article) => (
-        <Pressable key={article.title} accessibilityRole="button" style={styles.article}>
+        <Pressable key={article.title} accessibilityRole="button" onPress={article.onPress} style={styles.article}>
           <View style={[styles.well, { backgroundColor: article.well }]}>
             <Ionicons name={article.icon} size={20} color={article.iconColor} />
           </View>
