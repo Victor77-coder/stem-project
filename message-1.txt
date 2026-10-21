@@ -1,0 +1,8819 @@
+1
+00:00:00,000 --> 00:00:02,660
+Pronto, está gravando aí.
+
+2
+00:00:04,760 --> 00:00:05,200
+Certo.
+
+3
+00:00:05,420 --> 00:00:05,840
+Está conseguindo?
+
+4
+00:00:06,840 --> 00:00:11,580
+Então, a conexão está meio estável, mas eu estou conseguindo.
+
+5
+00:00:13,400 --> 00:00:13,980
+Estou conseguindo.
+
+6
+00:00:25,320 --> 00:00:26,120
+E agora?
+
+7
+00:00:26,760 --> 00:00:29,180
+Está tudo ótimo.
+
+8
+00:00:30,000 --> 00:00:35,900
+Ó, primeiro, queria apresentar, sou Pedro, tá?
+
+9
+00:00:36,200 --> 00:00:38,700
+Sou acadêmico de medicina, estou no sexto período.
+
+10
+00:00:41,000 --> 00:00:41,480
+E...
+
+11
+00:00:41,480 --> 00:00:42,280
+Sim?
+
+12
+00:00:42,980 --> 00:00:44,920
+Só vai estar um pouco baixo também agora.
+
+13
+00:00:46,000 --> 00:00:46,540
+Está ouvindo?
+
+14
+00:00:47,800 --> 00:00:48,120
+Estou.
+
+15
+00:00:48,460 --> 00:00:49,820
+Deixa eu ver se eu consigo só aumentar.
+
+16
+00:00:51,200 --> 00:00:51,540
+Está bem.
+
+17
+00:00:51,960 --> 00:00:54,380
+Eu posso tentar mudar também o microfone, se quiser.
+
+18
+00:00:55,220 --> 00:00:56,200
+Tem esse também.
+
+19
+00:00:56,200 --> 00:00:56,840
+Está aí, Pedro.
+
+20
+00:00:57,720 --> 00:00:59,380
+Acho que esse está melhor, está mais alto.
+
+21
+00:00:59,380 --> 00:00:59,880
+Tá.
+
+22
+00:01:00,680 --> 00:01:03,500
+Então, sou acadêmico de medicina, tá?
+
+23
+00:01:04,800 --> 00:01:07,800
+E no ano, no mês, semestre passado, na verdade,
+
+24
+00:01:08,760 --> 00:01:14,300
+a gente teve uma ideia de desenvolvimento de um aplicativo, certo?
+
+25
+00:01:14,940 --> 00:01:17,280
+Que era inicialmente para algo de uma aula mesmo,
+
+26
+00:01:17,380 --> 00:01:19,160
+era uma aula de metodologia simples,
+
+27
+00:01:19,360 --> 00:01:21,080
+então, era um negócio simples,
+
+28
+00:01:21,080 --> 00:01:26,480
+mas a gente acabou aprofundando melhor no aspecto de desenvolvimento.
+
+29
+00:01:26,560 --> 00:01:28,020
+A gente já tem uma liga, né?
+
+30
+00:01:28,180 --> 00:01:29,980
+A gente tem a liga Alamir,
+
+31
+00:01:30,820 --> 00:01:32,640
+que é a Liga Acadêmica de Medicina Cunha.
+
+32
+00:01:32,640 --> 00:01:38,060
+E a gente já estava nesse ramo já de desenvolvimento de projetos,
+
+33
+00:01:38,060 --> 00:01:40,360
+para partir de agora, esse ano, a gente está mais.
+
+34
+00:01:40,920 --> 00:01:46,020
+Mas no semestre passado, a gente conseguiu submeter para o PSIC
+
+35
+00:01:46,020 --> 00:01:49,500
+esse projeto, que muito provavelmente será aprovado,
+
+36
+00:01:49,580 --> 00:01:52,800
+não sei com bolsa ou não, não sei ainda,
+
+37
+00:01:52,860 --> 00:01:54,040
+porque ainda não sei o resultado.
+
+38
+00:01:54,040 --> 00:01:58,020
+Mas a gente tem que ser um projeto bom,
+
+39
+00:01:59,180 --> 00:02:03,220
+que tem duas pessoas de peso, né?
+
+40
+00:02:03,280 --> 00:02:06,180
+Que é o professor Laércio, que é um professor de metodologia,
+
+41
+00:02:06,480 --> 00:02:07,100
+muito bom.
+
+42
+00:02:08,160 --> 00:02:10,040
+E a professora Alessandra, né?
+
+43
+00:02:10,040 --> 00:02:12,500
+Que também é uma excelente tutora para nós.
+
+44
+00:02:12,680 --> 00:02:15,480
+Então, a gente está com esse projeto,
+
+45
+00:02:15,580 --> 00:02:16,860
+eu tenho aqui uma apresentação.
+
+46
+00:02:17,060 --> 00:02:19,860
+Eu vou colocar aqui, é uma apresentação do projeto mesmo,
+
+47
+00:02:19,940 --> 00:02:21,000
+é do trabalho.
+
+48
+00:02:21,000 --> 00:02:25,400
+Mas eu vou tentar transmitir aqui, peraí.
+
+49
+00:02:25,820 --> 00:02:26,760
+Um segundo.
+
+50
+00:02:27,960 --> 00:02:29,940
+Isso aqui é mais ou menos onde ele ilustra a ideia.
+
+51
+00:02:30,060 --> 00:02:33,620
+Você também pode acompanhar pelo próprio desenho metodológico
+
+52
+00:02:33,620 --> 00:02:34,280
+que a gente fez, tá?
+
+53
+00:02:35,140 --> 00:02:37,560
+A gente fez o desenho metodológico também,
+
+54
+00:02:37,820 --> 00:02:39,700
+a professora Alessandra enviou.
+
+55
+00:02:40,460 --> 00:02:41,080
+Está conseguindo ver?
+
+56
+00:02:42,540 --> 00:02:43,340
+Estou sim, estou sim.
+
+57
+00:02:43,860 --> 00:02:44,220
+Beleza.
+
+58
+00:02:44,820 --> 00:02:45,560
+Então, enfim.
+
+59
+00:02:46,500 --> 00:02:49,740
+Então, basicamente, o nosso projeto de pesquisa, né?
+
+60
+00:02:49,740 --> 00:02:55,320
+O desenvolvimento e avaliação de um aplicativo digital
+
+61
+00:02:55,320 --> 00:03:00,800
+para educação, facilitação e incentivo à doação e acesso a tratamentos
+
+62
+00:03:00,800 --> 00:03:03,300
+com células-tronco.
+
+63
+00:03:04,000 --> 00:03:08,120
+Enfim, a nossa ideia foi juntar uma parte com tecnologia
+
+64
+00:03:08,120 --> 00:03:11,360
+com um tema que não é tão debatido aqui no Brasil.
+
+65
+00:03:11,360 --> 00:03:15,780
+Então, eu posso dar algumas explicações para a parte burocrática
+
+66
+00:03:15,780 --> 00:03:17,040
+e a parte de saúde.
+
+67
+00:03:18,000 --> 00:03:23,380
+E você pode analisar se é algo tecnologicamente viável ou não, tá?
+
+68
+00:03:23,960 --> 00:03:24,360
+Enfim.
+
+69
+00:03:24,920 --> 00:03:28,140
+Então, essa ideia, o Stain Project que a gente teve,
+
+70
+00:03:28,500 --> 00:03:31,440
+é o nome de tronco, né?
+
+71
+00:03:31,800 --> 00:03:32,280
+Stain.
+
+72
+00:03:32,280 --> 00:03:39,420
+E célula-tronco, só para contextualizar qual a ideia, né?
+
+73
+00:03:40,180 --> 00:03:44,660
+A gente fala muito célula-tronco de uma maneira que a gente não sabe direito,
+
+74
+00:03:44,840 --> 00:03:47,160
+mas célula-tronco é nada mais, nada menos que uma célula
+
+75
+00:03:47,160 --> 00:03:52,160
+que ela vai se dividir para se tornar uma célula específica.
+
+76
+00:03:52,720 --> 00:03:54,540
+Então, ela é um tronco e ela tem ramos,
+
+77
+00:03:54,720 --> 00:03:58,980
+e esses ramos são basicamente a especificidade do que ela é.
+
+78
+00:03:58,980 --> 00:04:01,020
+Então, por exemplo, eu tenho uma célula-tronco,
+
+79
+00:04:01,500 --> 00:04:04,300
+se eu incentivar ela a virar um tecido gástrico,
+
+80
+00:04:04,720 --> 00:04:07,980
+eu colocar ela num tecido propício, ela vira um tecido gástrico.
+
+81
+00:04:08,340 --> 00:04:11,660
+Se eu colocar uma célula-tronco num tecido com muitas fibras,
+
+82
+00:04:11,740 --> 00:04:13,600
+eu consigo fazer um músculo, algo assim.
+
+83
+00:04:14,240 --> 00:04:16,600
+É claro que aqui no Brasil a gente não tem tanta coisa disso.
+
+84
+00:04:17,400 --> 00:04:19,260
+A gente sabe que aqui no Brasil tem muito problema
+
+85
+00:04:19,260 --> 00:04:21,380
+com a questão de célula-tronco.
+
+86
+00:04:21,600 --> 00:04:24,840
+Inclusive, é uma das piores coisas que pode ter nesse projeto.
+
+87
+00:04:25,300 --> 00:04:26,560
+Seria uma intervenção, né?
+
+88
+00:04:26,560 --> 00:04:31,400
+Porque a gente, só para contextualizar,
+
+89
+00:04:31,520 --> 00:04:34,140
+no Brasil a gente só tem, acho que tem aqui no slide,
+
+90
+00:04:34,720 --> 00:04:37,620
+o único procedimento que a gente pode utilizar de célula-tronco
+
+91
+00:04:37,620 --> 00:04:40,980
+é para doenças hematológicas.
+
+92
+00:04:42,100 --> 00:04:42,160
+Tá?
+
+93
+00:04:43,960 --> 00:04:46,940
+Então, assim, por exemplo, uma pessoa tem uma leucemia,
+
+94
+00:04:47,100 --> 00:04:48,580
+câncer de sangue, né?
+
+95
+00:04:48,840 --> 00:04:50,480
+A gente pode utilizar célula-tronco.
+
+96
+00:04:50,480 --> 00:04:55,320
+Mas lá fora, os caras podem usar célula-tronco para...
+
+97
+00:04:55,320 --> 00:04:57,200
+Pode ser para profilaxia, né?
+
+98
+00:04:57,220 --> 00:04:58,700
+Para não ter Alzheimer.
+
+99
+00:04:59,340 --> 00:05:02,680
+Ou a pessoa tem uma lesão medular, pode usar célula-tronco.
+
+100
+00:05:03,000 --> 00:05:06,860
+Uma pessoa que tem um problema renal, pode usar célula-tronco.
+
+101
+00:05:06,940 --> 00:05:09,320
+Lá fora, lá na Europa, nos Estados Unidos,
+
+102
+00:05:09,480 --> 00:05:11,920
+é muito mais fácil você fazer um tratamento de célula-tronco.
+
+103
+00:05:12,320 --> 00:05:12,680
+Por quê?
+
+104
+00:05:12,680 --> 00:05:15,940
+O motivo, basicamente, sendo uma maneira bem grosseira,
+
+105
+00:05:16,020 --> 00:05:20,080
+eu sei que está gravando, mas aqui no Brasil o motivo é que eles consideram
+
+106
+00:05:20,080 --> 00:05:21,760
+que...
+
+107
+00:05:21,760 --> 00:05:22,940
+Como que eu pego uma célula-tronco?
+
+108
+00:05:24,020 --> 00:05:27,640
+Pego a célula-tronco de alguém que tem célula-tronco, né?
+
+109
+00:05:27,660 --> 00:05:28,580
+Alguém que tem informação.
+
+110
+00:05:29,300 --> 00:05:30,900
+Então, geralmente, são imórolas, tá?
+
+111
+00:05:31,540 --> 00:05:34,380
+Que são, basicamente, quando você ainda não é um indivíduo,
+
+112
+00:05:34,380 --> 00:05:35,460
+você é uma mórula.
+
+113
+00:05:35,860 --> 00:05:38,960
+E aí você vai se multiplicando e vira um feto.
+
+114
+00:05:39,540 --> 00:05:42,100
+Aqui no Brasil eles consideram uma mórula como uma pessoa.
+
+115
+00:05:42,680 --> 00:05:46,580
+O que é meio louco, porque não tem cérebro, não tem nada.
+
+116
+00:05:46,700 --> 00:05:49,540
+É só uma célula que tem várias células-tronco.
+
+117
+00:05:50,000 --> 00:05:51,820
+Então, aqui no Brasil tem esse problema.
+
+118
+00:05:53,240 --> 00:05:55,160
+Uma religiosa e tal, né?
+
+119
+00:05:55,160 --> 00:05:56,980
+Aqui no Brasil tem esse problema.
+
+120
+00:05:57,140 --> 00:06:02,700
+Mas lá fora, lá fora, muitas pessoas que têm abortos e tal,
+
+121
+00:06:02,700 --> 00:06:06,880
+assim, de duas, três semanas, usa pra mórula.
+
+122
+00:06:07,700 --> 00:06:09,740
+Eles não usam aquilo ali pra qualquer coisa.
+
+123
+00:06:09,840 --> 00:06:10,500
+Eles usam pra mórula.
+
+124
+00:06:10,580 --> 00:06:12,180
+Aqui no Brasil é tudo descartado, né?
+
+125
+00:06:12,680 --> 00:06:16,120
+Então, por isso que a gente vê bastante tratamento com essas coisas.
+
+126
+00:06:17,300 --> 00:06:17,380
+Tá?
+
+127
+00:06:18,440 --> 00:06:20,480
+E aí, basicamente, a gente tá...
+
+128
+00:06:20,480 --> 00:06:21,600
+O que a gente tá querendo propor?
+
+129
+00:06:22,200 --> 00:06:24,680
+Você marcar uma cirurgia...
+
+130
+00:06:25,680 --> 00:06:30,700
+Você vai marcar uma cirurgia de célula-tronco aqui,
+
+131
+00:06:30,780 --> 00:06:32,860
+algum procedimento, algum transplante de célula-tronco.
+
+132
+00:06:32,940 --> 00:06:34,080
+Por exemplo, eu.
+
+133
+00:06:34,080 --> 00:06:36,220
+Eu posso doar célula-tronco.
+
+134
+00:06:36,480 --> 00:06:36,840
+Por quê?
+
+135
+00:06:37,520 --> 00:06:39,820
+Eu tenho célula-tronco aqui na minha medula, né?
+
+136
+00:06:39,820 --> 00:06:40,620
+Na minha...
+
+137
+00:06:40,620 --> 00:06:40,940
+Na minha...
+
+138
+00:06:40,940 --> 00:06:41,740
+Na minha...
+
+139
+00:06:41,740 --> 00:06:44,260
+Na parte vermelha, então, na medula espinhal eu tenho.
+
+140
+00:06:45,300 --> 00:06:48,120
+Eu tenho também algumas pessoas, né?
+
+141
+00:06:48,160 --> 00:06:49,120
+Já, tipo...
+
+142
+00:06:49,120 --> 00:06:49,720
+Eu não, né?
+
+143
+00:06:50,200 --> 00:06:51,180
+Pessoas mais novas.
+
+144
+00:06:51,360 --> 00:06:51,840
+Crianças.
+
+145
+00:06:52,660 --> 00:06:53,760
+Tem dente de leite.
+
+146
+00:06:54,760 --> 00:06:56,260
+Dente de leite tem célula-tronco.
+
+147
+00:06:56,260 --> 00:06:58,780
+Umbigo, cordão-ubilical.
+
+148
+00:06:59,180 --> 00:07:00,020
+Tem célula-tronco.
+
+149
+00:07:00,820 --> 00:07:05,960
+Então, a gente tem crianças e a gente tem até campanhas lá fora
+
+150
+00:07:05,960 --> 00:07:12,000
+de doação de dente de leite pra desenvolver remédios pra célula-tronco.
+
+151
+00:07:13,740 --> 00:07:14,180
+Basicamente.
+
+152
+00:07:15,220 --> 00:07:16,440
+E aqui no Brasil não tem isso, né?
+
+153
+00:07:16,500 --> 00:07:17,380
+Então, acaba...
+
+154
+00:07:17,380 --> 00:07:18,560
+A gente não tem muito conhecimento.
+
+155
+00:07:18,740 --> 00:07:19,100
+Você...
+
+156
+00:07:19,100 --> 00:07:21,620
+Eu não sei se você sabia disso que eu tô falando.
+
+157
+00:07:22,360 --> 00:07:23,460
+É pira minha?
+
+158
+00:07:23,580 --> 00:07:24,460
+Eu tô falando só...
+
+159
+00:07:24,460 --> 00:07:25,400
+Tipo assim...
+
+160
+00:07:25,400 --> 00:07:26,700
+Você tá conseguindo sacar...
+
+161
+00:07:26,700 --> 00:07:28,960
+Porque eu tô falando umas coisas meio específicas.
+
+162
+00:07:29,460 --> 00:07:29,820
+Não, beleza.
+
+163
+00:07:30,820 --> 00:07:31,260
+Enfim...
+
+164
+00:07:31,260 --> 00:07:35,100
+Então, o ponto é que lá fora é muito desenvolvida essa parada.
+
+165
+00:07:36,040 --> 00:07:37,120
+Aqui no Brasil, não.
+
+166
+00:07:38,260 --> 00:07:40,240
+Aqui no Brasil não tem essa parada de...
+
+167
+00:07:40,240 --> 00:07:42,700
+Pô, tem muito procedimento pra eu fazer de transplante e tal.
+
+168
+00:07:42,760 --> 00:07:45,240
+Aqui no Brasil é transplante de medula e acabou.
+
+169
+00:07:45,980 --> 00:07:48,340
+Eu não tenho certeza se tem do cordão-ubilical.
+
+170
+00:07:48,960 --> 00:07:51,760
+Mas aqui no Brasil é transplante de medula e acabou, chefe.
+
+171
+00:07:51,760 --> 00:07:54,240
+Então, é...
+
+172
+00:07:54,240 --> 00:07:55,580
+Não tem essa de...
+
+173
+00:07:55,580 --> 00:07:56,620
+A gente não tem muita coisa.
+
+174
+00:07:56,740 --> 00:07:57,620
+A gente não vê incentivo.
+
+175
+00:07:57,700 --> 00:07:58,820
+A gente não vê propaganda de TV.
+
+176
+00:07:58,960 --> 00:08:00,420
+A gente não vê na rádio.
+
+177
+00:08:00,760 --> 00:08:03,540
+Então, acaba que uma pessoa que pode potencialmente doar...
+
+178
+00:08:03,540 --> 00:08:07,300
+Fazer um transplante medular pra salatronco.
+
+179
+00:08:07,460 --> 00:08:08,240
+Ela não vai saber.
+
+180
+00:08:09,280 --> 00:08:11,200
+Porque aqui no Brasil ninguém faz nada.
+
+181
+00:08:11,420 --> 00:08:11,720
+Então...
+
+182
+00:08:11,720 --> 00:08:12,240
+Mas assim...
+
+183
+00:08:13,100 --> 00:08:14,300
+O ponto é...
+
+184
+00:08:14,300 --> 00:08:15,240
+Eu posso salvar uma vida...
+
+185
+00:08:15,240 --> 00:08:18,140
+De uma pessoa que tem leucemia, por exemplo.
+
+186
+00:08:19,100 --> 00:08:19,720
+E eu não sei.
+
+187
+00:08:20,580 --> 00:08:22,060
+Eu não sei como eu posso salvar.
+
+188
+00:08:22,060 --> 00:08:23,800
+Isso é um ponto.
+
+189
+00:08:24,320 --> 00:08:25,520
+Primeiro ponto que seria o quê?
+
+190
+00:08:25,520 --> 00:08:34,400
+Ela seria um suporte tecnológico pra auxiliar as pessoas a marcarem esse transplante.
+
+191
+00:08:34,620 --> 00:08:39,920
+Porque esse transplante, qualquer tipo de transplante em cadeia nacional é via SUS.
+
+192
+00:08:39,920 --> 00:08:43,140
+E a gente sabe que assim...
+
+193
+00:08:43,140 --> 00:08:44,180
+Por mais...
+
+194
+00:08:44,180 --> 00:08:48,620
+Por mais absurdo de bom que tenha todas as políticas do SUS, que é maravilhoso.
+
+195
+00:08:49,240 --> 00:08:52,820
+Porque nos Estados Unidos, pra você fazer uma parada dessa, tu gastaria 100 mil dólares.
+
+196
+00:08:53,980 --> 00:08:54,920
+Mas tem a...
+
+197
+00:08:54,920 --> 00:08:56,480
+O problema é que...
+
+198
+00:08:56,480 --> 00:08:59,020
+O site do SUS não é bom.
+
+199
+00:09:00,100 --> 00:09:01,500
+E é uma parada de 2010.
+
+200
+00:09:01,920 --> 00:09:02,700
+E a gente sabe...
+
+201
+00:09:02,700 --> 00:09:04,180
+Ah, então reforma o site de 2010.
+
+202
+00:09:04,180 --> 00:09:06,900
+São bilhões de reais pra reformar o site.
+
+203
+00:09:07,480 --> 00:09:11,200
+Então o ponto é criar um aplicativo pra ajudar nisso.
+
+204
+00:09:12,840 --> 00:09:18,820
+Porque já que a gente não consegue reformar o site, a gente pode criar uma extensão praquilo, sabe?
+
+205
+00:09:19,540 --> 00:09:23,140
+Uma extensão, tornar algo mais acessível pro brasileiro médio.
+
+206
+00:09:23,140 --> 00:09:26,640
+E esse é o ponto.
+
+207
+00:09:26,720 --> 00:09:27,660
+Esse é o primeiro ponto.
+
+208
+00:09:28,160 --> 00:09:29,060
+Segundo ponto.
+
+209
+00:09:30,160 --> 00:09:31,400
+A pessoa que tem leucemia.
+
+210
+00:09:32,540 --> 00:09:34,340
+A pessoa que tem o problema...
+
+211
+00:09:34,340 --> 00:09:37,120
+Assim, tem outras doenças que podem fazer estela-tronco.
+
+212
+00:09:37,280 --> 00:09:38,140
+Se eu não me engano...
+
+213
+00:09:39,620 --> 00:09:40,140
+Doenças...
+
+214
+00:09:41,420 --> 00:09:42,300
+Além da...
+
+215
+00:09:42,300 --> 00:09:43,360
+A leucemia é a mais comum.
+
+216
+00:09:45,320 --> 00:09:46,480
+Tô perdendo, não sei se, senhora.
+
+217
+00:09:47,080 --> 00:09:47,520
+Sim.
+
+218
+00:09:47,720 --> 00:09:49,620
+Só pra ver como eu entendi bem.
+
+219
+00:09:49,620 --> 00:09:55,100
+A gente, eu e o Daniel, nós fizemos alguns tópicos, né?
+
+220
+00:09:55,260 --> 00:09:56,640
+Pra perguntar a você.
+
+221
+00:09:57,220 --> 00:10:03,560
+E até o que você tá comentando agora, é o primeiro tópico, a gente, que a gente iria perguntar.
+
+222
+00:10:04,020 --> 00:10:06,160
+Qual seria a necessidade que o...
+
+223
+00:10:06,160 --> 00:10:08,580
+Qual seria a necessidade principal que o app iria resolver?
+
+224
+00:10:09,520 --> 00:10:15,160
+Então, basicamente, o que você tá me dizendo é que o app serviria pra facilitar, né?
+
+225
+00:10:15,700 --> 00:10:15,980
+Isso.
+
+226
+00:10:15,980 --> 00:10:19,980
+Essas cirurgias, no caso, de celulatron...
+
+227
+00:10:21,060 --> 00:10:24,020
+Que necessitam, no caso, cirurgias que necessitam celulatron.
+
+228
+00:10:24,600 --> 00:10:24,980
+Exato.
+
+229
+00:10:25,660 --> 00:10:26,140
+Exato.
+
+230
+00:10:27,900 --> 00:10:28,380
+Exato.
+
+231
+00:10:28,540 --> 00:10:29,980
+E aqui, ó, aparece, ó...
+
+232
+00:10:30,500 --> 00:10:32,980
+A gente tem alguns...
+
+233
+00:10:33,840 --> 00:10:38,040
+Algumas coisas aqui que podem também ajudar no transplante.
+
+234
+00:10:38,160 --> 00:10:39,980
+Então, tipo assim, não é só...
+
+235
+00:10:39,980 --> 00:10:41,680
+Tipo assim, leucemia é o grosso...
+
+236
+00:10:41,680 --> 00:10:43,980
+A grosso modo é o mais importante aqui, porque...
+
+237
+00:10:43,980 --> 00:10:45,980
+A pessoa com leucemia...
+
+238
+00:10:46,980 --> 00:10:47,980
+Você agrava...
+
+239
+00:10:48,780 --> 00:10:50,540
+De uma maneira que ela pode morrer, né?
+
+240
+00:10:50,820 --> 00:10:53,360
+Então, tipo assim, o transplante medular é, tipo assim...
+
+241
+00:10:53,360 --> 00:10:54,980
+Tentamos todas as terapias possíveis...
+
+242
+00:10:56,140 --> 00:10:56,720
+Não deu.
+
+243
+00:10:57,740 --> 00:10:58,800
+Vamos ter que achar uma medula.
+
+244
+00:11:00,360 --> 00:11:02,380
+Mas a gente também tem coisas mais corriqueiras.
+
+245
+00:11:02,500 --> 00:11:03,980
+Então, por exemplo, anemia falciforme.
+
+246
+00:11:05,020 --> 00:11:05,980
+Que é uma parada, assim...
+
+247
+00:11:05,980 --> 00:11:08,980
+Aqui no Brasil tem bastante...
+
+248
+00:11:09,700 --> 00:11:11,980
+Mas ao mesmo tempo, se você for pegar o somatório...
+
+249
+00:11:12,980 --> 00:11:15,180
+Não é algo tão recorrente.
+
+250
+00:11:15,280 --> 00:11:15,780
+Tipo assim...
+
+251
+00:11:15,780 --> 00:11:16,980
+Se a gente estivesse em Salvador...
+
+252
+00:11:18,000 --> 00:11:18,920
+Que é...
+
+253
+00:11:18,920 --> 00:11:20,620
+Por que eu tô falando que a gente estivesse em Salvador?
+
+254
+00:11:20,980 --> 00:11:22,660
+Ou Bahia em geral?
+
+255
+00:11:23,460 --> 00:11:26,120
+Porque é uma doença que afeta principalmente afrodescendentes.
+
+256
+00:11:27,160 --> 00:11:28,120
+Anemia falciforme.
+
+257
+00:11:28,360 --> 00:11:29,360
+Que é anemia, né...
+
+258
+00:11:29,360 --> 00:11:30,400
+Em formato de foice.
+
+259
+00:11:30,440 --> 00:11:30,980
+A pessoa tem pouca...
+
+260
+00:11:30,980 --> 00:11:31,700
+Tem pouca...
+
+261
+00:11:31,700 --> 00:11:32,740
+Pouca hemácia.
+
+262
+00:11:33,160 --> 00:11:33,280
+Né?
+
+263
+00:11:33,280 --> 00:11:34,040
+Então ela fica...
+
+264
+00:11:34,040 --> 00:11:35,140
+Tem problema de falta de ar.
+
+265
+00:11:35,160 --> 00:11:35,540
+Essas coisas.
+
+266
+00:11:36,280 --> 00:11:38,360
+E aí seria interessante essa célula-tronco, né?
+
+267
+00:11:38,380 --> 00:11:39,800
+Porque aí conseguiria formar a hemácia.
+
+268
+00:11:40,760 --> 00:11:41,060
+Tá ligado?
+
+269
+00:11:41,780 --> 00:11:43,320
+E aí lá em Salvador, tipo...
+
+270
+00:11:43,320 --> 00:11:45,020
+Isso aí é muito importante.
+
+271
+00:11:45,120 --> 00:11:46,580
+Porque lá tem uma população, né?
+
+272
+00:11:46,700 --> 00:11:47,700
+Afrodescendente imensa.
+
+273
+00:11:47,820 --> 00:11:48,980
+Aqui em Alagoas...
+
+274
+00:11:49,780 --> 00:11:51,440
+Eu acredito que não tenha tanto.
+
+275
+00:11:51,580 --> 00:11:53,120
+A gente podia até pesquisar isso.
+
+276
+00:11:53,560 --> 00:11:54,760
+Fazer uma busca ativa disso.
+
+277
+00:11:55,400 --> 00:11:57,400
+Mas a gente tem alguns outros exemplos.
+
+278
+00:11:57,400 --> 00:11:58,400
+A gente tem anemia falciforme.
+
+279
+00:11:58,980 --> 00:11:59,400
+A gente tem linfoma.
+
+280
+00:11:59,400 --> 00:12:02,080
+Linfoma, que é o câncer dos linfonodos.
+
+281
+00:12:02,160 --> 00:12:06,700
+Não é tão comum quanto uma anemia falciforme ou uma leucemia.
+
+282
+00:12:07,060 --> 00:12:08,200
+Mas a gente tem alguns procedimentos.
+
+283
+00:12:08,280 --> 00:12:10,220
+Mas você consegue perceber que é um bagulho mais de sangue.
+
+284
+00:12:11,020 --> 00:12:11,880
+Não é...
+
+285
+00:12:11,880 --> 00:12:12,160
+Tipo...
+
+286
+00:12:12,160 --> 00:12:15,560
+Porque se fosse um negócio de, tipo...
+
+287
+00:12:15,560 --> 00:12:17,140
+Ah, problema de visão.
+
+288
+00:12:17,740 --> 00:12:18,460
+Problema cerebral.
+
+289
+00:12:18,620 --> 00:12:19,580
+Problema cardíaco.
+
+290
+00:12:20,500 --> 00:12:20,900
+Você...
+
+291
+00:12:20,900 --> 00:12:23,180
+Você saca que, tipo...
+
+292
+00:12:23,180 --> 00:12:25,060
+O governo já teria feito alguma parada.
+
+293
+00:12:26,300 --> 00:12:28,400
+Mas sendo que é um bagulho de sangue...
+
+294
+00:12:29,400 --> 00:12:31,720
+O governo não meio que...
+
+295
+00:12:31,720 --> 00:12:32,080
+Tipo...
+
+296
+00:12:32,080 --> 00:12:33,840
+O que eu vou desenvolver um negócio?
+
+297
+00:12:33,900 --> 00:12:34,860
+Eu vou perder dinheiro.
+
+298
+00:12:35,620 --> 00:12:36,880
+O que é meio que a lógica, né?
+
+299
+00:12:37,320 --> 00:12:39,160
+A lógica do governo é o quê?
+
+300
+00:12:39,580 --> 00:12:40,380
+Do SUS é o seguinte.
+
+301
+00:12:40,820 --> 00:12:43,440
+Eu vou fazer algo que está afetando o meu sistema.
+
+302
+00:12:43,940 --> 00:12:44,940
+E está me dando prejuízo.
+
+303
+00:12:44,940 --> 00:12:47,540
+É a mesma coisa do cigarro.
+
+304
+00:12:48,120 --> 00:12:49,600
+Os caras cancelaram o cigarro por quê?
+
+305
+00:12:50,020 --> 00:12:52,320
+Porque o SUS, eles estavam gastando 90 bilhões.
+
+306
+00:12:52,420 --> 00:12:55,060
+O cigarro estava lucrando 10 bilhões de imposto.
+
+307
+00:12:55,560 --> 00:12:57,840
+Aqui, nesse negócio de sala-tronco, deve ser...
+
+308
+00:12:57,840 --> 00:12:59,900
+Eu lucro com transplante 100 milhões.
+
+309
+00:13:00,680 --> 00:13:05,800
+E se eu desenvolver um aplicativo, mudar a rede do meu SUS, meu data SUS, eu vou gastar 100 bilhões.
+
+310
+00:13:06,420 --> 00:13:07,660
+Então, para que eu vou fazer isso?
+
+311
+00:13:07,660 --> 00:13:12,760
+Então, é uma parada que eu acho que é importante...
+
+312
+00:13:12,760 --> 00:13:14,500
+É a primeira pergunta aí que você falou.
+
+313
+00:13:14,840 --> 00:13:16,180
+Realmente é um suporte.
+
+314
+00:13:16,660 --> 00:13:18,060
+A gente não vai inventar a roda.
+
+315
+00:13:18,880 --> 00:13:21,200
+A gente só vai dar um suporte para essas pessoas.
+
+316
+00:13:21,640 --> 00:13:22,160
+Além, né?
+
+317
+00:13:22,240 --> 00:13:23,160
+Claro, de educar.
+
+318
+00:13:23,300 --> 00:13:24,720
+Porque a gente colocou aqui, né?
+
+319
+00:13:25,460 --> 00:13:26,880
+A gente colocou educação também.
+
+320
+00:13:27,520 --> 00:13:28,660
+Então, isso tudo que eu estou explicando...
+
+321
+00:13:29,220 --> 00:13:31,140
+Isso tudo que eu estou explicando para você...
+
+322
+00:13:31,140 --> 00:13:33,460
+A gente vai tentar explicar para um leigo nesse aplicativo também.
+
+323
+00:13:33,460 --> 00:13:40,480
+Então, por exemplo, eu não vou doar, mas eu quero saber.
+
+324
+00:13:41,200 --> 00:13:41,860
+Eu quero entender.
+
+325
+00:13:42,540 --> 00:13:46,720
+Então, acaba que você tem uma política de prevenção, saúde, uma política primária.
+
+326
+00:13:47,100 --> 00:13:50,360
+Porque eu estou explicando para uma pessoa como é que funciona o processo.
+
+327
+00:13:50,520 --> 00:13:52,220
+Então, no momento que ela tiver...
+
+328
+00:13:52,220 --> 00:13:53,700
+Ah, eu tenho conhecido, alguma coisa assim.
+
+329
+00:13:53,880 --> 00:13:55,280
+Ela já vai acessar o aplicativo.
+
+330
+00:13:56,300 --> 00:13:57,380
+Porque ela já vai saber.
+
+331
+00:13:58,420 --> 00:13:59,160
+Ela vai procurar.
+
+332
+00:13:59,160 --> 00:14:02,680
+E a facilitação, a gente fala nisso.
+
+333
+00:14:02,820 --> 00:14:04,940
+A facilitação, porque a gente vai tornar o processo...
+
+334
+00:14:04,940 --> 00:14:07,300
+A gente, claro, a pessoa vai ter que passar por esse processo burocrático.
+
+335
+00:14:07,600 --> 00:14:08,940
+Porque senão, aí seria crime.
+
+336
+00:14:09,640 --> 00:14:11,760
+A gente está facilitando o transplante.
+
+337
+00:14:12,700 --> 00:14:14,780
+A grosso modo é crime, né?
+
+338
+00:14:15,320 --> 00:14:17,040
+Mas, eu estou falando de...
+
+339
+00:14:17,040 --> 00:14:23,400
+A pessoa, ela vai ter uma maior acessibilidade na questão do transplante, entendeu?
+
+340
+00:14:23,740 --> 00:14:25,800
+Então, por exemplo, ela fez a marcação no SUS.
+
+341
+00:14:25,800 --> 00:14:30,620
+Só que ela tem que ficar voltando na unidade de saúde o tempo todo para saber como está a situação dela.
+
+342
+00:14:31,840 --> 00:14:32,760
+No transplante.
+
+343
+00:14:33,240 --> 00:14:36,900
+A pessoa vai ter que voltar o tempo todo para saber onde que ela vai fazer isso.
+
+344
+00:14:37,340 --> 00:14:39,220
+Ela vai receber o órgão de helicóptero.
+
+345
+00:14:39,420 --> 00:14:41,660
+Porque tem toda essa parada, né?
+
+346
+00:14:42,020 --> 00:14:44,880
+Às vezes, a pessoa que está doando a medula, que é compatível...
+
+347
+00:14:44,880 --> 00:14:47,400
+Porque, assim, a minha medula não seja compatível com a tua.
+
+348
+00:14:47,940 --> 00:14:49,800
+A gente tem que encontrar uma pessoa que quer que seja compatível.
+
+349
+00:14:50,840 --> 00:14:53,000
+Geralmente, esse transporte é de helicóptero.
+
+350
+00:14:53,920 --> 00:14:55,260
+Como é que vai ser isso?
+
+351
+00:14:55,260 --> 00:14:56,680
+Explicar tudo isso.
+
+352
+00:14:56,820 --> 00:14:57,660
+Todas essas questões.
+
+353
+00:14:58,760 --> 00:15:01,520
+Então, é isso que eu estava querendo falar.
+
+354
+00:15:01,780 --> 00:15:02,620
+E aí, que tá.
+
+355
+00:15:03,960 --> 00:15:05,360
+Eu vou passar aqui um pouquinho.
+
+356
+00:15:06,000 --> 00:15:06,460
+Pode falar.
+
+357
+00:15:06,460 --> 00:15:14,160
+Parece que se baseia muito na necessidade de resolução, tanto educacional, certo?
+
+358
+00:15:14,180 --> 00:15:14,540
+Isso.
+
+359
+00:15:14,540 --> 00:15:20,400
+Onde instruir as pessoas a terem o conhecimento sobre o assunto.
+
+360
+00:15:20,400 --> 00:15:27,380
+E também a necessidade de resolução, no caso da facilitação.
+
+361
+00:15:28,260 --> 00:15:28,860
+Isso.
+
+362
+00:15:29,080 --> 00:15:34,600
+De realizar uma consulta ou marcar uma cirurgia.
+
+363
+00:15:34,600 --> 00:15:36,020
+Exato.
+
+364
+00:15:36,020 --> 00:15:38,240
+Uma consulta.
+
+365
+00:15:38,240 --> 00:15:42,240
+Então, pode ser, assim, é um leque relativamente...
+
+366
+00:15:42,760 --> 00:15:46,500
+É um leque relativamente amplo, tá?
+
+367
+00:15:47,420 --> 00:15:49,600
+Por mais específico que pareça ser.
+
+368
+00:15:50,160 --> 00:15:51,700
+Por mais específico que pareça ser.
+
+369
+00:15:52,700 --> 00:15:53,420
+Beleza?
+
+370
+00:15:53,420 --> 00:15:55,380
+Enfim, aí eu falei, né?
+
+371
+00:15:55,380 --> 00:15:56,620
+Do objetivo geral, né?
+
+372
+00:15:56,620 --> 00:16:00,020
+Desenvolver o aplicativo Stemprod, que é uma tecnologia digital voltada para organização
+
+373
+00:16:00,020 --> 00:16:05,820
+informacional, estruturação funcional e suporte tecnológico, tá?
+
+374
+00:16:07,200 --> 00:16:09,020
+Então, é uma ferramenta de suporte.
+
+375
+00:16:09,140 --> 00:16:10,640
+A gente não tá inventando a roda nem nada.
+
+376
+00:16:10,640 --> 00:16:17,500
+Porque a gente, assim, a gente tem uma vantagem que os dados do SUS, eles são abertos.
+
+377
+00:16:18,300 --> 00:16:19,040
+Eles são públicos.
+
+378
+00:16:19,700 --> 00:16:21,160
+A gente consegue ver as coisas do SUS.
+
+379
+00:16:21,800 --> 00:16:23,740
+E isso é uma coisa boa, inclusive.
+
+380
+00:16:23,960 --> 00:16:29,940
+Se você quiser dar uma olhada de transplantes e tal, é só acessar o DataSUS que você consegue
+
+381
+00:16:29,940 --> 00:16:32,140
+ver o número de transplantes que é realizado aqui em Alagoas.
+
+382
+00:16:32,140 --> 00:16:38,140
+Só que, assim, tem...
+
+383
+00:16:38,140 --> 00:16:39,820
+Eu tava falando até uma...
+
+384
+00:16:39,820 --> 00:16:43,180
+Depois eu posso falar, depois da dificuldade, é que, tipo assim, existem unidades de saúde
+
+385
+00:16:43,180 --> 00:16:45,920
+aqui em Alagoas que não vão relatar para o SUS.
+
+386
+00:16:47,280 --> 00:16:48,960
+Tem muita subnotificação.
+
+387
+00:16:49,140 --> 00:16:54,040
+Então, entrar em contato com essas unidades, eu acho que também é uma tarefa que, assim,
+
+388
+00:16:54,040 --> 00:16:54,760
+é um pouco difícil.
+
+389
+00:16:55,220 --> 00:16:57,500
+Mas, a gente começa pela cidade.
+
+390
+00:16:58,680 --> 00:16:59,380
+Para o desenvolvimento.
+
+391
+00:16:59,480 --> 00:17:00,620
+A gente começa numa cidade.
+
+392
+00:17:00,620 --> 00:17:05,180
+E aí, se ganhar forma, se funcionar, a gente pode expandir, né, para mais uma cidade.
+
+393
+00:17:05,840 --> 00:17:06,500
+E aí, a gente vai.
+
+394
+00:17:07,460 --> 00:17:09,840
+Começa de do micro para o macro.
+
+395
+00:17:10,480 --> 00:17:14,160
+Então, quantas unidades de saúde tem aqui que realizam transplantes de célula-tronco?
+
+396
+00:17:14,300 --> 00:17:15,100
+A gente vai falar.
+
+397
+00:17:15,860 --> 00:17:17,440
+Inclusive, eu queria até saber quantas.
+
+398
+00:17:18,800 --> 00:17:19,520
+É unidade.
+
+399
+00:17:23,520 --> 00:17:24,360
+Células.
+
+400
+00:17:24,360 --> 00:17:26,460
+Eu estou aproveitando o gancho.
+
+401
+00:17:27,420 --> 00:17:27,680
+Sim.
+
+402
+00:17:27,820 --> 00:17:30,140
+Eu já passando por uma pergunta no caso.
+
+403
+00:17:30,620 --> 00:17:33,860
+Do aplicativo.
+
+404
+00:17:34,000 --> 00:17:36,500
+No caso, quem seria o usuário-alvo?
+
+405
+00:17:36,500 --> 00:17:39,140
+O cliente-alvo do aplicativo?
+
+406
+00:17:39,840 --> 00:17:41,440
+Seriam apenas os pacientes?
+
+407
+00:17:41,980 --> 00:17:43,800
+Seriam também os profissionais da família?
+
+408
+00:17:44,040 --> 00:17:44,980
+Ou como geral?
+
+409
+00:17:45,840 --> 00:17:47,760
+Os clientes-alvo, né?
+
+410
+00:17:47,840 --> 00:17:49,160
+A gente está mirando em quê?
+
+411
+00:17:49,160 --> 00:18:01,620
+A gente está mirando na pessoa que tem o interesse de doar e uma pessoa que passa necessidade, que tem que acompanhar todos os seus procedimentos.
+
+412
+00:18:02,420 --> 00:18:03,400
+E uma pessoa leiga.
+
+413
+00:18:03,900 --> 00:18:05,160
+Então, fica esses três.
+
+414
+00:18:05,160 --> 00:18:11,320
+Mas, sim, claro que é no foco do doador e no foco do que vai receber.
+
+415
+00:18:11,320 --> 00:18:14,220
+Esse é o foco.
+
+416
+00:18:15,440 --> 00:18:15,920
+Exato.
+
+417
+00:18:16,140 --> 00:18:19,900
+Só que aí acaba sendo para um público leigo, aleatório.
+
+418
+00:18:20,640 --> 00:18:25,100
+Porque, querendo ou não, é uma forma de informação, de uma ação em saúde, né?
+
+419
+00:18:25,100 --> 00:18:29,380
+Porque você está explicando um processo que ele é complicado, né?
+
+420
+00:18:29,380 --> 00:18:38,180
+Um processo que tem uma cadeia grande e que, sei lá, obviamente, não pode não acontecer.
+
+421
+00:18:38,680 --> 00:18:43,320
+Mas essa pessoa pode ser futuramente a mãe dela, pai dela.
+
+422
+00:18:43,320 --> 00:18:45,380
+E ela vai saber.
+
+423
+00:18:45,540 --> 00:18:50,760
+Porque, assim, se eu for perguntar na rua, até não precisa nem sair do celular tronco.
+
+424
+00:18:51,380 --> 00:18:53,720
+Você sabe como que funciona um transplante de órgão?
+
+425
+00:18:54,940 --> 00:18:56,760
+Eu tenho certeza que ninguém...
+
+426
+00:18:56,760 --> 00:18:58,920
+10% vai saber tudo.
+
+427
+00:18:59,860 --> 00:19:00,880
+Eu não sei tudo.
+
+428
+00:19:01,020 --> 00:19:06,220
+Imagina uma pessoa leiga que não sabe de medicina, de fato.
+
+429
+00:19:07,180 --> 00:19:11,140
+Então, a gente colocou essa entrave.
+
+430
+00:19:11,140 --> 00:19:16,480
+Então, poderia colocar público-alvo, doador, receptor e o leigo, né?
+
+431
+00:19:16,500 --> 00:19:17,240
+Seria um tripé.
+
+432
+00:19:18,260 --> 00:19:19,040
+Tá, tá ok.
+
+433
+00:19:20,500 --> 00:19:22,220
+Tá fazendo sentido para vocês?
+
+434
+00:19:22,420 --> 00:19:22,820
+Boa noite.
+
+435
+00:19:23,220 --> 00:19:23,960
+Eita, ele caiu.
+
+436
+00:19:24,240 --> 00:19:24,720
+Caiu?
+
+437
+00:19:25,020 --> 00:19:25,600
+Não, voltou.
+
+438
+00:19:25,960 --> 00:19:26,360
+Caiu.
+
+439
+00:19:27,760 --> 00:19:28,740
+Falou boa noite.
+
+440
+00:19:29,060 --> 00:19:29,740
+Foi, deu boa noite.
+
+441
+00:19:29,820 --> 00:19:30,020
+Tchau.
+
+442
+00:19:30,560 --> 00:19:31,480
+Mas tá fazendo...
+
+443
+00:19:31,480 --> 00:19:32,080
+Tá fazendo...
+
+444
+00:19:32,080 --> 00:19:33,520
+Não, eu sei, eu sei.
+
+445
+00:19:33,680 --> 00:19:34,220
+Tá tudo bem.
+
+446
+00:19:34,400 --> 00:19:35,260
+Tá brincando só.
+
+447
+00:19:36,420 --> 00:19:37,020
+Boa noite.
+
+448
+00:19:37,420 --> 00:19:38,440
+Boa noite, boa noite, Daniel.
+
+449
+00:19:38,600 --> 00:19:38,960
+Tudo bom?
+
+450
+00:19:39,640 --> 00:19:40,000
+Prazer.
+
+451
+00:19:40,000 --> 00:19:40,460
+E aí, Pedro?
+
+452
+00:19:40,680 --> 00:19:41,040
+Beleza?
+
+453
+00:19:41,140 --> 00:19:41,800
+Boa noite, Pedro.
+
+454
+00:19:43,080 --> 00:19:44,040
+Desculpa o atraso.
+
+455
+00:19:45,040 --> 00:19:45,380
+Tranquilo.
+
+456
+00:19:45,440 --> 00:19:47,520
+Eu estava só explicando o básico, assim.
+
+457
+00:19:47,640 --> 00:19:49,000
+Eu vou responder só duas perguntas.
+
+458
+00:19:50,880 --> 00:19:51,280
+Enfim.
+
+459
+00:19:51,880 --> 00:19:53,420
+Então, esse é o objetivo geral, né?
+
+460
+00:19:53,480 --> 00:19:58,960
+Então, é desenvolver um aplicativo que ele tenha uma tecnologia digital para a organização
+
+461
+00:19:58,960 --> 00:19:59,960
+do processo, né?
+
+462
+00:19:59,960 --> 00:20:08,000
+Do processo para estruturar conhecimento e ter um suporte para aquele que necessita, né?
+
+463
+00:20:08,000 --> 00:20:14,120
+Então, Daniel, só para não deixar você de fora, eu não sei se você leu tudo, né?
+
+464
+00:20:14,120 --> 00:20:15,120
+Da nossa máscara, né?
+
+465
+00:20:15,120 --> 00:20:16,120
+Da nossa máscara, mas...
+
+466
+00:20:16,120 --> 00:20:22,420
+É basicamente desenvolvimento desse aplicativo para a educação, facilitação e incentivo
+
+467
+00:20:22,420 --> 00:20:25,460
+à doação via SUS, né?
+
+468
+00:20:25,460 --> 00:20:26,800
+Para as células-tronco, né?
+
+469
+00:20:26,800 --> 00:20:31,900
+Então, eu vou dar uma explicada, assim, básica de como a gente utiliza a doação de
+
+470
+00:20:31,900 --> 00:20:33,740
+célula-tronco aqui no Brasil, né?
+
+471
+00:20:33,740 --> 00:20:34,580
+Especificamente.
+
+472
+00:20:35,240 --> 00:20:39,560
+É uma célula-tronco que a gente utiliza principalmente para processos, né?
+
+473
+00:20:39,560 --> 00:20:41,180
+De doenças hematológicas, né?
+
+474
+00:20:41,180 --> 00:20:43,340
+Doenças do sangue, né?
+
+475
+00:20:43,340 --> 00:20:50,760
+E acaba que, por ser um negócio muito específico aqui no Brasil, a gente não tem muito incentivo,
+
+476
+00:20:50,820 --> 00:20:53,120
+a gente não tem muita divulgação quanto a isso, né?
+
+477
+00:20:53,180 --> 00:20:59,080
+Então, acaba que a gente não tem um desenvolvimento de política pública para a célula-tronco
+
+478
+00:20:59,080 --> 00:21:04,740
+de uma maneira da devida maneira, a gente não tem o site do SUS adaptado para isso, a gente
+
+479
+00:21:04,740 --> 00:21:10,680
+não tem propaganda, a gente não tem política de educação e saúde voltada a isso, e basicamente
+
+480
+00:21:10,680 --> 00:21:15,680
+esse aplicativo tenta cumprir essas três funções, mas claro, não tentando reinventar
+
+481
+00:21:15,680 --> 00:21:20,540
+a roda, mas sim tentando dar um suporte para a plataforma, já que se a gente for tentar
+
+482
+00:21:20,540 --> 00:21:27,400
+fazer análise de toda a ocorrência de célula-tronco e ajudar a pessoa a doar uma célula-tronco
+
+483
+00:21:27,400 --> 00:21:28,900
+diretamente, a gente é preso, né?
+
+484
+00:21:29,480 --> 00:21:38,260
+Então, é só explicando que é basicamente um aplicativo de suporte para o site do SUS,
+
+485
+00:21:38,540 --> 00:21:38,720
+tá?
+
+486
+00:21:39,180 --> 00:21:40,540
+Para o site do Ministério da Saúde.
+
+487
+00:21:41,280 --> 00:21:41,580
+Beleza?
+
+488
+00:21:42,620 --> 00:21:42,820
+Enfim.
+
+489
+00:21:42,940 --> 00:21:43,380
+Beleza.
+
+490
+00:21:44,000 --> 00:21:44,660
+Adiantando aqui.
+
+491
+00:21:45,460 --> 00:21:51,140
+A metodologia, a gente já, basicamente, acho que nem precisa falar tanto, mas a metodologia,
+
+492
+00:21:51,340 --> 00:21:56,980
+basicamente, ter esse desenvolvimento caso o projeto seja aprovado, e por favor, com a
+
+493
+00:21:56,980 --> 00:21:59,200
+bolsa aí do CNPQ, pelo amor de Deus.
+
+494
+00:21:59,200 --> 00:22:07,500
+caso seja aprovado, a gente vai estar tendo desenvolvimento do Centro Universitário Sesmac,
+
+495
+00:22:07,860 --> 00:22:08,040
+tá?
+
+496
+00:22:08,040 --> 00:22:17,380
+E por se tratar, assim, acho que a Alessandra vai aceitar de boa, por se tratar de um projeto
+
+497
+00:22:17,380 --> 00:22:25,380
+que é meu e de mais duas pessoas que estão na minha liga acadêmica de medicina e a professora
+
+498
+00:22:25,380 --> 00:22:30,720
+Alessandra, a tutora, eu acredito que a gente consiga utilizar algumas estruturas que o Sesmac
+
+499
+00:22:30,720 --> 00:22:32,340
+fornece para a gente na liga também.
+
+500
+00:22:32,340 --> 00:22:38,360
+Então, eu não posso falar muito, mas eu creio que a gente possa, sim, fazer essa
+
+501
+00:22:38,360 --> 00:22:40,180
+ponte e acho que fica algo legal.
+
+502
+00:22:40,940 --> 00:22:41,180
+Enfim.
+
+503
+00:22:41,440 --> 00:22:43,740
+Então, a gente vai, primeiramente, né?
+
+504
+00:22:43,740 --> 00:22:51,120
+Esse aí é o trabalho mais para a gente, que é uma busca na base de dados para saber,
+
+505
+00:22:51,180 --> 00:22:57,380
+né, quais são as maiores necessidades aqui na cidade, voltado para a cela tronco, onde
+
+506
+00:22:57,380 --> 00:22:59,760
+que a gente pode realizar os procedimentos, né?
+
+507
+00:23:00,540 --> 00:23:03,300
+Então, seria dessa maneira.
+
+508
+00:23:04,040 --> 00:23:10,080
+E, se eu não me engano, assim, a central de transplante que a gente tem, tipo, a principal,
+
+509
+00:23:10,080 --> 00:23:15,980
+assim, que o transplante vai acontecer aqui, é em Recife, tá?
+
+510
+00:23:16,080 --> 00:23:22,380
+Se eu não me engano, aqui em Maceió, geralmente, manda para Recife, mas o banco de dados a gente
+
+511
+00:23:22,380 --> 00:23:25,060
+tem aqui em Maceió, então, acho que não seria um problema tão grande.
+
+512
+00:23:25,820 --> 00:23:26,100
+Enfim.
+
+513
+00:23:26,680 --> 00:23:31,920
+E aí, seria procurar e a gente saber se tem, se o serviço realmente é viável.
+
+514
+00:23:32,480 --> 00:23:35,900
+Tudo que eu estou falando aqui faz sentido, eu não sei até agora para vocês.
+
+515
+00:23:36,220 --> 00:23:38,860
+Posso ser que eu só estava falando aqui loucura da minha cabeça.
+
+516
+00:23:40,080 --> 00:23:40,520
+tudo tudo.
+
+517
+00:23:41,280 --> 00:23:41,640
+Beleza.
+
+518
+00:23:42,240 --> 00:23:48,640
+Mas, enfim, saber se ele é um estudo, ele é um projeto potencializado, né, ele faz sentido,
+
+519
+00:23:48,800 --> 00:23:55,820
+ele pode ser escalado, ele tem um potencial de se tornar uma ferramenta útil para a saúde
+
+520
+00:23:55,820 --> 00:23:56,800
+pública do Brasil.
+
+521
+00:23:57,420 --> 00:24:01,520
+Então, é isso também, a gente vai analisar, meio que a gente está fazendo aqui agora,
+
+522
+00:24:01,620 --> 00:24:03,140
+antes do negócio começar, mas, enfim.
+
+523
+00:24:03,140 --> 00:24:09,320
+A gente colocou aqui a plataforma do Unity, mas a gente só colocou aqui para o professor
+
+524
+00:24:09,320 --> 00:24:13,880
+para cumprir tabela, não necessariamente vocês vão utilizar o Unity.
+
+525
+00:24:14,340 --> 00:24:18,020
+Aqui tem o nosso amigo aqui que a gente colocou no slide, ignore ele.
+
+526
+00:24:18,020 --> 00:24:24,940
+Basicamente, a gente vai ter o Unity para definição da arquitetura, criação, a parte gráfica, né,
+
+527
+00:24:24,940 --> 00:24:31,620
+a gente tem que tornar um aplicativo agradável, né, claro, tornar informações que elas são complexas, né,
+
+528
+00:24:31,620 --> 00:24:36,300
+porque, vamos lá, a gente está explicando o ciclo celular, a gente está explicando o transplante,
+
+529
+00:24:36,380 --> 00:24:41,920
+está explicando um monte de conceito, assim, que para uma pessoa leiga é algo que não é muito atrativo,
+
+530
+00:24:41,920 --> 00:24:46,920
+então, a pessoa, sei lá, ela vai ver o infográfico, ela vai ler uma linha e vai falar que eu não entendi nada,
+
+531
+00:24:47,160 --> 00:24:47,780
+fechei e tal.
+
+532
+00:24:48,240 --> 00:24:53,980
+Então, tem que ser algo educativo, tem que ser algo, tem que ser algo fluido, tem que ser algo simples, né,
+
+533
+00:24:54,120 --> 00:24:56,840
+então, sintetizar a informação da melhor maneira possível.
+
+534
+00:24:58,040 --> 00:25:03,620
+E, nesse caso aqui também, né, deixar bem claro que a gente não vai estar trabalhando com o humano diretamente, né,
+
+535
+00:25:03,740 --> 00:25:09,780
+claro, a gente vai ter somente o desenvolvimento, então, eu não sei se o terceiro de vocês seria a parte metodológica
+
+536
+00:25:09,780 --> 00:25:15,620
+de desenvolvimento mesmo, né, tipo, eu vou desenvolver aquilo ali, não necessariamente você vai precisar testar
+
+537
+00:25:15,620 --> 00:25:16,740
+o grande público, né.
+
+538
+00:25:19,760 --> 00:25:26,860
+Beleza, então, isso aí também não é um problema nem para mim, nem para vocês, a gente só precisa de modelo, tá,
+
+539
+00:25:26,980 --> 00:25:34,680
+é uma coisa também, é, o Ministério da Saúde está pedindo bastante, tá, é, o Ministério da Saúde está lançando aí,
+
+540
+00:25:34,680 --> 00:25:43,180
+vamos lançar alguns fomentos aí, e a ideia é só você mandar um modelo, não é tu mandar e botar na prática, não, não,
+
+541
+00:25:43,640 --> 00:25:49,700
+é, você só mandar a ideia, que eles, se eles comprarem a ideia, eles dão um aval para bastante coisa, então,
+
+542
+00:25:50,320 --> 00:25:52,340
+acho que é até interessante para nós, enfim.
+
+543
+00:25:52,340 --> 00:25:59,440
+Em relação ao risco-benefício, eu acho que, eu acho que dessa parte eu posso pular, sendo bem honesto,
+
+544
+00:25:59,500 --> 00:26:00,920
+a gente não vai precisar.
+
+545
+00:26:01,420 --> 00:26:03,180
+Então, aqui a gente tem o nosso cronograma,
+
+546
+00:26:03,840 --> 00:26:08,640
+a gente já, já, a gente já submeteu no comitê de ética, mas já que a gente não trabalha com pessoas,
+
+547
+00:26:09,080 --> 00:26:11,460
+isso também não é um problema, então, eu meio que vocês estão livres nisso,
+
+548
+00:26:11,920 --> 00:26:16,800
+a única coisa que a gente vai trabalhar no final seria a anonimização de dados, né,
+
+549
+00:26:16,800 --> 00:26:21,540
+mas, já que está no SUS, muito provavelmente já está anônimo, né,
+
+550
+00:26:21,540 --> 00:26:23,180
+então, isso aí também não tem muito problema.
+
+551
+00:26:24,180 --> 00:26:25,460
+A gente colocou,
+
+552
+00:26:25,840 --> 00:26:31,820
+para testes do aplicativo e desenvolvimento, a gente colocou,
+
+553
+00:26:31,900 --> 00:26:33,380
+aqui era para estar em 2027, tá?
+
+554
+00:26:34,840 --> 00:26:41,040
+Então, 2027, a gente já planeja colocar isso aí mão na massa, entendeu?
+
+555
+00:26:41,040 --> 00:26:46,740
+Então, em um ano, a gente já, vamos lá, a gente está aqui em julho,
+
+556
+00:26:47,420 --> 00:26:50,140
+a gente já está, já fez a elaboração do projeto, já entregou,
+
+557
+00:26:50,220 --> 00:26:52,340
+a gente faria mais a parte do estudo epidemiológico,
+
+558
+00:26:52,460 --> 00:26:55,900
+passava informações voltadas para a educação,
+
+559
+00:26:56,400 --> 00:26:58,880
+os dados do DataSuis, vocês também podem pegar,
+
+560
+00:26:59,020 --> 00:27:02,660
+porque não é um negócio que exige tanto conhecimento médico, tá?
+
+561
+00:27:02,740 --> 00:27:05,480
+Então, isso aí é, qualquer um pode acessar o DataSuis,
+
+562
+00:27:05,580 --> 00:27:07,340
+qualquer um pode interpretar os dados,
+
+563
+00:27:07,340 --> 00:27:12,560
+vocês jogarem aí num call work aí do Cláudio,
+
+564
+00:27:12,620 --> 00:27:14,080
+ele tabula tudo para vocês,
+
+565
+00:27:14,220 --> 00:27:16,880
+ele faz toda uma tabela de Excel aí para vocês,
+
+566
+00:27:17,000 --> 00:27:18,320
+então, isso aí também não é um problema.
+
+567
+00:27:19,960 --> 00:27:22,300
+E a parte mais do desenvolvimento, que é aí que está.
+
+568
+00:27:23,020 --> 00:27:26,220
+Vamos lá, eu não sei se eu coloquei aqui,
+
+569
+00:27:26,760 --> 00:27:29,840
+orçamento, esse é orçamento totalmente imaginário, tá?
+
+570
+00:27:30,000 --> 00:27:34,960
+Isso aí, aqui, pronto, ó, se liga.
+
+571
+00:27:34,960 --> 00:27:38,960
+Esse aqui foi, a gente colocou numa IA estranhinha,
+
+572
+00:27:39,860 --> 00:27:42,240
+só para colocar no projeto,
+
+573
+00:27:42,380 --> 00:27:44,960
+porque geralmente o pessoal do PC,
+
+574
+00:27:45,820 --> 00:27:47,960
+que gosta bastante de colocar essas artezinhas,
+
+575
+00:27:49,460 --> 00:27:55,020
+a arte dele, muito provavelmente a gente usaria a mesma arte
+
+576
+00:27:55,020 --> 00:27:57,020
+que a gente fez na Liga,
+
+577
+00:27:58,020 --> 00:28:00,020
+na Liga, a logo da Liga, não sei se vocês sabem,
+
+578
+00:28:00,100 --> 00:28:02,960
+toda a arte da Liga é tudo feito por um ilustrador,
+
+579
+00:28:02,960 --> 00:28:06,200
+então, não usa IA na Liga de IA,
+
+580
+00:28:06,900 --> 00:28:08,180
+a gente usa artista mesmo.
+
+581
+00:28:08,920 --> 00:28:10,760
+E aí a gente podia usar alguma parte,
+
+582
+00:28:10,840 --> 00:28:13,400
+inclusive a logo, essa logo aí de IA a gente tiraria,
+
+583
+00:28:13,620 --> 00:28:15,580
+é claro, colocaria de um artista mesmo,
+
+584
+00:28:15,700 --> 00:28:17,100
+para deixar algo bem genuíno, assim,
+
+585
+00:28:17,240 --> 00:28:20,480
+porque eu acho que essas artes já são bem pessoais, né,
+
+586
+00:28:20,520 --> 00:28:22,000
+são meio estranhinhas e tal,
+
+587
+00:28:22,080 --> 00:28:23,420
+e não são muito convidativas,
+
+588
+00:28:23,580 --> 00:28:25,260
+colocando um artista normal, fica legal.
+
+589
+00:28:25,820 --> 00:28:28,000
+Mas vamos lá, a ideia é,
+
+590
+00:28:28,760 --> 00:28:30,080
+vamos lá, é o que eu tinha falado,
+
+591
+00:28:30,080 --> 00:28:32,300
+na elaboração do projeto,
+
+592
+00:28:32,420 --> 00:28:34,820
+a gente levaria algumas coisas em consideração,
+
+593
+00:28:34,940 --> 00:28:36,560
+como, por exemplo, como vocês conseguem ver aqui,
+
+594
+00:28:36,940 --> 00:28:37,680
+geolocalização.
+
+595
+00:28:38,740 --> 00:28:40,120
+Então, geolocalização da pessoa,
+
+596
+00:28:40,260 --> 00:28:42,500
+a gente conseguiria colocar as unidades próximas
+
+597
+00:28:42,500 --> 00:28:44,620
+que podem fazer o primeiro atendimento para a pessoa,
+
+598
+00:28:45,200 --> 00:28:46,260
+né, então, por exemplo,
+
+599
+00:28:46,400 --> 00:28:48,100
+ah, eu tenho doença,
+
+600
+00:28:48,320 --> 00:28:49,440
+eu tenho uma leucemia.
+
+601
+00:28:50,580 --> 00:28:52,860
+Você consegue tratar aqui em Maceió uma leucemia?
+
+602
+00:28:53,860 --> 00:28:55,740
+Cara, vou falar que sim,
+
+603
+00:28:56,280 --> 00:28:58,440
+mas é o melhor tratamento estar aqui em Maceió?
+
+604
+00:28:58,440 --> 00:29:01,180
+Ó, não, está em Recife,
+
+605
+00:29:01,480 --> 00:29:03,860
+porque em Recife é muito mais desenvolvido que aqui.
+
+606
+00:29:04,780 --> 00:29:06,000
+Mas vamos lá, você consegue,
+
+607
+00:29:06,040 --> 00:29:06,820
+uma pessoa com leucemia,
+
+608
+00:29:06,900 --> 00:29:08,120
+ela consegue pegar medicamento?
+
+609
+00:29:08,260 --> 00:29:10,800
+Ela consegue ter parte clínica?
+
+610
+00:29:11,540 --> 00:29:11,980
+Acompanhamento?
+
+611
+00:29:13,020 --> 00:29:13,920
+A gente coloca aqui também.
+
+612
+00:29:14,840 --> 00:29:16,280
+Então, faz um acompanhamento
+
+613
+00:29:16,280 --> 00:29:18,780
+com o pessoal que tem leucemia,
+
+614
+00:29:18,880 --> 00:29:20,220
+então você teria um questionário,
+
+615
+00:29:20,300 --> 00:29:22,440
+você conectaria o teu SUS,
+
+616
+00:29:22,440 --> 00:29:25,500
+e a gente tem agora o meu SUS, né,
+
+617
+00:29:25,580 --> 00:29:27,100
+então é tudo no celular,
+
+618
+00:29:27,960 --> 00:29:30,020
+meio que a gente usaria no protótipo,
+
+619
+00:29:30,080 --> 00:29:31,920
+a gente colocaria uma conexão com o SUS,
+
+620
+00:29:33,060 --> 00:29:37,020
+e aí a gente puxaria toda a triagem que ela tem no SUS,
+
+621
+00:29:37,380 --> 00:29:38,360
+todos os acompanhamentos,
+
+622
+00:29:38,460 --> 00:29:40,380
+porque está tudo lá no meu SUS, vacina,
+
+623
+00:29:41,660 --> 00:29:43,060
+e as pessoas merecem mais cuidado,
+
+624
+00:29:43,180 --> 00:29:46,040
+porque elas são imunocomprometidas,
+
+625
+00:29:46,660 --> 00:29:48,260
+tem mais sensibilidade, né,
+
+626
+00:29:48,260 --> 00:29:51,360
+Então, a gente colocaria geolocalização aqui,
+
+627
+00:29:51,680 --> 00:29:53,900
+então na geolocalização ele já conecta
+
+628
+00:29:53,900 --> 00:29:55,880
+unidades de saúde próxima,
+
+629
+00:29:56,840 --> 00:29:58,260
+o contato com o médico,
+
+630
+00:29:58,640 --> 00:30:00,200
+e inclusive, por exemplo,
+
+631
+00:30:00,240 --> 00:30:02,760
+uma pessoa que deseja fazer um transplante, né,
+
+632
+00:30:02,820 --> 00:30:03,660
+tendo leucemia,
+
+633
+00:30:04,440 --> 00:30:06,940
+a gente teria a geolocalização
+
+634
+00:30:06,940 --> 00:30:09,780
+e a unidade que ela podia fazer
+
+635
+00:30:09,780 --> 00:30:11,160
+esse atendimento mais próximo.
+
+636
+00:30:12,380 --> 00:30:14,060
+Então, aqui ele coloca em São Paulo, né,
+
+637
+00:30:14,120 --> 00:30:15,480
+mais óbvio que seria Maceió,
+
+638
+00:30:15,480 --> 00:30:18,800
+mas você teria aqui, ó, a data, né,
+
+639
+00:30:18,940 --> 00:30:22,420
+do último consulta que tu fez,
+
+640
+00:30:23,640 --> 00:30:26,080
+basicamente a anamnese, né,
+
+641
+00:30:26,140 --> 00:30:28,480
+então aqui a idade, né, o sexo,
+
+642
+00:30:29,480 --> 00:30:30,380
+e a sua localização,
+
+643
+00:30:30,520 --> 00:30:32,200
+e a unidade de saúde mais próxima,
+
+644
+00:30:32,640 --> 00:30:33,920
+e aí que está quando eu falei
+
+645
+00:30:33,920 --> 00:30:37,060
+que o STEM Project seria uma espécie de educador,
+
+646
+00:30:37,140 --> 00:30:39,480
+mais um Tinder de celular tronco,
+
+647
+00:30:40,060 --> 00:30:42,740
+porque a gente também conectaria todo mundo que está.
+
+648
+00:30:42,740 --> 00:30:46,000
+E aí, assim, o SUS,
+
+649
+00:30:46,080 --> 00:30:48,580
+obviamente que ele faz toda essa parte de,
+
+650
+00:30:48,720 --> 00:30:49,780
+isso aqui é compatível, isso aqui não,
+
+651
+00:30:49,860 --> 00:30:51,120
+porque, por exemplo, uma criança,
+
+652
+00:30:52,260 --> 00:30:53,800
+muito provavelmente não pode doar uma medula
+
+653
+00:30:53,800 --> 00:30:58,620
+para um homem de 1,90m de 120kg, né,
+
+654
+00:30:58,720 --> 00:31:01,080
+então, obviamente, toda essa parte, né,
+
+655
+00:31:01,140 --> 00:31:03,020
+a gente não tomaria controle,
+
+656
+00:31:03,180 --> 00:31:04,180
+porque, querendo ou não,
+
+657
+00:31:04,220 --> 00:31:05,880
+é feito por estudantes de medicina,
+
+658
+00:31:05,960 --> 00:31:06,780
+tem médico envolvido,
+
+659
+00:31:06,900 --> 00:31:08,940
+mas a gente tem que resolver com os médicos do SUS.
+
+660
+00:31:08,940 --> 00:31:13,160
+mas a gente teria todas as informações
+
+661
+00:31:13,160 --> 00:31:14,340
+que a gente tem da unidade,
+
+662
+00:31:14,480 --> 00:31:15,880
+então a gente pediria essas informações
+
+663
+00:31:15,880 --> 00:31:17,500
+voltarem para a sala do tronco das unidades,
+
+664
+00:31:18,900 --> 00:31:19,820
+que é pelo SUS também,
+
+665
+00:31:20,720 --> 00:31:21,540
+e a gente colocaria,
+
+666
+00:31:21,660 --> 00:31:25,100
+olha, você não tem doador ainda,
+
+667
+00:31:26,400 --> 00:31:28,020
+ou no momento que passar, assim,
+
+668
+00:31:28,100 --> 00:31:28,800
+passou um ano,
+
+669
+00:31:29,320 --> 00:31:30,700
+ou receber uma notificação,
+
+670
+00:31:31,140 --> 00:31:33,040
+você tem um doador.
+
+671
+00:31:33,660 --> 00:31:35,000
+Tipo, lá no site do SUS,
+
+672
+00:31:35,060 --> 00:31:35,500
+ele ia receber,
+
+673
+00:31:35,640 --> 00:31:37,060
+lá no SMS do SUS,
+
+674
+00:31:37,140 --> 00:31:37,680
+ele ia receber.
+
+675
+00:31:37,680 --> 00:31:40,160
+Só que o site é muito ruim.
+
+676
+00:31:41,880 --> 00:31:43,040
+O site é lento,
+
+677
+00:31:43,320 --> 00:31:44,460
+o site precisa de senha,
+
+678
+00:31:44,640 --> 00:31:45,540
+o site é burocrático,
+
+679
+00:31:46,320 --> 00:31:47,180
+e esse site aqui,
+
+680
+00:31:47,360 --> 00:31:48,140
+pela via do SUS,
+
+681
+00:31:49,000 --> 00:31:51,140
+ele conseguia receber pelo próprio aplicativo,
+
+682
+00:31:51,240 --> 00:31:51,700
+no celular,
+
+683
+00:31:51,860 --> 00:31:53,480
+ele nem precisava do computador para acessar.
+
+684
+00:31:54,620 --> 00:31:55,460
+E assim, vamos combinar,
+
+685
+00:31:56,160 --> 00:31:58,860
+uma pessoa tem mais um celular em casa
+
+686
+00:31:58,860 --> 00:31:59,780
+do que um computador,
+
+687
+00:32:00,740 --> 00:32:01,320
+hoje em dia.
+
+688
+00:32:01,320 --> 00:32:03,200
+No caso de essa informação,
+
+689
+00:32:03,560 --> 00:32:04,520
+o SUS, ele traz.
+
+690
+00:32:04,520 --> 00:32:05,740
+Sim.
+
+691
+00:32:05,740 --> 00:32:06,180
+Basicamente,
+
+692
+00:32:06,560 --> 00:32:08,200
+a unidade de saúde traz.
+
+693
+00:32:09,000 --> 00:32:11,760
+Então, ele traz quando um doador,
+
+694
+00:32:11,980 --> 00:32:13,740
+existe um doador para a pessoa que...
+
+695
+00:32:14,480 --> 00:32:14,780
+Exato.
+
+696
+00:32:14,780 --> 00:32:15,520
+...que tem a necessidade.
+
+697
+00:32:15,840 --> 00:32:16,680
+Ele tem essa informação.
+
+698
+00:32:17,280 --> 00:32:17,520
+Sim.
+
+699
+00:32:17,940 --> 00:32:20,920
+Só que aí tu pega essa informação lá no computador, né?
+
+700
+00:32:21,600 --> 00:32:22,020
+Perfeito.
+
+701
+00:32:22,160 --> 00:32:23,200
+Mas essa informação,
+
+702
+00:32:23,840 --> 00:32:24,960
+você sabe dizer,
+
+703
+00:32:25,480 --> 00:32:27,720
+que existe um API do SUS
+
+704
+00:32:27,720 --> 00:32:29,960
+que a gente consiga buscar essa informação?
+
+705
+00:32:29,960 --> 00:32:33,120
+Cara, eu tenho quase que certeza que sim,
+
+706
+00:32:33,220 --> 00:32:34,300
+porque o meu SUS digital,
+
+707
+00:32:34,440 --> 00:32:35,720
+acho que ele permite uma API.
+
+708
+00:32:36,620 --> 00:32:37,840
+Deixa eu só dar uma olhada
+
+709
+00:32:37,840 --> 00:32:39,920
+do SUS digital.
+
+710
+00:32:45,920 --> 00:32:46,360
+Sim.
+
+711
+00:32:46,960 --> 00:32:48,220
+Pode ser acessado, tá?
+
+712
+00:32:49,220 --> 00:32:50,640
+Então, a gente tendo...
+
+713
+00:32:51,860 --> 00:32:52,860
+Aqui, inclusive,
+
+714
+00:32:52,860 --> 00:32:55,360
+eu vou até mandar um link.
+
+715
+00:32:56,320 --> 00:32:57,800
+Tem até pelo Ministério da Saúde.
+
+716
+00:32:57,900 --> 00:32:59,420
+Isso aqui foi muito bom do SUS, tá?
+
+717
+00:32:59,960 --> 00:33:03,660
+O DataSuis, agora,
+
+718
+00:33:03,780 --> 00:33:04,600
+com o meu SUS digital,
+
+719
+00:33:04,760 --> 00:33:06,000
+ficou bem acessível.
+
+720
+00:33:06,240 --> 00:33:07,320
+E a gente, claro,
+
+721
+00:33:07,840 --> 00:33:09,520
+a gente tendo contato com
+
+722
+00:33:09,520 --> 00:33:13,520
+as próprias unidades,
+
+723
+00:33:14,660 --> 00:33:15,920
+os próprios centros,
+
+724
+00:33:16,220 --> 00:33:17,660
+isso fica tudo mais fácil.
+
+725
+00:33:18,680 --> 00:33:19,780
+E, assim, vamos lá,
+
+726
+00:33:19,940 --> 00:33:22,500
+a gente apresentando essa ideia
+
+727
+00:33:22,500 --> 00:33:24,060
+para os centros,
+
+728
+00:33:24,660 --> 00:33:26,520
+seria um atrativo, né?
+
+729
+00:33:27,400 --> 00:33:28,200
+Então, assim,
+
+730
+00:33:28,200 --> 00:33:29,940
+a gente não está ganhando nada com isso,
+
+731
+00:33:30,020 --> 00:33:31,800
+a gente não quer lucro com isso,
+
+732
+00:33:31,860 --> 00:33:32,380
+a gente só,
+
+733
+00:33:32,860 --> 00:33:33,480
+mostrando isso,
+
+734
+00:33:33,520 --> 00:33:35,200
+eles vão topar de alguma forma, né?
+
+735
+00:33:35,620 --> 00:33:36,140
+Eu acho.
+
+736
+00:33:36,760 --> 00:33:37,020
+Enfim.
+
+737
+00:33:38,400 --> 00:33:39,680
+Essa é a primeira ideia, tá?
+
+738
+00:33:40,160 --> 00:33:41,340
+Quer dizer, segunda ideia, né?
+
+739
+00:33:41,340 --> 00:33:42,240
+A gente falou da educação,
+
+740
+00:33:42,400 --> 00:33:44,600
+essa aqui é a segunda coisa
+
+741
+00:33:44,600 --> 00:33:45,640
+que a gente pode aplicar.
+
+742
+00:33:45,780 --> 00:33:47,020
+Claro que ela é muito mais difícil,
+
+743
+00:33:47,020 --> 00:33:49,000
+mas, como ideia,
+
+744
+00:33:49,400 --> 00:33:51,420
+eu achei muito boa, assim,
+
+745
+00:33:52,180 --> 00:33:53,460
+não sei se vocês, assim,
+
+746
+00:33:54,080 --> 00:33:54,560
+acharam,
+
+747
+00:33:55,780 --> 00:33:56,540
+mas seria mais ou menos
+
+748
+00:33:56,540 --> 00:33:57,180
+dessa maneira.
+
+749
+00:33:57,900 --> 00:33:58,820
+Assim, claro,
+
+750
+00:33:58,880 --> 00:33:59,740
+se fosse um país de fora,
+
+751
+00:33:59,840 --> 00:34:00,700
+seria bem mais fácil,
+
+752
+00:34:00,940 --> 00:34:02,200
+porque é bem mais variado
+
+753
+00:34:02,200 --> 00:34:03,060
+o uso de cela-tronco,
+
+754
+00:34:03,760 --> 00:34:05,940
+mas seria dessa forma.
+
+755
+00:34:06,120 --> 00:34:07,520
+Então, você teria um cadastro,
+
+756
+00:34:08,040 --> 00:34:09,780
+tanto para quem é doador,
+
+757
+00:34:10,460 --> 00:34:10,600
+né?
+
+758
+00:34:10,600 --> 00:34:11,660
+Então, eu sou doador tal,
+
+759
+00:34:12,080 --> 00:34:13,240
+eu tenho sangue tipo
+
+760
+00:34:13,240 --> 00:34:15,340
+O negativo,
+
+761
+00:34:16,080 --> 00:34:19,480
+tenho 77 quilos,
+
+762
+00:34:20,400 --> 00:34:23,480
+tenho 20 anos
+
+763
+00:34:23,480 --> 00:34:25,600
+e moro em Maceió,
+
+764
+00:34:26,240 --> 00:34:27,180
+e eu quero ser doador.
+
+765
+00:34:27,640 --> 00:34:27,920
+Pronto.
+
+766
+00:34:28,140 --> 00:34:29,780
+Enviei, né?
+
+767
+00:34:30,720 --> 00:34:32,240
+Eu coloco isso no meu
+
+768
+00:34:32,240 --> 00:34:32,840
+Stain Project,
+
+769
+00:34:32,840 --> 00:34:35,280
+mas no momento também, né?
+
+770
+00:34:35,300 --> 00:34:35,960
+A gente, obviamente,
+
+771
+00:34:36,160 --> 00:34:37,180
+tem uma carta
+
+772
+00:34:37,180 --> 00:34:39,040
+que declara que você quer ser doador,
+
+773
+00:34:39,140 --> 00:34:40,140
+então você tem todo um trâmite
+
+774
+00:34:40,140 --> 00:34:41,800
+para mostrar que você vai ser doador,
+
+775
+00:34:42,280 --> 00:34:43,800
+então isso também é via SUS, né?
+
+776
+00:34:43,820 --> 00:34:44,860
+Então, você faria via SUS,
+
+777
+00:34:44,960 --> 00:34:46,320
+isso aí podia estar linkado já
+
+778
+00:34:46,320 --> 00:34:48,260
+com o teu aplicativo, né?
+
+779
+00:34:49,360 --> 00:34:49,740
+E aí,
+
+780
+00:34:49,920 --> 00:34:51,840
+já a localização mostraria, né?
+
+781
+00:34:51,840 --> 00:34:52,980
+Unidades próximas, né?
+
+782
+00:34:52,980 --> 00:34:53,940
+Que você pode fazer isso,
+
+783
+00:34:54,080 --> 00:34:54,700
+podia, tipo,
+
+784
+00:34:54,740 --> 00:34:55,660
+mostrar todas as etapas.
+
+785
+00:34:55,700 --> 00:34:57,220
+Ó, você que quer ser doador,
+
+786
+00:34:57,680 --> 00:34:59,520
+faça isso, isso, isso, isso,
+
+787
+00:34:59,580 --> 00:35:00,360
+isso, isso, isso,
+
+788
+00:35:00,360 --> 00:35:01,320
+acesse o link tal
+
+789
+00:35:01,320 --> 00:35:03,100
+no Ministério da Saúde
+
+790
+00:35:03,100 --> 00:35:04,200
+para você ver
+
+791
+00:35:04,200 --> 00:35:06,560
+o cadastro, tal.
+
+792
+00:35:07,140 --> 00:35:08,280
+Ele iria auxiliar
+
+793
+00:35:08,280 --> 00:35:09,400
+nesse quesito, entende?
+
+794
+00:35:10,140 --> 00:35:12,360
+Ele iria instruir o doador.
+
+795
+00:35:12,900 --> 00:35:13,420
+E o receptor?
+
+796
+00:35:14,480 --> 00:35:15,840
+Então, o receptor vai lá,
+
+797
+00:35:16,900 --> 00:35:17,620
+cadastrou no SUS,
+
+798
+00:35:17,720 --> 00:35:18,700
+beleza, tudo certo.
+
+799
+00:35:20,220 --> 00:35:21,500
+Fez o cadastro.
+
+800
+00:35:23,420 --> 00:35:24,860
+E após isso,
+
+801
+00:35:25,280 --> 00:35:27,460
+depois de realizar o cadastro,
+
+802
+00:35:28,020 --> 00:35:29,540
+lá no SUS,
+
+803
+00:35:29,740 --> 00:35:31,360
+ele pode conectar no Stain Project,
+
+804
+00:35:31,520 --> 00:35:32,640
+falou, você é o quem?
+
+805
+00:35:32,740 --> 00:35:33,700
+Aí você podia até colocar,
+
+806
+00:35:33,860 --> 00:35:34,480
+tipo, ó,
+
+807
+00:35:34,980 --> 00:35:36,140
+antes no menu do aplicativo,
+
+808
+00:35:36,140 --> 00:35:36,720
+do aplicativo,
+
+809
+00:35:37,400 --> 00:35:38,560
+sou doador,
+
+810
+00:35:38,960 --> 00:35:39,760
+sou receptor,
+
+811
+00:35:40,520 --> 00:35:41,160
+sou leigo,
+
+812
+00:35:41,360 --> 00:35:42,360
+não tenho nenhum envolvimento
+
+813
+00:35:42,360 --> 00:35:42,780
+nos dois,
+
+814
+00:35:42,840 --> 00:35:43,320
+mas quero aprender.
+
+815
+00:35:43,480 --> 00:35:44,420
+Então, a gente podia até fazer
+
+816
+00:35:44,420 --> 00:35:45,180
+um menu personalizado
+
+817
+00:35:45,180 --> 00:35:46,040
+para cada um deles, né?
+
+818
+00:35:47,620 --> 00:35:48,340
+E aí, assim,
+
+819
+00:35:48,420 --> 00:35:49,460
+a gente pode até mudar, né?
+
+820
+00:35:50,140 --> 00:35:51,540
+Ah, eu fui só uma pessoa leiga
+
+821
+00:35:51,540 --> 00:35:52,560
+e hoje eu quero ser doador.
+
+822
+00:35:54,020 --> 00:35:54,280
+Então,
+
+823
+00:35:54,480 --> 00:35:56,100
+tem essas variáveis também, né?
+
+824
+00:35:56,100 --> 00:35:58,640
+Então, aqui a gente teria, ó,
+
+825
+00:35:59,440 --> 00:36:00,620
+uma parte de acesso
+
+826
+00:36:00,620 --> 00:36:01,660
+de conhecimento, né?
+
+827
+00:36:02,220 --> 00:36:03,060
+Então, a gente tem aqui, ó,
+
+828
+00:36:03,060 --> 00:36:03,840
+explora conhecimento,
+
+829
+00:36:03,960 --> 00:36:04,640
+a gente podia colocar
+
+830
+00:36:04,640 --> 00:36:05,240
+algumas,
+
+831
+00:36:05,480 --> 00:36:06,380
+alguns pop-ups
+
+832
+00:36:06,380 --> 00:36:08,400
+para artigos, né?
+
+833
+00:36:08,600 --> 00:36:10,240
+De forma mais simples, né?
+
+834
+00:36:11,340 --> 00:36:11,860
+Novidades,
+
+835
+00:36:12,380 --> 00:36:13,940
+ensinar quais são as,
+
+836
+00:36:14,100 --> 00:36:15,720
+quais são os tipos de terapia
+
+837
+00:36:15,720 --> 00:36:16,420
+de célula-tronco
+
+838
+00:36:16,420 --> 00:36:18,260
+que a pessoa pode fazer uso,
+
+839
+00:36:18,880 --> 00:36:19,100
+né?
+
+840
+00:36:19,820 --> 00:36:21,280
+Então, tudo isso,
+
+841
+00:36:21,380 --> 00:36:22,880
+a gente está trazendo aqui
+
+842
+00:36:22,880 --> 00:36:23,560
+como ideia.
+
+843
+00:36:24,340 --> 00:36:25,500
+Aqui, por exemplo, também,
+
+844
+00:36:25,500 --> 00:36:27,060
+ah, sou uma pessoa que
+
+845
+00:36:27,060 --> 00:36:28,900
+eu estou recebendo,
+
+846
+00:36:29,060 --> 00:36:29,760
+mas não é,
+
+847
+00:36:29,980 --> 00:36:30,940
+que eu quero doar
+
+848
+00:36:30,940 --> 00:36:32,400
+e eu não sei quais são os centros,
+
+849
+00:36:32,480 --> 00:36:33,180
+sou uma pessoa leiga.
+
+850
+00:36:33,300 --> 00:36:33,860
+Então, aqui, ó,
+
+851
+00:36:34,120 --> 00:36:35,460
+a gente também tem os centros
+
+852
+00:36:35,460 --> 00:36:37,460
+que estão voltados para...
+
+853
+00:36:38,520 --> 00:36:39,260
+Oi, professora,
+
+854
+00:36:39,440 --> 00:36:39,900
+boa noite.
+
+855
+00:36:40,780 --> 00:36:41,920
+A gente estava gravando,
+
+856
+00:36:42,020 --> 00:36:42,340
+inclusive,
+
+857
+00:36:42,720 --> 00:36:43,320
+para a senhora.
+
+858
+00:36:43,960 --> 00:36:44,600
+Ah, ótimo,
+
+859
+00:36:44,680 --> 00:36:45,400
+depois eu assisto
+
+860
+00:36:45,400 --> 00:36:46,460
+mais os detalhes.
+
+861
+00:36:46,860 --> 00:36:47,260
+Beleza.
+
+862
+00:36:48,380 --> 00:36:49,340
+Mas, enfim,
+
+863
+00:36:49,460 --> 00:36:50,620
+a gente tem aqui os centros, né?
+
+864
+00:36:50,680 --> 00:36:50,860
+Então,
+
+865
+00:36:50,860 --> 00:36:52,580
+ter conexão com os centros.
+
+866
+00:36:52,720 --> 00:36:53,200
+Se eu não me engano,
+
+867
+00:36:53,360 --> 00:36:54,860
+tem até aplicativos
+
+868
+00:36:55,500 --> 00:36:57,320
+e tem uma associação
+
+869
+00:36:57,320 --> 00:36:58,140
+lá em São Paulo
+
+870
+00:36:58,140 --> 00:37:01,000
+que ela meio que
+
+871
+00:37:01,000 --> 00:37:02,680
+conecta os centros
+
+872
+00:37:02,680 --> 00:37:04,840
+e ela lança no site,
+
+873
+00:37:04,960 --> 00:37:05,760
+ó, centro tal,
+
+874
+00:37:05,880 --> 00:37:06,700
+está disponibilizando,
+
+875
+00:37:06,820 --> 00:37:07,160
+não sei o quê,
+
+876
+00:37:07,740 --> 00:37:09,060
+mas esse aqui seria no celular,
+
+877
+00:37:09,280 --> 00:37:09,360
+né?
+
+878
+00:37:09,360 --> 00:37:11,060
+Seria algo mais prático,
+
+879
+00:37:11,840 --> 00:37:11,980
+né?
+
+880
+00:37:12,100 --> 00:37:13,700
+Tanto para a parte personalizada,
+
+881
+00:37:13,800 --> 00:37:14,220
+tem que lembrar,
+
+882
+00:37:14,560 --> 00:37:15,100
+da tríade,
+
+883
+00:37:15,740 --> 00:37:16,480
+do receptor,
+
+884
+00:37:17,040 --> 00:37:17,960
+do doador e do leigo.
+
+885
+00:37:18,680 --> 00:37:18,820
+Então,
+
+886
+00:37:18,880 --> 00:37:20,180
+seriam menus diferentes, né?
+
+887
+00:37:20,800 --> 00:37:21,200
+Então,
+
+888
+00:37:21,260 --> 00:37:22,100
+aqui a gente tem também,
+
+889
+00:37:22,160 --> 00:37:22,240
+ó,
+
+890
+00:37:22,240 --> 00:37:22,840
+o calendário.
+
+891
+00:37:22,840 --> 00:37:23,120
+Então,
+
+892
+00:37:23,280 --> 00:37:24,400
+já que você podia conectar
+
+893
+00:37:24,400 --> 00:37:25,240
+com a API do SUS,
+
+894
+00:37:26,120 --> 00:37:26,620
+podia ver,
+
+895
+00:37:26,780 --> 00:37:27,640
+conectar a API do SUS
+
+896
+00:37:27,640 --> 00:37:28,240
+com o calendário.
+
+897
+00:37:28,320 --> 00:37:28,400
+Então,
+
+898
+00:37:28,440 --> 00:37:28,700
+por exemplo,
+
+899
+00:37:28,800 --> 00:37:28,920
+ó,
+
+900
+00:37:28,960 --> 00:37:30,380
+você vai ter consulta tal
+
+901
+00:37:30,380 --> 00:37:32,640
+na semana tal,
+
+902
+00:37:32,780 --> 00:37:33,160
+ele vai,
+
+903
+00:37:33,420 --> 00:37:34,080
+com a API do SUS
+
+904
+00:37:34,080 --> 00:37:35,040
+está lá registrado,
+
+905
+00:37:35,400 --> 00:37:36,300
+você consegue também
+
+906
+00:37:36,300 --> 00:37:37,580
+colocar o registro aqui.
+
+907
+00:37:38,060 --> 00:37:39,080
+Só estou falando ideias,
+
+908
+00:37:39,140 --> 00:37:39,220
+tá?
+
+909
+00:37:40,040 --> 00:37:40,800
+E aí vocês veem
+
+910
+00:37:40,800 --> 00:37:41,460
+se você acha,
+
+911
+00:37:41,720 --> 00:37:42,980
+acha que é aplicável
+
+912
+00:37:42,980 --> 00:37:44,580
+ou não,
+
+913
+00:37:45,620 --> 00:37:45,820
+tá?
+
+914
+00:37:47,120 --> 00:37:47,780
+Acho que,
+
+915
+00:37:48,340 --> 00:37:49,540
+explicando o básico
+
+916
+00:37:49,540 --> 00:37:50,440
+do aplicativo,
+
+917
+00:37:50,660 --> 00:37:51,980
+é mais ou menos isso.
+
+918
+00:37:51,980 --> 00:37:53,640
+se vocês tiverem
+
+919
+00:37:53,640 --> 00:37:55,020
+algumas perguntas,
+
+920
+00:37:55,220 --> 00:37:56,500
+a gente pode responder também.
+
+921
+00:37:57,740 --> 00:37:58,100
+Tá, filho.
+
+922
+00:37:58,660 --> 00:38:00,600
+Foi bem explicativo até.
+
+923
+00:38:00,960 --> 00:38:01,440
+Realmente,
+
+924
+00:38:02,040 --> 00:38:03,460
+eu não tinha conhecimento
+
+925
+00:38:03,460 --> 00:38:05,740
+de nada disso.
+
+926
+00:38:06,540 --> 00:38:07,360
+Como eu falei,
+
+927
+00:38:07,660 --> 00:38:08,000
+Vinícius,
+
+928
+00:38:08,100 --> 00:38:09,320
+a gente teve alguns tópicos
+
+929
+00:38:09,320 --> 00:38:09,920
+que a gente tem base
+
+930
+00:38:09,920 --> 00:38:11,460
+no documento
+
+931
+00:38:11,460 --> 00:38:12,340
+que a professora enviou
+
+932
+00:38:12,340 --> 00:38:12,880
+lá no grupo.
+
+933
+00:38:13,880 --> 00:38:15,060
+O som está bem baixo,
+
+934
+00:38:15,200 --> 00:38:15,540
+Vitor.
+
+935
+00:38:16,700 --> 00:38:17,360
+Está baixo?
+
+936
+00:38:17,360 --> 00:38:21,200
+Falou?
+
+937
+00:38:22,000 --> 00:38:22,740
+Está um pouco baixo,
+
+938
+00:38:22,800 --> 00:38:23,440
+eu estou conseguindo
+
+939
+00:38:23,440 --> 00:38:23,940
+ouvir aqui,
+
+940
+00:38:24,020 --> 00:38:24,360
+de boa,
+
+941
+00:38:24,440 --> 00:38:25,080
+mas se quiser...
+
+942
+00:38:25,080 --> 00:38:26,040
+Então, pronto.
+
+943
+00:38:26,220 --> 00:38:26,580
+Depois,
+
+944
+00:38:26,680 --> 00:38:27,180
+qualquer coisa,
+
+945
+00:38:27,280 --> 00:38:28,240
+eu converso com o Pedro.
+
+946
+00:38:29,180 --> 00:38:29,760
+Tá, ok.
+
+947
+00:38:30,520 --> 00:38:30,740
+Tá.
+
+948
+00:38:33,580 --> 00:38:34,080
+Continuando,
+
+949
+00:38:34,440 --> 00:38:35,260
+a gente listou,
+
+950
+00:38:35,280 --> 00:38:35,420
+né,
+
+951
+00:38:35,440 --> 00:38:35,980
+alguns,
+
+952
+00:38:35,980 --> 00:38:38,520
+alguns tópicos.
+
+953
+00:38:39,140 --> 00:38:39,380
+Ah.
+
+954
+00:38:40,040 --> 00:38:41,100
+E, basicamente,
+
+955
+00:38:41,260 --> 00:38:42,380
+as duas primeiras perguntas,
+
+956
+00:38:42,480 --> 00:38:43,600
+você já respondeu
+
+957
+00:38:43,600 --> 00:38:44,040
+com base
+
+958
+00:38:44,040 --> 00:38:44,820
+na sua explicação,
+
+959
+00:38:45,360 --> 00:38:46,660
+que foi qual a necessidade
+
+960
+00:38:46,660 --> 00:38:48,600
+principal que o app vai resolver,
+
+961
+00:38:49,220 --> 00:38:49,880
+que, basicamente,
+
+962
+00:38:50,160 --> 00:38:51,560
+é facilitar
+
+963
+00:38:51,560 --> 00:38:53,720
+a consulta,
+
+964
+00:38:53,840 --> 00:38:54,520
+a realização
+
+965
+00:38:54,520 --> 00:38:56,260
+de cirurgias,
+
+966
+00:38:56,640 --> 00:38:57,980
+tanto o dono
+
+967
+00:38:57,980 --> 00:38:58,500
+do tema
+
+968
+00:38:58,500 --> 00:38:59,820
+como o necessitado,
+
+969
+00:38:59,880 --> 00:39:00,040
+né,
+
+970
+00:39:00,640 --> 00:39:01,280
+e também
+
+971
+00:39:01,280 --> 00:39:02,660
+educacional,
+
+972
+00:39:02,940 --> 00:39:03,140
+né,
+
+973
+00:39:03,140 --> 00:39:04,360
+um app também
+
+974
+00:39:04,360 --> 00:39:05,220
+explicativo,
+
+975
+00:39:05,300 --> 00:39:05,980
+ter aquele celular
+
+976
+00:39:05,980 --> 00:39:06,640
+explicativo
+
+977
+00:39:06,640 --> 00:39:07,080
+para quem
+
+978
+00:39:07,080 --> 00:39:08,120
+tem o interesse
+
+979
+00:39:08,120 --> 00:39:09,140
+de entender
+
+980
+00:39:09,140 --> 00:39:09,780
+sobre o tema,
+
+981
+00:39:10,340 --> 00:39:10,740
+não é isso?
+
+982
+00:39:11,440 --> 00:39:11,720
+Sim.
+
+983
+00:39:11,740 --> 00:39:12,020
+Também,
+
+984
+00:39:12,120 --> 00:39:12,840
+você respondeu
+
+985
+00:39:12,840 --> 00:39:13,880
+a questão dos
+
+986
+00:39:13,880 --> 00:39:15,320
+quem são os usuários
+
+987
+00:39:15,320 --> 00:39:15,800
+alvos,
+
+988
+00:39:15,900 --> 00:39:16,200
+no caso,
+
+989
+00:39:16,200 --> 00:39:17,060
+dos clientes alvos,
+
+990
+00:39:17,160 --> 00:39:17,300
+né,
+
+991
+00:39:17,400 --> 00:39:17,820
+no caso,
+
+992
+00:39:17,900 --> 00:39:19,420
+seria os pacientes
+
+993
+00:39:19,420 --> 00:39:20,200
+e os doadores
+
+994
+00:39:20,200 --> 00:39:21,160
+e também
+
+995
+00:39:21,160 --> 00:39:21,840
+o pessoal
+
+996
+00:39:21,840 --> 00:39:23,000
+que quer entender,
+
+997
+00:39:23,720 --> 00:39:23,920
+né,
+
+998
+00:39:24,960 --> 00:39:27,200
+aí vem outro tópico
+
+999
+00:39:27,200 --> 00:39:27,640
+que a gente
+
+1000
+00:39:27,640 --> 00:39:28,360
+queria entender.
+
+1001
+00:39:29,140 --> 00:39:29,920
+Em relação
+
+1002
+00:39:29,920 --> 00:39:30,520
+ao cadastro
+
+1003
+00:39:30,520 --> 00:39:31,080
+de usuários,
+
+1004
+00:39:31,760 --> 00:39:32,840
+os doadores
+
+1005
+00:39:32,840 --> 00:39:34,120
+e os receptores,
+
+1006
+00:39:34,280 --> 00:39:35,160
+eles se cadastram
+
+1007
+00:39:35,160 --> 00:39:35,600
+no app
+
+1008
+00:39:35,600 --> 00:39:37,360
+ou através
+
+1009
+00:39:37,360 --> 00:39:38,260
+do
+
+1010
+00:39:38,260 --> 00:39:39,360
+SUS
+
+1011
+00:39:39,360 --> 00:39:40,320
+e
+
+1012
+00:39:40,320 --> 00:39:41,360
+se for
+
+1013
+00:39:41,360 --> 00:39:41,860
+se cadastrar
+
+1014
+00:39:41,860 --> 00:39:42,240
+no app,
+
+1015
+00:39:42,540 --> 00:39:43,440
+quais seriam
+
+1016
+00:39:43,440 --> 00:39:43,760
+os dados
+
+1017
+00:39:43,760 --> 00:39:44,320
+coletados,
+
+1018
+00:39:44,440 --> 00:39:44,820
+no caso,
+
+1019
+00:39:44,820 --> 00:39:45,680
+a gente
+
+1020
+00:39:45,680 --> 00:39:46,320
+traz o que?
+
+1021
+00:39:46,480 --> 00:39:46,800
+Novo,
+
+1022
+00:39:46,900 --> 00:39:47,580
+o TPS,
+
+1023
+00:39:48,460 --> 00:39:50,740
+no caso,
+
+1024
+00:39:50,840 --> 00:39:51,740
+vai ter lá
+
+1025
+00:39:51,740 --> 00:39:52,760
+opção dele
+
+1026
+00:39:52,760 --> 00:39:53,380
+selecionar
+
+1027
+00:39:53,380 --> 00:39:54,080
+se ele é doador,
+
+1028
+00:39:54,220 --> 00:39:54,840
+se ele é receptor,
+
+1029
+00:39:55,100 --> 00:39:55,980
+mas, assim,
+
+1030
+00:39:56,100 --> 00:39:56,760
+quais os dados
+
+1031
+00:39:56,760 --> 00:39:57,980
+específicos
+
+1032
+00:39:57,980 --> 00:39:58,320
+que a gente
+
+1033
+00:39:58,320 --> 00:39:59,020
+precisa trazer?
+
+1034
+00:39:59,020 --> 00:40:00,200
+Tá,
+
+1035
+00:40:00,420 --> 00:40:00,700
+então,
+
+1036
+00:40:00,860 --> 00:40:01,800
+para não sobrecarregar
+
+1037
+00:40:01,800 --> 00:40:02,320
+muito
+
+1038
+00:40:02,320 --> 00:40:03,500
+a questão
+
+1039
+00:40:03,500 --> 00:40:04,020
+de dados,
+
+1040
+00:40:04,100 --> 00:40:04,500
+a gente tem,
+
+1041
+00:40:04,640 --> 00:40:04,740
+tipo,
+
+1042
+00:40:04,880 --> 00:40:05,220
+por exemplo,
+
+1043
+00:40:05,500 --> 00:40:06,520
+a parte personalizada
+
+1044
+00:40:06,520 --> 00:40:06,960
+do menu,
+
+1045
+00:40:07,180 --> 00:40:07,980
+seria importante
+
+1046
+00:40:07,980 --> 00:40:08,520
+a gente pegar
+
+1047
+00:40:08,520 --> 00:40:10,160
+no máximo,
+
+1048
+00:40:10,280 --> 00:40:10,460
+né,
+
+1049
+00:40:11,760 --> 00:40:12,180
+três,
+
+1050
+00:40:12,340 --> 00:40:13,020
+dois dados,
+
+1051
+00:40:13,320 --> 00:40:13,460
+né,
+
+1052
+00:40:13,520 --> 00:40:13,860
+por exemplo,
+
+1053
+00:40:13,920 --> 00:40:14,640
+uma pessoa leica,
+
+1054
+00:40:14,760 --> 00:40:15,480
+a gente só
+
+1055
+00:40:15,480 --> 00:40:16,440
+seria interessante,
+
+1056
+00:40:16,580 --> 00:40:17,180
+nem precisaria
+
+1057
+00:40:17,180 --> 00:40:18,460
+de fato
+
+1058
+00:40:18,460 --> 00:40:19,260
+nem a localização
+
+1059
+00:40:19,260 --> 00:40:19,640
+dela,
+
+1060
+00:40:19,760 --> 00:40:19,940
+então,
+
+1061
+00:40:20,000 --> 00:40:20,620
+acho que até
+
+1062
+00:40:20,620 --> 00:40:21,300
+a gente colocaria,
+
+1063
+00:40:21,440 --> 00:40:21,600
+tipo,
+
+1064
+00:40:21,840 --> 00:40:22,960
+uma parte personalizada
+
+1065
+00:40:22,960 --> 00:40:23,640
+de cadastro,
+
+1066
+00:40:23,700 --> 00:40:24,620
+não sei se isso é possível,
+
+1067
+00:40:25,440 --> 00:40:25,840
+mas,
+
+1068
+00:40:26,040 --> 00:40:26,740
+por exemplo,
+
+1069
+00:40:26,820 --> 00:40:27,340
+uma pessoa leica,
+
+1070
+00:40:27,400 --> 00:40:27,900
+ela não precisa
+
+1071
+00:40:27,900 --> 00:40:29,040
+colocar o nome,
+
+1072
+00:40:30,480 --> 00:40:30,920
+se você quiser,
+
+1073
+00:40:31,080 --> 00:40:31,640
+ela pode entrar,
+
+1074
+00:40:31,720 --> 00:40:31,860
+tipo,
+
+1075
+00:40:31,860 --> 00:40:32,560
+sem até,
+
+1076
+00:40:32,900 --> 00:40:33,520
+nem precisa,
+
+1077
+00:40:33,660 --> 00:40:34,080
+de fato.
+
+1078
+00:40:34,820 --> 00:40:35,120
+Agora,
+
+1079
+00:40:35,200 --> 00:40:35,720
+uma pessoa
+
+1080
+00:40:35,720 --> 00:40:36,500
+que é doadora
+
+1081
+00:40:36,500 --> 00:40:37,220
+e receptora,
+
+1082
+00:40:37,400 --> 00:40:38,480
+era muito importante
+
+1083
+00:40:38,480 --> 00:40:39,120
+a gente ter,
+
+1084
+00:40:39,820 --> 00:40:40,140
+claro,
+
+1085
+00:40:40,380 --> 00:40:41,880
+um cadastro,
+
+1086
+00:40:42,240 --> 00:40:44,420
+a gente podia ter
+
+1087
+00:40:44,420 --> 00:40:45,420
+um cadastro próprio,
+
+1088
+00:40:45,500 --> 00:40:46,340
+você conectaria
+
+1089
+00:40:46,340 --> 00:40:47,420
+com o próprio SUS,
+
+1090
+00:40:47,840 --> 00:40:48,000
+né,
+
+1091
+00:40:48,000 --> 00:40:49,260
+que aí é o diferencial
+
+1092
+00:40:49,260 --> 00:40:49,920
+do negócio,
+
+1093
+00:40:50,500 --> 00:40:51,280
+que aí você teria
+
+1094
+00:40:51,280 --> 00:40:52,240
+conectado com a API
+
+1095
+00:40:52,240 --> 00:40:52,720
+do SUS,
+
+1096
+00:40:53,280 --> 00:40:54,960
+os atendimentos,
+
+1097
+00:40:55,660 --> 00:40:57,120
+a parte da questão
+
+1098
+00:40:57,120 --> 00:40:58,760
+das unidades de saúde,
+
+1099
+00:40:59,200 --> 00:41:00,360
+campanhas,
+
+1100
+00:41:00,560 --> 00:41:01,100
+isso tudo,
+
+1101
+00:41:01,220 --> 00:41:02,040
+eu acho que
+
+1102
+00:41:02,040 --> 00:41:04,100
+seria importante
+
+1103
+00:41:04,100 --> 00:41:05,200
+para o cadastro do SUS,
+
+1104
+00:41:05,260 --> 00:41:05,420
+então,
+
+1105
+00:41:05,480 --> 00:41:05,960
+a gente teria,
+
+1106
+00:41:06,120 --> 00:41:06,280
+né,
+
+1107
+00:41:06,340 --> 00:41:07,580
+a conta do próprio GOV,
+
+1108
+00:41:08,440 --> 00:41:08,640
+né,
+
+1109
+00:41:08,680 --> 00:41:10,260
+o GOV estaria conectado,
+
+1110
+00:41:10,500 --> 00:41:10,640
+então,
+
+1111
+00:41:10,720 --> 00:41:11,880
+a gente teria o CPF,
+
+1112
+00:41:11,940 --> 00:41:12,060
+né,
+
+1113
+00:41:12,100 --> 00:41:12,940
+e a senha do GOV,
+
+1114
+00:41:13,880 --> 00:41:15,900
+colocar,
+
+1115
+00:41:16,300 --> 00:41:16,740
+e aí você,
+
+1116
+00:41:16,800 --> 00:41:16,920
+beleza,
+
+1117
+00:41:17,000 --> 00:41:17,820
+você conectou o GOV,
+
+1118
+00:41:17,940 --> 00:41:18,980
+mas aí você tem que colocar
+
+1119
+00:41:18,980 --> 00:41:20,140
+algumas paradas antes,
+
+1120
+00:41:20,740 --> 00:41:20,980
+então,
+
+1121
+00:41:21,120 --> 00:41:21,880
+quais são as paradas?
+
+1122
+00:41:23,480 --> 00:41:23,800
+Peso,
+
+1123
+00:41:23,800 --> 00:41:25,800
+sexo,
+
+1124
+00:41:27,300 --> 00:41:27,660
+altura,
+
+1125
+00:41:28,880 --> 00:41:29,840
+essas três coisas,
+
+1126
+00:41:30,760 --> 00:41:31,500
+e comorbidades,
+
+1127
+00:41:31,620 --> 00:41:31,840
+claro,
+
+1128
+00:41:32,980 --> 00:41:34,120
+essas quatro coisas aqui,
+
+1129
+00:41:34,200 --> 00:41:34,820
+elas são meio que,
+
+1130
+00:41:34,980 --> 00:41:35,080
+tipo,
+
+1131
+00:41:36,040 --> 00:41:37,300
+óbvio que vai estar lá no SUS,
+
+1132
+00:41:37,380 --> 00:41:38,280
+nos exames e tal,
+
+1133
+00:41:39,320 --> 00:41:41,640
+mas eu acho que é bem importante
+
+1134
+00:41:41,640 --> 00:41:43,100
+você colocar essas quatro coisas,
+
+1135
+00:41:43,220 --> 00:41:45,520
+porque já muda
+
+1136
+00:41:45,520 --> 00:41:47,340
+uma abordagem significativa,
+
+1137
+00:41:47,840 --> 00:41:48,140
+por exemplo,
+
+1138
+00:41:48,280 --> 00:41:49,540
+eu sou receptor,
+
+1139
+00:41:49,680 --> 00:41:51,400
+nunca fiz uma consulta,
+
+1140
+00:41:51,400 --> 00:41:52,360
+pra ser,
+
+1141
+00:41:52,520 --> 00:41:52,760
+quer dizer,
+
+1142
+00:41:52,860 --> 00:41:53,280
+sou doador,
+
+1143
+00:41:53,480 --> 00:41:54,840
+eu nunca fiz uma consulta pra isso,
+
+1144
+00:41:54,920 --> 00:41:55,040
+tipo,
+
+1145
+00:41:55,060 --> 00:41:55,780
+eu quero ser doador,
+
+1146
+00:41:56,620 --> 00:41:56,800
+sim,
+
+1147
+00:41:56,960 --> 00:41:57,200
+então,
+
+1148
+00:41:57,320 --> 00:41:57,960
+você como doador,
+
+1149
+00:41:58,060 --> 00:41:58,160
+então,
+
+1150
+00:41:58,220 --> 00:41:59,360
+coloca suas informações aí,
+
+1151
+00:42:00,280 --> 00:42:01,400
+que aí a gente pode te orientar
+
+1152
+00:42:01,400 --> 00:42:02,180
+baseado nisso,
+
+1153
+00:42:02,760 --> 00:42:03,040
+por exemplo,
+
+1154
+00:42:03,120 --> 00:42:04,440
+eu posso doar tendo comorbidade?
+
+1155
+00:42:06,220 --> 00:42:06,400
+Entendeu?
+
+1156
+00:42:07,020 --> 00:42:07,340
+Então,
+
+1157
+00:42:07,600 --> 00:42:08,900
+eu acho que é importante
+
+1158
+00:42:08,900 --> 00:42:09,780
+a gente colocar isso,
+
+1159
+00:42:10,780 --> 00:42:11,520
+mas,
+
+1160
+00:42:11,640 --> 00:42:11,800
+claro,
+
+1161
+00:42:12,360 --> 00:42:14,540
+uma pessoa que se declara doador,
+
+1162
+00:42:15,320 --> 00:42:17,320
+ela tem que fazer os trâmites legais,
+
+1163
+00:42:17,400 --> 00:42:17,520
+né,
+
+1164
+00:42:17,520 --> 00:42:18,360
+pra realmente,
+
+1165
+00:42:18,780 --> 00:42:18,940
+né,
+
+1166
+00:42:19,120 --> 00:42:19,920
+mostrar que é doador e tal,
+
+1167
+00:42:19,920 --> 00:42:21,220
+e isso vai estar conectado também
+
+1168
+00:42:21,220 --> 00:42:21,760
+no ViaSus,
+
+1169
+00:42:21,840 --> 00:42:21,940
+né,
+
+1170
+00:42:23,480 --> 00:42:25,420
+eu acho que essas são as coisas
+
+1171
+00:42:25,420 --> 00:42:25,920
+importantes,
+
+1172
+00:42:26,340 --> 00:42:28,220
+e a mesma coisa vale pro doador,
+
+1173
+00:42:28,620 --> 00:42:28,860
+né,
+
+1174
+00:42:29,400 --> 00:42:30,060
+claro também,
+
+1175
+00:42:30,940 --> 00:42:33,140
+que acho que seria interessante também,
+
+1176
+00:42:34,960 --> 00:42:35,760
+e,
+
+1177
+00:42:35,940 --> 00:42:36,120
+claro,
+
+1178
+00:42:36,260 --> 00:42:36,460
+né,
+
+1179
+00:42:37,460 --> 00:42:37,880
+por exemplo,
+
+1180
+00:42:38,180 --> 00:42:38,580
+uma pessoa,
+
+1181
+00:42:38,760 --> 00:42:40,600
+essas informações podem ser alteradas,
+
+1182
+00:42:41,200 --> 00:42:41,460
+né,
+
+1183
+00:42:42,060 --> 00:42:42,220
+então,
+
+1184
+00:42:42,300 --> 00:42:42,440
+por exemplo,
+
+1185
+00:42:42,480 --> 00:42:44,560
+uma pessoa que tinha 120 quilos,
+
+1186
+00:42:44,620 --> 00:42:45,140
+como eu tinha falado,
+
+1187
+00:42:45,220 --> 00:42:46,600
+uma pessoa de 120 quilos,
+
+1188
+00:42:46,720 --> 00:42:47,100
+ela vai lá,
+
+1189
+00:42:47,220 --> 00:42:48,040
+você pode alterar,
+
+1190
+00:42:48,040 --> 00:42:48,660
+né,
+
+1191
+00:42:48,900 --> 00:42:49,200
+claro,
+
+1192
+00:42:49,300 --> 00:42:50,320
+com base na última consulta,
+
+1193
+00:42:50,380 --> 00:42:51,580
+isso pode ser alterado,
+
+1194
+00:42:52,280 --> 00:42:52,820
+mas,
+
+1195
+00:42:53,580 --> 00:42:54,040
+na de agora,
+
+1196
+00:42:54,160 --> 00:42:54,260
+ou,
+
+1197
+00:42:54,340 --> 00:42:54,440
+por exemplo,
+
+1198
+00:42:54,480 --> 00:42:54,980
+uma criança,
+
+1199
+00:42:55,060 --> 00:42:55,160
+né,
+
+1200
+00:42:55,160 --> 00:42:56,220
+uma criança que vai crescendo,
+
+1201
+00:42:56,340 --> 00:42:56,420
+né,
+
+1202
+00:42:56,420 --> 00:42:57,620
+também é importante isso,
+
+1203
+00:42:57,680 --> 00:42:57,780
+então,
+
+1204
+00:42:57,840 --> 00:43:00,180
+tem que ser mantido atualizado,
+
+1205
+00:43:00,820 --> 00:43:01,640
+tanto pro aplicativo,
+
+1206
+00:43:01,720 --> 00:43:02,960
+mas isso seria pelo SUS também,
+
+1207
+00:43:03,080 --> 00:43:03,200
+né,
+
+1208
+00:43:03,840 --> 00:43:05,260
+mas acho que seria interessante isso.
+
+1209
+00:43:05,340 --> 00:43:06,200
+E já pra o,
+
+1210
+00:43:06,880 --> 00:43:08,320
+pra o leigo,
+
+1211
+00:43:08,640 --> 00:43:10,080
+a gente pode fazer um cadastro,
+
+1212
+00:43:10,100 --> 00:43:10,300
+né,
+
+1213
+00:43:11,120 --> 00:43:11,820
+básico,
+
+1214
+00:43:12,640 --> 00:43:13,060
+mas,
+
+1215
+00:43:13,220 --> 00:43:13,600
+eu,
+
+1216
+00:43:13,680 --> 00:43:14,220
+sinceramente,
+
+1217
+00:43:14,220 --> 00:43:16,240
+pra uma pessoa leiga,
+
+1218
+00:43:16,720 --> 00:43:16,980
+tipo,
+
+1219
+00:43:17,100 --> 00:43:18,340
+pode ser pra receber e-mails,
+
+1220
+00:43:18,460 --> 00:43:18,680
+talvez,
+
+1221
+00:43:18,900 --> 00:43:19,120
+sabe,
+
+1222
+00:43:19,840 --> 00:43:20,620
+receber e-mail,
+
+1223
+00:43:20,960 --> 00:43:22,540
+ou receber mensagem no WhatsApp,
+
+1224
+00:43:23,020 --> 00:43:23,820
+alguma coisa assim,
+
+1225
+00:43:25,400 --> 00:43:31,240
+mas eu não penso muito em um cadastro muito específico pra uma pessoa leiga que quer aprender.
+
+1226
+00:43:33,560 --> 00:43:33,820
+Ok,
+
+1227
+00:43:34,020 --> 00:43:34,620
+tranquilo,
+
+1228
+00:43:34,800 --> 00:43:35,440
+então,
+
+1229
+00:43:35,680 --> 00:43:36,040
+tranquilo.
+
+1230
+00:43:36,040 --> 00:43:40,120
+Em relação ao sistema de notificação,
+
+1231
+00:43:40,220 --> 00:43:41,360
+você chegou a comentar,
+
+1232
+00:43:41,680 --> 00:43:43,160
+no caso de notificação,
+
+1233
+00:43:43,800 --> 00:43:44,520
+onde seria,
+
+1234
+00:43:44,720 --> 00:43:45,420
+basicamente,
+
+1235
+00:43:46,300 --> 00:43:47,600
+através do SUS também,
+
+1236
+00:43:48,000 --> 00:43:48,180
+onde,
+
+1237
+00:43:48,680 --> 00:43:49,100
+no caso,
+
+1238
+00:43:49,200 --> 00:43:50,580
+essa informação a gente tem no SUS,
+
+1239
+00:43:50,640 --> 00:43:50,800
+né,
+
+1240
+00:43:51,260 --> 00:43:52,360
+quando o receptor,
+
+1241
+00:43:52,500 --> 00:43:55,960
+ele tá aguardando um doador pra ele,
+
+1242
+00:43:56,040 --> 00:43:56,200
+né,
+
+1243
+00:43:56,860 --> 00:43:57,260
+então,
+
+1244
+00:43:57,380 --> 00:43:57,680
+no caso,
+
+1245
+00:43:57,760 --> 00:43:59,360
+a gente tiraria esse tipo de notificação,
+
+1246
+00:43:59,440 --> 00:43:59,580
+né,
+
+1247
+00:43:59,580 --> 00:44:03,180
+quando encontrasse um doador para o receptor,
+
+1248
+00:44:03,180 --> 00:44:05,060
+só que,
+
+1249
+00:44:05,640 --> 00:44:06,460
+não existe,
+
+1250
+00:44:06,620 --> 00:44:06,840
+no caso,
+
+1251
+00:44:07,080 --> 00:44:09,000
+essas notificações são exclusivas,
+
+1252
+00:44:09,240 --> 00:44:10,100
+apenas disso,
+
+1253
+00:44:10,740 --> 00:44:13,100
+ou pode ter campanha,
+
+1254
+00:44:13,560 --> 00:44:14,760
+notificação de campanha,
+
+1255
+00:44:15,000 --> 00:44:15,640
+compatibilidade.
+
+1256
+00:44:15,660 --> 00:44:15,720
+É,
+
+1257
+00:44:15,800 --> 00:44:16,400
+exato,
+
+1258
+00:44:16,760 --> 00:44:17,220
+exato,
+
+1259
+00:44:17,300 --> 00:44:19,420
+é o que eu tava pensando na parte de geolocalização,
+
+1260
+00:44:20,600 --> 00:44:20,940
+então,
+
+1261
+00:44:21,100 --> 00:44:22,040
+a gente colocaria,
+
+1262
+00:44:22,200 --> 00:44:22,400
+tipo,
+
+1263
+00:44:22,520 --> 00:44:26,200
+conectaria o próprio Ministério da Saúde nisso,
+
+1264
+00:44:26,900 --> 00:44:28,220
+pra parte de notícias,
+
+1265
+00:44:28,280 --> 00:44:28,380
+né,
+
+1266
+00:44:28,380 --> 00:44:30,420
+porque o site do Ministério da Saúde sempre tem isso também,
+
+1267
+00:44:30,520 --> 00:44:30,680
+né,
+
+1268
+00:44:31,680 --> 00:44:32,040
+então,
+
+1269
+00:44:32,200 --> 00:44:32,940
+campanha tal,
+
+1270
+00:44:32,940 --> 00:44:34,060
+em Maceió,
+
+1271
+00:44:34,280 --> 00:44:35,580
+no Jaraguá,
+
+1272
+00:44:36,020 --> 00:44:37,500
+às sete horas da noite,
+
+1273
+00:44:37,620 --> 00:44:38,000
+não sei o que,
+
+1274
+00:44:38,160 --> 00:44:38,320
+tal,
+
+1275
+00:44:38,460 --> 00:44:38,640
+aí,
+
+1276
+00:44:39,040 --> 00:44:39,200
+pô,
+
+1277
+00:44:39,240 --> 00:44:39,780
+eu moro em Maceió,
+
+1278
+00:44:39,940 --> 00:44:40,080
+pum,
+
+1279
+00:44:40,160 --> 00:44:40,540
+recebi,
+
+1280
+00:44:41,260 --> 00:44:42,040
+recebi,
+
+1281
+00:44:42,100 --> 00:44:42,920
+vai ter uma campanha,
+
+1282
+00:44:43,920 --> 00:44:44,160
+entendeu?
+
+1283
+00:44:44,840 --> 00:44:45,100
+Então,
+
+1284
+00:44:45,180 --> 00:44:46,560
+isso tanto vale pro receptor,
+
+1285
+00:44:46,720 --> 00:44:51,280
+quanto vale para o doador,
+
+1286
+00:44:52,180 --> 00:44:52,360
+então,
+
+1287
+00:44:52,440 --> 00:44:54,520
+esse é o diferencial de geolocalização,
+
+1288
+00:44:55,260 --> 00:44:55,920
+também nisso.
+
+1289
+00:44:56,340 --> 00:44:56,580
+Agora,
+
+1290
+00:44:56,680 --> 00:44:57,640
+o que você tinha falado de receber,
+
+1291
+00:44:58,200 --> 00:44:58,640
+claro,
+
+1292
+00:44:58,640 --> 00:45:00,300
+no site do SUS,
+
+1293
+00:45:00,300 --> 00:45:03,220
+o negócio é que,
+
+1294
+00:45:03,420 --> 00:45:04,460
+conectado com o site do SUS,
+
+1295
+00:45:04,560 --> 00:45:04,860
+a gente,
+
+1296
+00:45:05,240 --> 00:45:05,720
+meio que,
+
+1297
+00:45:06,280 --> 00:45:08,880
+deixaria mais fácil da pessoa acessar essa informação,
+
+1298
+00:45:09,640 --> 00:45:12,220
+do que meramente entrar no site do SUS e,
+
+1299
+00:45:12,460 --> 00:45:12,700
+né,
+
+1300
+00:45:14,060 --> 00:45:15,320
+ter dificuldade.
+
+1301
+00:45:15,320 --> 00:45:15,900
+do outro lado.
+
+1302
+00:45:16,660 --> 00:45:17,940
+A única dificuldade,
+
+1303
+00:45:18,120 --> 00:45:18,580
+eu acho,
+
+1304
+00:45:18,820 --> 00:45:19,180
+Pedro,
+
+1305
+00:45:19,320 --> 00:45:19,880
+é se a gente,
+
+1306
+00:45:20,100 --> 00:45:21,480
+como é que a gente vai conseguir,
+
+1307
+00:45:22,480 --> 00:45:23,560
+esse acesso.
+
+1308
+00:45:24,360 --> 00:45:26,080
+Mas você não tem aquela reunião,
+
+1309
+00:45:26,660 --> 00:45:28,060
+com a mulher do Ministério?
+
+1310
+00:45:28,480 --> 00:45:28,880
+Exato,
+
+1311
+00:45:29,200 --> 00:45:29,440
+então,
+
+1312
+00:45:29,600 --> 00:45:31,000
+aí fica um pouco mais fácil.
+
+1313
+00:45:31,000 --> 00:45:31,660
+É,
+
+1314
+00:45:31,780 --> 00:45:32,040
+mas,
+
+1315
+00:45:32,040 --> 00:45:32,520
+o que eu estava falando,
+
+1316
+00:45:32,520 --> 00:45:33,060
+não,
+
+1317
+00:45:33,060 --> 00:45:33,500
+não,
+
+1318
+00:45:33,660 --> 00:45:34,060
+mas,
+
+1319
+00:45:34,300 --> 00:45:34,940
+é,
+
+1320
+00:45:35,320 --> 00:45:35,740
+mas,
+
+1321
+00:45:35,820 --> 00:45:36,080
+assim,
+
+1322
+00:45:36,260 --> 00:45:37,080
+o que eu estava falando,
+
+1323
+00:45:37,220 --> 00:45:38,120
+a API do SUS,
+
+1324
+00:45:38,220 --> 00:45:41,540
+ela é disponibilizada para programas de saúde,
+
+1325
+00:45:41,780 --> 00:45:41,920
+então,
+
+1326
+00:45:41,980 --> 00:45:42,240
+tipo assim,
+
+1327
+00:45:42,340 --> 00:45:43,540
+já é uma coisa aberta.
+
+1328
+00:45:44,040 --> 00:45:44,240
+É,
+
+1329
+00:45:44,340 --> 00:45:45,560
+já tem um ponto,
+
+1330
+00:45:45,680 --> 00:45:45,840
+né?
+
+1331
+00:45:45,940 --> 00:45:46,100
+É,
+
+1332
+00:45:46,160 --> 00:45:46,800
+já tem um ponto,
+
+1333
+00:45:46,900 --> 00:45:47,080
+tipo,
+
+1334
+00:45:47,200 --> 00:45:50,000
+eu fui ver aqui no site do Ministério da Saúde,
+
+1335
+00:45:50,080 --> 00:45:50,580
+data SUS,
+
+1336
+00:45:52,260 --> 00:45:53,260
+mas não data SUS,
+
+1337
+00:45:53,320 --> 00:45:54,080
+eu estou falando do,
+
+1338
+00:45:54,600 --> 00:45:55,820
+da API em si.
+
+1339
+00:45:55,840 --> 00:45:56,180
+Já chegou?
+
+1340
+00:45:56,180 --> 00:45:57,920
+A gente consegue,
+
+1341
+00:45:58,100 --> 00:45:58,940
+por via GOV,
+
+1342
+00:45:59,540 --> 00:45:59,740
+é,
+
+1343
+00:45:59,920 --> 00:46:02,980
+fazer uma solicitação formal para ter acesso à API SUS.
+
+1344
+00:46:04,160 --> 00:46:04,460
+Então,
+
+1345
+00:46:04,600 --> 00:46:05,220
+assim como a gente,
+
+1346
+00:46:05,360 --> 00:46:05,920
+como instituição,
+
+1347
+00:46:06,660 --> 00:46:11,440
+fez um aplicativo voltado para a política de saúde,
+
+1348
+00:46:11,440 --> 00:46:13,280
+de uma escala nacional,
+
+1349
+00:46:14,720 --> 00:46:15,040
+assim,
+
+1350
+00:46:15,480 --> 00:46:16,540
+há uma chance, sim,
+
+1351
+00:46:16,620 --> 00:46:19,560
+eles disponibilizarem API específica para transplantes.
+
+1352
+00:46:20,320 --> 00:46:22,940
+E tem também um edital,
+
+1353
+00:46:23,280 --> 00:46:25,440
+que é o edital que você faz o cadastro,
+
+1354
+00:46:26,180 --> 00:46:27,760
+da sua solução hoje,
+
+1355
+00:46:28,400 --> 00:46:28,520
+sim,
+
+1356
+00:46:28,580 --> 00:46:29,360
+para o,
+
+1357
+00:46:29,360 --> 00:46:30,360
+o,
+
+1358
+00:46:30,360 --> 00:46:30,540
+o,
+
+1359
+00:46:30,540 --> 00:46:33,820
+digitalização da saúde,
+
+1360
+00:46:34,420 --> 00:46:34,580
+no,
+
+1361
+00:46:34,820 --> 00:46:35,660
+diante do GOV,
+
+1362
+00:46:35,740 --> 00:46:36,700
+do Ministério,
+
+1363
+00:46:37,200 --> 00:46:37,340
+é,
+
+1364
+00:46:37,340 --> 00:46:37,720
+e eles,
+
+1365
+00:46:37,720 --> 00:46:40,840
+eles colocam sua solução dentro,
+
+1366
+00:46:41,280 --> 00:46:42,280
+como oferta,
+
+1367
+00:46:42,800 --> 00:46:45,400
+podendo também até receber fomento hoje.
+
+1368
+00:46:45,540 --> 00:46:46,060
+Exato.
+
+1369
+00:46:46,560 --> 00:46:46,900
+Então,
+
+1370
+00:46:47,160 --> 00:46:47,520
+o,
+
+1371
+00:46:47,520 --> 00:46:47,940
+o,
+
+1372
+00:46:47,940 --> 00:46:48,920
+o negócio é,
+
+1373
+00:46:49,860 --> 00:46:52,720
+a gente tem algumas alternativas para ter essa API,
+
+1374
+00:46:53,320 --> 00:46:54,640
+e conseguindo a API,
+
+1375
+00:46:54,640 --> 00:46:57,740
+esse projeto está 60% feito.
+
+1376
+00:46:59,420 --> 00:46:59,560
+Né,
+
+1377
+00:46:59,560 --> 00:47:00,860
+eu acredito que é isso,
+
+1378
+00:47:00,980 --> 00:47:01,860
+é o ouro,
+
+1379
+00:47:02,140 --> 00:47:03,200
+é o ouro ter API,
+
+1380
+00:47:04,440 --> 00:47:05,000
+ter acesso.
+
+1381
+00:47:06,440 --> 00:47:06,860
+Né,
+
+1382
+00:47:06,860 --> 00:47:10,840
+campanha, né,
+
+1383
+00:47:10,960 --> 00:47:15,780
+a gente traz também a notificação de quando encontra-se um doador para o,
+
+1384
+00:47:15,780 --> 00:47:16,080
+sim,
+
+1385
+00:47:16,080 --> 00:47:17,600
+para o editor,
+
+1386
+00:47:17,960 --> 00:47:18,280
+não é isso?
+
+1387
+00:47:19,040 --> 00:47:19,200
+E,
+
+1388
+00:47:19,300 --> 00:47:19,480
+no caso,
+
+1389
+00:47:19,540 --> 00:47:20,960
+se encaixa em compatibilidade,
+
+1390
+00:47:21,040 --> 00:47:21,160
+né?
+
+1391
+00:47:22,500 --> 00:47:22,980
+Sim.
+
+1392
+00:47:23,200 --> 00:47:23,600
+E aí,
+
+1393
+00:47:23,780 --> 00:47:24,300
+tudo isso,
+
+1394
+00:47:24,420 --> 00:47:24,920
+pelo que eu entendi,
+
+1395
+00:47:25,080 --> 00:47:25,300
+fica,
+
+1396
+00:47:25,640 --> 00:47:28,260
+engloba na geolocalização,
+
+1397
+00:47:28,420 --> 00:47:28,560
+né?
+
+1398
+00:47:28,940 --> 00:47:29,340
+No caso,
+
+1399
+00:47:29,460 --> 00:47:29,640
+seria...
+
+1400
+00:47:29,640 --> 00:47:29,960
+É,
+
+1401
+00:47:29,960 --> 00:47:32,140
+a geolocalização seria importante por isso,
+
+1402
+00:47:32,200 --> 00:47:32,300
+né?
+
+1403
+00:47:32,300 --> 00:47:35,720
+Isso seria até minha próxima pergunta,
+
+1404
+00:47:35,900 --> 00:47:36,260
+que seria,
+
+1405
+00:47:36,420 --> 00:47:36,700
+no caso,
+
+1406
+00:47:37,340 --> 00:47:38,440
+a geolocalização,
+
+1407
+00:47:38,600 --> 00:47:38,860
+no caso,
+
+1408
+00:47:39,200 --> 00:47:42,200
+servirá para encontrar bancos de sangue,
+
+1409
+00:47:42,380 --> 00:47:43,160
+celular de protocolo,
+
+1410
+00:47:43,200 --> 00:47:43,580
+no caso,
+
+1411
+00:47:44,200 --> 00:47:45,640
+mais próximos ao usuário,
+
+1412
+00:47:45,800 --> 00:47:47,880
+tanto ao doador como ao receptor.
+
+1413
+00:47:48,620 --> 00:47:50,980
+Isso é uma coisa da geolocalização,
+
+1414
+00:47:51,460 --> 00:47:53,400
+outra coisa seria para os eventos,
+
+1415
+00:47:54,580 --> 00:47:55,900
+podia ser uma para...
+
+1416
+00:47:55,900 --> 00:47:56,980
+Exato,
+
+1417
+00:47:56,980 --> 00:47:58,300
+pode ser para ONGs,
+
+1418
+00:47:59,320 --> 00:48:00,660
+pode ser bastante coisa,
+
+1419
+00:48:00,780 --> 00:48:01,380
+inclusive, né?
+
+1420
+00:48:01,380 --> 00:48:02,420
+Então,
+
+1421
+00:48:02,500 --> 00:48:04,840
+a gente pode pensar em algumas outras paradas
+
+1422
+00:48:04,840 --> 00:48:07,040
+para geolocalização,
+
+1423
+00:48:07,220 --> 00:48:07,400
+mas,
+
+1424
+00:48:07,600 --> 00:48:08,320
+a princípio,
+
+1425
+00:48:08,420 --> 00:48:09,880
+seria essas duas coisas.
+
+1426
+00:48:10,780 --> 00:48:10,960
+É,
+
+1427
+00:48:11,040 --> 00:48:11,320
+que tal,
+
+1428
+00:48:11,440 --> 00:48:11,560
+que.
+
+1429
+00:48:12,400 --> 00:48:13,220
+Outra coisa,
+
+1430
+00:48:13,900 --> 00:48:15,700
+falando em funcionalidade de trato,
+
+1431
+00:48:15,840 --> 00:48:15,980
+né?
+
+1432
+00:48:16,600 --> 00:48:18,200
+O sistema de IA preditiva,
+
+1433
+00:48:18,340 --> 00:48:18,400
+que,
+
+1434
+00:48:18,460 --> 00:48:18,700
+no caso,
+
+1435
+00:48:18,780 --> 00:48:21,420
+seria os dados que o app usará
+
+1436
+00:48:21,420 --> 00:48:23,600
+para estimar serviços disponíveis.
+
+1437
+00:48:25,040 --> 00:48:25,840
+No caso,
+
+1438
+00:48:25,840 --> 00:48:28,040
+quais seriam esses dados?
+
+1439
+00:48:28,660 --> 00:48:29,860
+Seria também uma adaptação?
+
+1440
+00:48:29,860 --> 00:48:31,520
+Então,
+
+1441
+00:48:31,760 --> 00:48:32,240
+aí que tá,
+
+1442
+00:48:32,440 --> 00:48:32,760
+a gente,
+
+1443
+00:48:32,900 --> 00:48:35,040
+isso aí seria meramente preditivo,
+
+1444
+00:48:35,260 --> 00:48:36,640
+a gente podia até colocar um aviso,
+
+1445
+00:48:36,760 --> 00:48:36,840
+assim,
+
+1446
+00:48:36,900 --> 00:48:37,020
+mas,
+
+1447
+00:48:37,060 --> 00:48:37,340
+por exemplo,
+
+1448
+00:48:37,500 --> 00:48:37,660
+ah,
+
+1449
+00:48:37,760 --> 00:48:39,320
+uma,
+
+1450
+00:48:40,140 --> 00:48:40,460
+beleza,
+
+1451
+00:48:40,520 --> 00:48:41,440
+uma pessoa que ela tá,
+
+1452
+00:48:41,880 --> 00:48:42,820
+quer ser doadora,
+
+1453
+00:48:44,020 --> 00:48:45,040
+aí a gente podia colocar,
+
+1454
+00:48:45,200 --> 00:48:45,780
+aproximadamente,
+
+1455
+00:48:46,260 --> 00:48:48,580
+ela pode realizar tal procedimento,
+
+1456
+00:48:49,000 --> 00:48:49,800
+tal consulta,
+
+1457
+00:48:49,800 --> 00:48:51,020
+geralmente pode acontecer,
+
+1458
+00:48:51,240 --> 00:48:51,320
+tal,
+
+1459
+00:48:51,360 --> 00:48:51,440
+tal,
+
+1460
+00:48:51,440 --> 00:48:51,620
+tal,
+
+1461
+00:48:51,620 --> 00:48:52,520
+você coloca,
+
+1462
+00:48:52,660 --> 00:48:53,000
+mais ou menos,
+
+1463
+00:48:53,500 --> 00:48:55,800
+dos trâmites que eu preciso
+
+1464
+00:48:55,800 --> 00:48:56,600
+para ser um doador,
+
+1465
+00:48:57,100 --> 00:48:57,920
+quanto tempo que,
+
+1466
+00:48:58,040 --> 00:48:58,380
+mais ou menos,
+
+1467
+00:48:58,500 --> 00:48:59,540
+eu passo para ter isso?
+
+1468
+00:49:00,020 --> 00:49:01,560
+Na localização que eu tô,
+
+1469
+00:49:02,000 --> 00:49:05,580
+baseado na idade que eu tenho,
+
+1470
+00:49:05,980 --> 00:49:07,720
+baseado em toda essa parte do SUS,
+
+1471
+00:49:07,860 --> 00:49:09,260
+ele meio que vai fazer uma predição.
+
+1472
+00:49:09,260 --> 00:49:10,580
+Perfeito,
+
+1473
+00:49:10,720 --> 00:49:10,860
+então,
+
+1474
+00:49:10,980 --> 00:49:11,260
+no caso,
+
+1475
+00:49:11,600 --> 00:49:11,840
+não,
+
+1476
+00:49:12,160 --> 00:49:12,320
+não,
+
+1477
+00:49:12,320 --> 00:49:12,660
+não,
+
+1478
+00:49:12,660 --> 00:49:12,860
+não,
+
+1479
+00:49:12,860 --> 00:49:13,160
+não,
+
+1480
+00:49:13,160 --> 00:49:13,260
+não,
+
+1481
+00:49:13,260 --> 00:49:13,820
+não,
+
+1482
+00:49:13,820 --> 00:49:14,000
+não,
+
+1483
+00:49:14,000 --> 00:49:14,320
+não,
+
+1484
+00:49:14,320 --> 00:49:14,940
+não,
+
+1485
+00:49:14,940 --> 00:49:15,040
+não,
+
+1486
+00:49:15,040 --> 00:49:15,320
+não,
+
+1487
+00:49:15,320 --> 00:49:16,740
+exclusivamente preditivo.
+
+1488
+00:49:17,420 --> 00:49:17,560
+É,
+
+1489
+00:49:17,640 --> 00:49:18,980
+exclusivamente preditivo,
+
+1490
+00:49:19,060 --> 00:49:19,600
+é meio que,
+
+1491
+00:49:19,680 --> 00:49:20,040
+sei lá,
+
+1492
+00:49:20,560 --> 00:49:21,580
+é meio que o,
+
+1493
+00:49:21,880 --> 00:49:22,380
+o,
+
+1494
+00:49:22,500 --> 00:49:23,380
+entregar um iFood,
+
+1495
+00:49:23,500 --> 00:49:24,180
+mais ou menos,
+
+1496
+00:49:24,240 --> 00:49:25,400
+daqui a dois minutos,
+
+1497
+00:49:26,440 --> 00:49:26,760
+tipo,
+
+1498
+00:49:26,860 --> 00:49:27,300
+você não,
+
+1499
+00:49:27,400 --> 00:49:28,940
+não vai ser daqui a dois minutos,
+
+1500
+00:49:29,140 --> 00:49:30,680
+pode ser daqui a 20 segundos,
+
+1501
+00:49:31,540 --> 00:49:31,780
+é,
+
+1502
+00:49:31,900 --> 00:49:32,340
+enfim,
+
+1503
+00:49:33,220 --> 00:49:34,160
+meramente preditivo.
+
+1504
+00:49:34,960 --> 00:49:35,300
+Perfeito,
+
+1505
+00:49:35,300 --> 00:49:39,740
+outro ponto seria a verificação do,
+
+1506
+00:49:39,740 --> 00:49:43,720
+do perfil profissional cadastrado,
+
+1507
+00:49:43,900 --> 00:49:44,120
+mas,
+
+1508
+00:49:44,740 --> 00:49:45,080
+assim,
+
+1509
+00:49:45,280 --> 00:49:46,060
+essa questão,
+
+1510
+00:49:46,820 --> 00:49:51,640
+como é voltado mais para um doador e um,
+
+1511
+00:49:51,640 --> 00:49:53,480
+e um receptor,
+
+1512
+00:49:53,760 --> 00:49:55,140
+e até a pessoa amiga, né?
+
+1513
+00:49:55,860 --> 00:49:56,160
+Sim.
+
+1514
+00:49:56,160 --> 00:49:58,400
+Acho que não se passa a um profissional cadastrado,
+
+1515
+00:49:58,620 --> 00:49:58,900
+no caso,
+
+1516
+00:49:58,980 --> 00:50:01,220
+seria uma verificação de,
+
+1517
+00:50:02,480 --> 00:50:03,200
+dos usuários,
+
+1518
+00:50:03,300 --> 00:50:03,560
+no caso,
+
+1519
+00:50:03,640 --> 00:50:04,580
+voltados para esse app,
+
+1520
+00:50:04,640 --> 00:50:04,740
+né?
+
+1521
+00:50:04,740 --> 00:50:05,600
+Seria um insuficiente.
+
+1522
+00:50:06,380 --> 00:50:06,620
+Isso,
+
+1523
+00:50:06,680 --> 00:50:06,940
+isso,
+
+1524
+00:50:06,960 --> 00:50:07,060
+isso.
+
+1525
+00:50:07,900 --> 00:50:08,240
+E aí,
+
+1526
+00:50:08,340 --> 00:50:10,340
+eu lembro que você comentou até sobre o Gov,
+
+1527
+00:50:11,000 --> 00:50:11,560
+no caso,
+
+1528
+00:50:12,540 --> 00:50:17,640
+poderia ter uma verificação acessando pelo site do Gov,
+
+1529
+00:50:17,920 --> 00:50:18,380
+no caso,
+
+1530
+00:50:18,560 --> 00:50:19,040
+imagino.
+
+1531
+00:50:19,800 --> 00:50:20,280
+É,
+
+1532
+00:50:20,660 --> 00:50:21,000
+isso,
+
+1533
+00:50:21,200 --> 00:50:22,940
+faria uma verificação já direto,
+
+1534
+00:50:22,980 --> 00:50:23,080
+né?
+
+1535
+00:50:24,160 --> 00:50:25,380
+Seria já interessante.
+
+1536
+00:50:26,020 --> 00:50:26,340
+Assim,
+
+1537
+00:50:26,560 --> 00:50:27,280
+se eles realmente,
+
+1538
+00:50:27,400 --> 00:50:28,740
+se a gente conseguir fazer esse negócio,
+
+1539
+00:50:28,980 --> 00:50:31,540
+e eles fornecerem a API do SUS para nós,
+
+1540
+00:50:31,620 --> 00:50:32,740
+a gente consegue fazer isso,
+
+1541
+00:50:32,740 --> 00:50:34,880
+com certa facilidade,
+
+1542
+00:50:35,000 --> 00:50:35,120
+assim,
+
+1543
+00:50:35,700 --> 00:50:35,920
+tipo,
+
+1544
+00:50:35,980 --> 00:50:36,180
+óbvio,
+
+1545
+00:50:36,240 --> 00:50:37,200
+vai ter demorado,
+
+1546
+00:50:37,600 --> 00:50:39,060
+mas já é meio caminhandado,
+
+1547
+00:50:39,240 --> 00:50:39,440
+entende?
+
+1548
+00:50:39,560 --> 00:50:39,860
+Tipo,
+
+1549
+00:50:39,920 --> 00:50:41,000
+é um negócio absurdo,
+
+1550
+00:50:41,120 --> 00:50:42,220
+porque tem muito dado,
+
+1551
+00:50:42,460 --> 00:50:42,800
+e,
+
+1552
+00:50:42,800 --> 00:50:44,820
+e é dado todo estruturado já,
+
+1553
+00:50:44,960 --> 00:50:46,240
+é todo estruturadinho já.
+
+1554
+00:50:46,780 --> 00:50:46,980
+Então,
+
+1555
+00:50:47,100 --> 00:50:48,100
+é um negócio relativamente,
+
+1556
+00:50:48,240 --> 00:50:48,520
+tipo assim,
+
+1557
+00:50:48,620 --> 00:50:49,860
+já é meio caminhandado mesmo,
+
+1558
+00:50:50,180 --> 00:50:52,560
+não é dado aleatório e solto,
+
+1559
+00:50:52,640 --> 00:50:52,820
+não,
+
+1560
+00:50:53,300 --> 00:50:54,340
+é dado estruturado.
+
+1561
+00:50:54,340 --> 00:50:55,820
+É,
+
+1562
+00:50:55,900 --> 00:50:56,020
+é,
+
+1563
+00:50:56,140 --> 00:50:56,340
+tipo,
+
+1564
+00:50:56,380 --> 00:50:56,880
+petróleo,
+
+1565
+00:50:57,280 --> 00:50:58,300
+basicamente.
+
+1566
+00:50:59,640 --> 00:50:59,920
+Pedro,
+
+1567
+00:51:00,000 --> 00:51:03,960
+passando aqui para um ponto mais referente a dados e segurança,
+
+1568
+00:51:04,380 --> 00:51:04,660
+é,
+
+1569
+00:51:06,020 --> 00:51:11,120
+como é que a gente obtém o consentimento para esses dados sentíveis de saúde?
+
+1570
+00:51:12,700 --> 00:51:13,120
+Então,
+
+1571
+00:51:13,600 --> 00:51:14,540
+a gente teria,
+
+1572
+00:51:14,900 --> 00:51:15,440
+é,
+
+1573
+00:51:16,120 --> 00:51:16,440
+seguir,
+
+1574
+00:51:16,580 --> 00:51:16,900
+obviamente,
+
+1575
+00:51:17,120 --> 00:51:18,340
+a LGPD nesse aspecto,
+
+1576
+00:51:19,220 --> 00:51:20,260
+teria que ter,
+
+1577
+00:51:20,340 --> 00:51:20,520
+né,
+
+1578
+00:51:20,800 --> 00:51:22,300
+antes de preencher o formulário,
+
+1579
+00:51:22,300 --> 00:51:23,820
+tem que ter um TSLA,
+
+1580
+00:51:23,900 --> 00:51:25,780
+um termo de consentimento livre esclarecido,
+
+1581
+00:51:26,080 --> 00:51:26,480
+meio que,
+
+1582
+00:51:26,920 --> 00:51:27,320
+querendo ou não,
+
+1583
+00:51:27,420 --> 00:51:28,500
+vai alimentar,
+
+1584
+00:51:29,680 --> 00:51:29,880
+o,
+
+1585
+00:51:29,880 --> 00:51:30,320
+o,
+
+1586
+00:51:30,320 --> 00:51:30,940
+o STEM Project,
+
+1587
+00:51:31,140 --> 00:51:32,980
+mas uma parada que eu estava pensando,
+
+1588
+00:51:33,780 --> 00:51:33,920
+é,
+
+1589
+00:51:34,020 --> 00:51:36,860
+a gente não colocar esses dados,
+
+1590
+00:51:37,780 --> 00:51:38,520
+por exemplo,
+
+1591
+00:51:38,600 --> 00:51:38,740
+tipo,
+
+1592
+00:51:38,820 --> 00:51:39,460
+acho que toda,
+
+1593
+00:51:39,640 --> 00:51:40,920
+toda a nossa cadeia de,
+
+1594
+00:51:41,000 --> 00:51:41,320
+de,
+
+1595
+00:51:41,320 --> 00:51:41,820
+de,
+
+1596
+00:51:41,820 --> 00:51:42,620
+de criação,
+
+1597
+00:51:43,060 --> 00:51:43,980
+ela pode estar aberta,
+
+1598
+00:51:44,100 --> 00:51:44,320
+tipo,
+
+1599
+00:51:44,520 --> 00:51:45,160
+o servidor,
+
+1600
+00:51:45,340 --> 00:51:46,420
+tudo isso pode estar aberto,
+
+1601
+00:51:46,540 --> 00:51:47,040
+mas os dados,
+
+1602
+00:51:47,140 --> 00:51:49,660
+eles podem meio que ficar numa caixa preta.
+
+1603
+00:51:49,760 --> 00:51:51,020
+Vocês já sabem entender isso?
+
+1604
+00:51:51,120 --> 00:51:51,300
+Tipo,
+
+1605
+00:51:51,300 --> 00:51:54,180
+a gente meio que anonimiza isso,
+
+1606
+00:51:54,760 --> 00:51:56,080
+tentando deixar ele,
+
+1607
+00:51:56,240 --> 00:51:56,360
+assim,
+
+1608
+00:51:56,460 --> 00:51:58,240
+os dados vão estar todos fechados,
+
+1609
+00:51:58,340 --> 00:52:00,340
+porque eles meio que vão ter conexão com o SUS,
+
+1610
+00:52:00,980 --> 00:52:01,200
+né,
+
+1611
+00:52:01,300 --> 00:52:01,880
+por exemplo,
+
+1612
+00:52:02,560 --> 00:52:03,420
+a API do SUS,
+
+1613
+00:52:03,520 --> 00:52:04,660
+ela também é anônima,
+
+1614
+00:52:05,260 --> 00:52:07,000
+mas nem todo mundo pode entrar nela,
+
+1615
+00:52:07,200 --> 00:52:08,480
+apesar de ser anônima,
+
+1616
+00:52:08,900 --> 00:52:11,680
+mas a gente deixaria esses dados anonimizados,
+
+1617
+00:52:12,420 --> 00:52:13,880
+ninguém poderia mexer neles,
+
+1618
+00:52:14,340 --> 00:52:15,400
+ninguém pode mexer neles,
+
+1619
+00:52:15,880 --> 00:52:17,200
+mas toda a rede que,
+
+1620
+00:52:17,200 --> 00:52:17,740
+que,
+
+1621
+00:52:17,740 --> 00:52:18,120
+que,
+
+1622
+00:52:18,120 --> 00:52:19,600
+que cuida desses dados,
+
+1623
+00:52:19,700 --> 00:52:21,060
+a gente poderia deixar aberto,
+
+1624
+00:52:21,300 --> 00:52:21,940
+eu,
+
+1625
+00:52:21,940 --> 00:52:21,960
+eu,
+
+1626
+00:52:21,960 --> 00:52:23,300
+eu tava pensando numa parada assim,
+
+1627
+00:52:23,420 --> 00:52:24,600
+porque a gente teve aula,
+
+1628
+00:52:24,820 --> 00:52:25,180
+inclusive,
+
+1629
+00:52:25,300 --> 00:52:26,540
+vocês deveriam ter participado,
+
+1630
+00:52:26,640 --> 00:52:26,660
+né,
+
+1631
+00:52:26,720 --> 00:52:27,180
+Alessandra,
+
+1632
+00:52:27,420 --> 00:52:29,380
+a Alessandra criou o grupo depois,
+
+1633
+00:52:29,500 --> 00:52:31,080
+mas não tem problema, né,
+
+1634
+00:52:31,760 --> 00:52:33,060
+o pessoal do
+
+1635
+00:52:33,060 --> 00:52:34,180
+noharm.ia,
+
+1636
+00:52:34,320 --> 00:52:35,140
+eles seguem,
+
+1637
+00:52:35,280 --> 00:52:35,900
+basicamente,
+
+1638
+00:52:35,960 --> 00:52:37,200
+uma parada parecida,
+
+1639
+00:52:37,760 --> 00:52:38,100
+que é o quê?
+
+1640
+00:52:38,100 --> 00:52:40,240
+é uma IA para o SUS,
+
+1641
+00:52:41,280 --> 00:52:43,420
+eles têm o acesso do SUS,
+
+1642
+00:52:43,500 --> 00:52:44,500
+mas o acesso do SUS,
+
+1643
+00:52:44,620 --> 00:52:46,320
+nem eles sabem de fato o que é.
+
+1644
+00:52:47,380 --> 00:52:49,900
+Eles têm a programação feita toda
+
+1645
+00:52:49,900 --> 00:52:52,400
+para lidar com aqueles dados,
+
+1646
+00:52:53,200 --> 00:52:56,120
+mas eles não fazem ideia do que está rolando nos dados.
+
+1647
+00:52:57,420 --> 00:52:58,360
+Entendeu o que eu quis dizer?
+
+1648
+00:52:58,360 --> 00:52:58,880
+Tipo,
+
+1649
+00:52:59,000 --> 00:52:59,000
+
+
+1650
+00:52:59,000 --> 00:52:59,300
+eu,
+
+1651
+00:52:59,300 --> 00:53:01,240
+eu não estudo muito do,
+
+1652
+00:53:01,740 --> 00:53:01,860
+de,
+
+1653
+00:53:01,980 --> 00:53:02,160
+de,
+
+1654
+00:53:02,280 --> 00:53:04,780
+da parte de anonimização,
+
+1655
+00:53:05,500 --> 00:53:05,860
+mas,
+
+1656
+00:53:06,000 --> 00:53:07,440
+essa ideia de,
+
+1657
+00:53:07,540 --> 00:53:08,280
+é,
+
+1658
+00:53:08,480 --> 00:53:10,180
+deixar aberto
+
+1659
+00:53:10,180 --> 00:53:12,420
+para todo mundo que está trabalhando no projeto,
+
+1660
+00:53:12,500 --> 00:53:14,000
+a parte de estruturação,
+
+1661
+00:53:14,160 --> 00:53:15,080
+e os dados,
+
+1662
+00:53:15,200 --> 00:53:15,920
+a gente deixa,
+
+1663
+00:53:16,380 --> 00:53:16,540
+né,
+
+1664
+00:53:16,740 --> 00:53:18,420
+quem cuida disso é o que a gente está criando.
+
+1665
+00:53:18,960 --> 00:53:19,140
+Então,
+
+1666
+00:53:19,180 --> 00:53:20,060
+meio que é cego,
+
+1667
+00:53:20,140 --> 00:53:21,980
+eu não vou ter ideia do que está tendo aí.
+
+1668
+00:53:21,980 --> 00:53:24,480
+O Vitor,
+
+1669
+00:53:24,600 --> 00:53:25,300
+mas aí,
+
+1670
+00:53:25,880 --> 00:53:26,340
+você,
+
+1671
+00:53:26,600 --> 00:53:27,800
+com a sua experiência,
+
+1672
+00:53:28,000 --> 00:53:28,160
+né,
+
+1673
+00:53:28,260 --> 00:53:28,520
+Pedro,
+
+1674
+00:53:28,620 --> 00:53:31,960
+porque a gente vai jogando tudo que a gente acredita,
+
+1675
+00:53:32,840 --> 00:53:33,460
+e você,
+
+1676
+00:53:33,860 --> 00:53:35,260
+com a sua experiência,
+
+1677
+00:53:35,440 --> 00:53:38,680
+vai dizer o que vai ser entregue para a gente,
+
+1678
+00:53:39,440 --> 00:53:40,900
+e o que você precisa,
+
+1679
+00:53:41,060 --> 00:53:41,300
+porque,
+
+1680
+00:53:41,540 --> 00:53:43,220
+em cima do que você precisa,
+
+1681
+00:53:43,880 --> 00:53:47,460
+a equipe tenta providenciar a tempo,
+
+1682
+00:53:47,620 --> 00:53:48,560
+e se não conseguir,
+
+1683
+00:53:48,760 --> 00:53:49,520
+já avisa,
+
+1684
+00:53:50,060 --> 00:53:51,520
+para a gente pivotar,
+
+1685
+00:53:51,520 --> 00:53:52,520
+e,
+
+1686
+00:53:52,520 --> 00:53:55,940
+trazer uma proposta que não sai do que a gente acredita,
+
+1687
+00:53:56,020 --> 00:53:56,140
+né,
+
+1688
+00:53:56,240 --> 00:53:56,520
+Pedro?
+
+1689
+00:53:56,900 --> 00:53:57,300
+Exato,
+
+1690
+00:53:57,540 --> 00:53:58,060
+tem isso,
+
+1691
+00:53:58,400 --> 00:53:59,600
+tem isso também,
+
+1692
+00:53:59,740 --> 00:53:59,820
+né,
+
+1693
+00:53:59,820 --> 00:54:00,100
+claro.
+
+1694
+00:54:01,100 --> 00:54:02,140
+O intuito aqui,
+
+1695
+00:54:02,220 --> 00:54:02,480
+no caso,
+
+1696
+00:54:02,560 --> 00:54:04,000
+seria ter uma visão mais macro,
+
+1697
+00:54:04,320 --> 00:54:04,300
+né,
+
+1698
+00:54:04,300 --> 00:54:05,160
+por isso que a gente,
+
+1699
+00:54:05,760 --> 00:54:06,220
+é,
+
+1700
+00:54:06,220 --> 00:54:07,200
+trouxe alguns tópicos,
+
+1701
+00:54:07,260 --> 00:54:07,380
+né,
+
+1702
+00:54:07,380 --> 00:54:08,260
+que a gente deixou importantes,
+
+1703
+00:54:08,340 --> 00:54:09,480
+por base no documento,
+
+1704
+00:54:10,060 --> 00:54:10,440
+é,
+
+1705
+00:54:10,560 --> 00:54:10,980
+certamente,
+
+1706
+00:54:10,980 --> 00:54:13,120
+um entendimento maior em relação ao projeto,
+
+1707
+00:54:14,080 --> 00:54:14,300
+né,
+
+1708
+00:54:14,780 --> 00:54:15,260
+é,
+
+1709
+00:54:15,780 --> 00:54:16,520
+a próxima pergunta,
+
+1710
+00:54:16,620 --> 00:54:18,080
+em relação a dados de segurança,
+
+1711
+00:54:18,260 --> 00:54:18,740
+basicamente,
+
+1712
+00:54:19,020 --> 00:54:21,420
+o Pedro já respondeu na notificação,
+
+1713
+00:54:21,520 --> 00:54:22,420
+que,
+
+1714
+00:54:22,680 --> 00:54:23,360
+mas só,
+
+1715
+00:54:23,440 --> 00:54:23,940
+só,
+
+1716
+00:54:25,360 --> 00:54:26,600
+por desencargo de consciência,
+
+1717
+00:54:26,740 --> 00:54:26,900
+Pedro,
+
+1718
+00:54:27,440 --> 00:54:29,820
+onde seriam que os dados ficassem armazenados,
+
+1719
+00:54:29,940 --> 00:54:31,200
+e quem seria o responsável por eles?
+
+1720
+00:54:31,700 --> 00:54:33,700
+Mas acredito que você já tem respondido,
+
+1721
+00:54:33,780 --> 00:54:36,700
+quando você falou que os dados ficam armazenados lá no,
+
+1722
+00:54:36,700 --> 00:54:37,020
+no,
+
+1723
+00:54:37,020 --> 00:54:37,400
+no,
+
+1724
+00:54:37,400 --> 00:54:37,620
+no,
+
+1725
+00:54:37,620 --> 00:54:37,620
+
+
+1726
+00:54:37,620 --> 00:54:37,940
+no,
+
+1727
+00:54:37,940 --> 00:54:37,940
+
+
+1728
+00:54:37,940 --> 00:54:38,020
+no,
+
+1729
+00:54:38,020 --> 00:54:38,200
+no,
+
+1730
+00:54:38,200 --> 00:54:38,580
+no caso,
+
+1731
+00:54:38,580 --> 00:54:38,840
+né,
+
+1732
+00:54:39,320 --> 00:54:40,360
+no site do,
+
+1733
+00:54:40,360 --> 00:54:41,120
+do SUS,
+
+1734
+00:54:41,180 --> 00:54:41,320
+né,
+
+1735
+00:54:41,380 --> 00:54:42,820
+e o responsável seria o SUS,
+
+1736
+00:54:42,880 --> 00:54:43,000
+né,
+
+1737
+00:54:43,000 --> 00:54:43,440
+não é isso?
+
+1738
+00:54:44,460 --> 00:54:45,460
+Tem isso também,
+
+1739
+00:54:45,640 --> 00:54:45,760
+né,
+
+1740
+00:54:45,840 --> 00:54:46,260
+tipo assim,
+
+1741
+00:54:46,360 --> 00:54:46,580
+claro,
+
+1742
+00:54:46,780 --> 00:54:49,660
+os outros dados que a gente está colocando,
+
+1743
+00:54:49,740 --> 00:54:50,140
+por exemplo,
+
+1744
+00:54:50,440 --> 00:54:50,860
+é,
+
+1745
+00:54:52,440 --> 00:54:53,280
+cuidaria do SUS,
+
+1746
+00:54:53,500 --> 00:54:54,640
+além da API,
+
+1747
+00:54:55,140 --> 00:54:55,900
+além da API,
+
+1748
+00:54:56,040 --> 00:54:57,220
+o que eu estava falando dos outros dados,
+
+1749
+00:54:57,340 --> 00:54:57,940
+além da API,
+
+1750
+00:54:58,100 --> 00:54:59,500
+a gente também não ia saber,
+
+1751
+00:55:00,100 --> 00:55:00,300
+tipo,
+
+1752
+00:55:00,380 --> 00:55:02,520
+a gente não ia fazer ideia do que está tendo,
+
+1753
+00:55:02,580 --> 00:55:04,640
+porque a gente está levando para unidades diferentes,
+
+1754
+00:55:04,640 --> 00:55:06,560
+a gente não tem que expor nem nada,
+
+1755
+00:55:06,660 --> 00:55:09,120
+ninguém vai ter acesso a nada que está recebendo aqui,
+
+1756
+00:55:09,520 --> 00:55:10,440
+mas a gente está,
+
+1757
+00:55:10,840 --> 00:55:13,980
+tem acesso a toda a estrutura que está regendo esses dados,
+
+1758
+00:55:15,100 --> 00:55:18,360
+para meio que criar um algoritmo próprio para cada um,
+
+1759
+00:55:18,640 --> 00:55:18,840
+então,
+
+1760
+00:55:19,240 --> 00:55:20,540
+um algoritmo próprio,
+
+1761
+00:55:20,660 --> 00:55:21,180
+a gente vai ter,
+
+1762
+00:55:21,340 --> 00:55:21,540
+claro,
+
+1763
+00:55:22,000 --> 00:55:24,460
+utilizando como métricas para o doador,
+
+1764
+00:55:24,980 --> 00:55:25,280
+SUS,
+
+1765
+00:55:25,760 --> 00:55:26,340
+API SUS,
+
+1766
+00:55:27,160 --> 00:55:27,600
+receptor,
+
+1767
+00:55:28,100 --> 00:55:28,660
+API SUS,
+
+1768
+00:55:28,780 --> 00:55:32,720
+mas também vai ter o algoritmo para recomendações com a jornada que está baseada nele,
+
+1769
+00:55:33,400 --> 00:55:34,260
+o leigo,
+
+1770
+00:55:34,260 --> 00:55:34,760
+o leigo,
+
+1771
+00:55:34,860 --> 00:55:36,500
+ele pode não ter cadastro,
+
+1772
+00:55:37,100 --> 00:55:39,220
+tem essas ideias que eu estou trazendo aqui,
+
+1773
+00:55:39,400 --> 00:55:39,580
+assim,
+
+1774
+00:55:39,760 --> 00:55:40,000
+claro,
+
+1775
+00:55:40,160 --> 00:55:42,540
+vocês vão saber muito melhor que eu nesse aspecto,
+
+1776
+00:55:42,900 --> 00:55:45,040
+mas é baseado nas coisas que eu vejo.
+
+1777
+00:55:45,980 --> 00:55:46,400
+Inclusive,
+
+1778
+00:55:46,520 --> 00:55:46,660
+Pedro,
+
+1779
+00:55:46,740 --> 00:55:48,120
+você falou até do algoritmo,
+
+1780
+00:55:48,840 --> 00:55:49,740
+eu queria passar uma pergunta,
+
+1781
+00:55:50,280 --> 00:55:50,640
+no caso,
+
+1782
+00:55:50,860 --> 00:55:51,760
+quem validaria,
+
+1783
+00:55:52,240 --> 00:55:53,560
+clinicamente falando,
+
+1784
+00:55:53,780 --> 00:55:56,360
+os critérios de compatibilidade do algoritmo?
+
+1785
+00:55:57,740 --> 00:55:58,320
+Os modelos de,
+
+1786
+00:55:58,420 --> 00:55:58,720
+então,
+
+1787
+00:55:59,040 --> 00:56:00,980
+tudo isso que vai aparecer,
+
+1788
+00:56:01,600 --> 00:56:03,600
+você está falando da parte do selo-tronco?
+
+1789
+00:56:04,260 --> 00:56:05,100
+Isso.
+
+1790
+00:56:06,000 --> 00:56:06,360
+Então,
+
+1791
+00:56:06,520 --> 00:56:07,480
+a compatibilidade,
+
+1792
+00:56:07,580 --> 00:56:08,360
+ela é feita,
+
+1793
+00:56:08,720 --> 00:56:10,900
+ela é analisada por dois médicos diferentes,
+
+1794
+00:56:11,000 --> 00:56:11,080
+tá?
+
+1795
+00:56:11,780 --> 00:56:12,080
+Então,
+
+1796
+00:56:12,200 --> 00:56:12,400
+assim,
+
+1797
+00:56:12,540 --> 00:56:13,580
+tudo para passar
+
+1798
+00:56:13,580 --> 00:56:15,840
+para o site do SUS,
+
+1799
+00:56:15,860 --> 00:56:17,000
+que a gente já vê ali,
+
+1800
+00:56:17,720 --> 00:56:20,460
+tem que passar pela validação de pelo menos dois profissionais diferentes,
+
+1801
+00:56:20,540 --> 00:56:21,760
+que não tem conexão um com o outro.
+
+1802
+00:56:22,400 --> 00:56:22,540
+Então,
+
+1803
+00:56:22,540 --> 00:56:23,040
+é,
+
+1804
+00:56:23,040 --> 00:56:23,100
+é,
+
+1805
+00:56:25,100 --> 00:56:25,640
+exato,
+
+1806
+00:56:25,780 --> 00:56:26,100
+então,
+
+1807
+00:56:26,220 --> 00:56:26,360
+é,
+
+1808
+00:56:26,360 --> 00:56:28,720
+a gente só fala nessa informação,
+
+1809
+00:56:28,940 --> 00:56:29,240
+no caso.
+
+1810
+00:56:29,280 --> 00:56:29,500
+É,
+
+1811
+00:56:29,580 --> 00:56:29,760
+é,
+
+1812
+00:56:29,860 --> 00:56:31,740
+porque aí a gente estaria cometendo crime,
+
+1813
+00:56:32,180 --> 00:56:33,280
+muito provavelmente.
+
+1814
+00:56:34,640 --> 00:56:34,820
+Tá,
+
+1815
+00:56:34,900 --> 00:56:35,300
+perfeito.
+
+1816
+00:56:36,200 --> 00:56:36,380
+É,
+
+1817
+00:56:37,280 --> 00:56:38,920
+você já tinha falado da Ionic,
+
+1818
+00:56:39,060 --> 00:56:39,200
+né,
+
+1819
+00:56:39,220 --> 00:56:39,560
+no caso,
+
+1820
+00:56:39,660 --> 00:56:39,820
+então,
+
+1821
+00:56:39,920 --> 00:56:40,120
+a gente,
+
+1822
+00:56:40,280 --> 00:56:41,800
+a escolha da Ionic,
+
+1823
+00:56:41,900 --> 00:56:42,940
+ela não é definitiva,
+
+1824
+00:56:43,020 --> 00:56:43,380
+no caso.
+
+1825
+00:56:43,380 --> 00:56:43,780
+Não,
+
+1826
+00:56:43,880 --> 00:56:44,040
+não,
+
+1827
+00:56:44,080 --> 00:56:45,340
+a gente colocou aí,
+
+1828
+00:56:45,520 --> 00:56:45,920
+só para,
+
+1829
+00:56:46,080 --> 00:56:46,220
+tipo,
+
+1830
+00:56:47,140 --> 00:56:48,780
+realmente cumprir tabela,
+
+1831
+00:56:48,880 --> 00:56:49,320
+basicamente.
+
+1832
+00:56:49,800 --> 00:56:49,960
+Tá,
+
+1833
+00:56:50,160 --> 00:56:50,640
+tudo bem.
+
+1834
+00:56:51,320 --> 00:56:51,520
+É,
+
+1835
+00:56:51,640 --> 00:56:53,180
+uma outra pergunta aqui,
+
+1836
+00:56:54,120 --> 00:56:54,540
+que a gente,
+
+1837
+00:56:54,880 --> 00:56:55,460
+do nosso lado,
+
+1838
+00:56:55,820 --> 00:56:56,340
+encerrar,
+
+1839
+00:56:56,500 --> 00:56:56,760
+seria,
+
+1840
+00:56:57,600 --> 00:56:59,480
+o que vocês realmente esperam
+
+1841
+00:56:59,480 --> 00:57:01,720
+que o app entregue ao final do projeto?
+
+1842
+00:57:02,720 --> 00:57:03,000
+Olha,
+
+1843
+00:57:03,560 --> 00:57:05,080
+o que eu realmente espero,
+
+1844
+00:57:06,100 --> 00:57:06,300
+assim,
+
+1845
+00:57:06,520 --> 00:57:09,440
+já fazendo um negócio educacional e de incentivo,
+
+1846
+00:57:09,580 --> 00:57:12,040
+a procura de doação,
+
+1847
+00:57:12,040 --> 00:57:13,760
+célula-tronco,
+
+1848
+00:57:14,080 --> 00:57:15,180
+já é algo que
+
+1849
+00:57:15,180 --> 00:57:16,320
+supre
+
+1850
+00:57:16,320 --> 00:57:17,660
+uma,
+
+1851
+00:57:17,880 --> 00:57:19,660
+uma deficiência que a gente tem aqui,
+
+1852
+00:57:20,180 --> 00:57:21,020
+no Brasil em geral,
+
+1853
+00:57:21,200 --> 00:57:23,040
+porque não é um negócio que é um tema tão falado,
+
+1854
+00:57:23,400 --> 00:57:24,460
+lá fora é muito falado,
+
+1855
+00:57:24,700 --> 00:57:27,000
+porque tem procedimento com célula-tronco a rodo,
+
+1856
+00:57:27,660 --> 00:57:28,860
+que no Brasil é algo muito mais
+
+1857
+00:57:28,860 --> 00:57:30,340
+hematológico,
+
+1858
+00:57:30,420 --> 00:57:30,620
+então,
+
+1859
+00:57:30,860 --> 00:57:32,340
+não vê falando muito na TV,
+
+1860
+00:57:32,980 --> 00:57:34,920
+não é algo muito falado na mídia,
+
+1861
+00:57:35,020 --> 00:57:37,620
+não é algo muito falado pelo próprio Ministério da Saúde.
+
+1862
+00:57:38,640 --> 00:57:39,760
+Isso é uma deficiência.
+
+1863
+00:57:40,420 --> 00:57:41,760
+Se a gente já supri uma dessas deficiências,
+
+1864
+00:57:42,040 --> 00:57:42,900
+já está ótimo.
+
+1865
+00:57:44,120 --> 00:57:44,940
+Essa é a primeira coisa.
+
+1866
+00:57:45,140 --> 00:57:45,460
+Agora,
+
+1867
+00:57:45,940 --> 00:57:49,140
+se a gente consegue trazer a PEDUSUS para cá,
+
+1868
+00:57:49,820 --> 00:57:53,140
+a gente supri as três deficiências que a gente está procurando nesse aplicativo,
+
+1869
+00:57:53,740 --> 00:57:56,760
+que aí é uma coisa ambiciosa,
+
+1870
+00:57:57,640 --> 00:57:59,060
+mas se realmente se tornar realidade,
+
+1871
+00:57:59,300 --> 00:58:00,340
+vira algo muito inovador.
+
+1872
+00:58:00,340 --> 00:58:03,540
+e é uma coisa que,
+
+1873
+00:58:03,540 --> 00:58:04,140
+assim,
+
+1874
+00:58:04,860 --> 00:58:05,740
+esse caso,
+
+1875
+00:58:06,000 --> 00:58:06,180
+assim,
+
+1876
+00:58:06,260 --> 00:58:08,720
+a gente tem contato com o pessoal do Ministério da Saúde,
+
+1877
+00:58:08,800 --> 00:58:10,340
+que já é algo bom,
+
+1878
+00:58:11,340 --> 00:58:13,100
+já o meio que eu me andado,
+
+1879
+00:58:13,280 --> 00:58:15,820
+para virar o meio que eu me andado na vida real,
+
+1880
+00:58:16,800 --> 00:58:17,640
+mas,
+
+1881
+00:58:17,940 --> 00:58:20,360
+eu realmente acredito que,
+
+1882
+00:58:20,560 --> 00:58:22,360
+se isso for realmente feito,
+
+1883
+00:58:23,800 --> 00:58:25,120
+vira um projeto muito,
+
+1884
+00:58:25,120 --> 00:58:25,960
+muito interessante
+
+1885
+00:58:25,960 --> 00:58:26,820
+para a saúde.
+
+1886
+00:58:27,820 --> 00:58:28,260
+É,
+
+1887
+00:58:28,420 --> 00:58:29,980
+traz um impacto social,
+
+1888
+00:58:30,240 --> 00:58:30,460
+né?
+
+1889
+00:58:31,740 --> 00:58:32,020
+É,
+
+1890
+00:58:32,020 --> 00:58:35,680
+a parte educacional é tão importante,
+
+1891
+00:58:35,820 --> 00:58:37,540
+tal qual a facilitação para vocês,
+
+1892
+00:58:37,620 --> 00:58:37,980
+no caso,
+
+1893
+00:58:38,040 --> 00:58:38,180
+né?
+
+1894
+00:58:39,080 --> 00:58:39,340
+Ah,
+
+1895
+00:58:39,340 --> 00:58:39,700
+Claro,
+
+1896
+00:58:39,780 --> 00:58:40,540
+é um dos pilares,
+
+1897
+00:58:40,620 --> 00:58:41,200
+é um triângulo,
+
+1898
+00:58:41,340 --> 00:58:42,420
+se tirar uma linha,
+
+1899
+00:58:42,620 --> 00:58:43,540
+já acabou.
+
+1900
+00:58:44,300 --> 00:58:44,540
+Então,
+
+1901
+00:58:44,660 --> 00:58:44,840
+assim,
+
+1902
+00:58:45,080 --> 00:58:46,960
+todos os elementos que a gente está trazendo aqui,
+
+1903
+00:58:47,040 --> 00:58:48,840
+são igualmente importantes,
+
+1904
+00:58:49,600 --> 00:58:49,760
+né?
+
+1905
+00:58:50,020 --> 00:58:50,420
+Igualmente,
+
+1906
+00:58:50,500 --> 00:58:54,260
+porque a primeira coisa que a gente preza na saúde,
+
+1907
+00:58:54,520 --> 00:58:55,880
+é o conhecimento,
+
+1908
+00:58:56,020 --> 00:58:58,580
+você entregar o conhecimento para aquela pessoa,
+
+1909
+00:58:59,360 --> 00:59:01,420
+porque no momento que a gente tem o conhecimento,
+
+1910
+00:59:01,520 --> 00:59:02,900
+a gente está fazendo uma prevenção,
+
+1911
+00:59:03,040 --> 00:59:05,980
+e aí a gente está prevenindo aquela pessoa de um monte de coisa,
+
+1912
+00:59:06,140 --> 00:59:07,960
+traz uma educação de saúde absurda,
+
+1913
+00:59:07,960 --> 00:59:08,760
+e além disso,
+
+1914
+00:59:08,840 --> 00:59:09,000
+né?
+
+1915
+00:59:09,360 --> 00:59:10,080
+Para o Ministério,
+
+1916
+00:59:10,160 --> 00:59:12,460
+é importante o din-din,
+
+1917
+00:59:12,560 --> 00:59:12,660
+né?
+
+1918
+00:59:13,100 --> 00:59:14,700
+Você prevenir uma pessoa,
+
+1919
+00:59:14,700 --> 00:59:17,920
+você prevenir uma pessoa de algum processo,
+
+1920
+00:59:18,660 --> 00:59:19,040
+por exemplo,
+
+1921
+00:59:19,120 --> 00:59:20,300
+a pessoa que vai estar,
+
+1922
+00:59:21,180 --> 00:59:22,600
+que quer ser doadora,
+
+1923
+00:59:23,560 --> 00:59:25,880
+você está tornando o processo muito mais fácil,
+
+1924
+00:59:26,000 --> 00:59:28,620
+então o Ministério não vai precisar fazer uma campanha absurda,
+
+1925
+00:59:28,740 --> 00:59:30,700
+ele não vai precisar fazer um monte de política pública,
+
+1926
+00:59:30,780 --> 00:59:32,080
+que era para achar esse tipo de gente,
+
+1927
+00:59:32,420 --> 00:59:33,800
+mas esse aplicativo já vai estar.
+
+1928
+00:59:35,040 --> 00:59:35,260
+Então,
+
+1929
+00:59:35,500 --> 00:59:36,580
+para o Ministério,
+
+1930
+00:59:36,580 --> 00:59:39,740
+o Ministério é ótimo ter essas coisas racionalmente falando,
+
+1931
+00:59:40,540 --> 00:59:43,060
+porque economicamente é viável,
+
+1932
+00:59:44,200 --> 00:59:44,380
+né?
+
+1933
+00:59:44,380 --> 00:59:45,320
+Vamos falar sério,
+
+1934
+00:59:45,420 --> 00:59:45,620
+eles,
+
+1935
+00:59:45,960 --> 00:59:46,880
+é meio que isso,
+
+1936
+00:59:47,520 --> 00:59:47,720
+tipo,
+
+1937
+00:59:47,880 --> 00:59:49,360
+óbvio que tem impacto social,
+
+1938
+00:59:49,540 --> 00:59:49,880
+que é muito,
+
+1939
+00:59:49,980 --> 00:59:50,620
+porque é a maior coisa,
+
+1940
+00:59:50,620 --> 00:59:51,820
+mais importante de todas,
+
+1941
+00:59:52,480 --> 00:59:53,480
+mas eles pensam nisso,
+
+1942
+00:59:53,520 --> 00:59:55,080
+antes de aprovar um projeto também.
+
+1943
+00:59:56,020 --> 00:59:56,480
+Muito bem,
+
+1944
+00:59:56,480 --> 00:59:56,580
+com certeza.
+
+1945
+00:59:57,960 --> 00:59:58,220
+Bom,
+
+1946
+00:59:58,580 --> 01:00:00,440
+dos tópicos que a gente trouxe,
+
+1947
+01:00:01,760 --> 01:00:03,080
+você respondeu
+
+1948
+01:00:03,080 --> 01:00:04,920
+de forma perfeita,
+
+1949
+01:00:05,040 --> 01:00:05,880
+eu consigo adicionar a nossa pergunta.
+
+1950
+01:00:05,880 --> 01:00:06,280
+Obrigada.
+
+1951
+01:00:06,280 --> 01:00:07,840
+eu tentei.
+
+1952
+01:00:08,560 --> 01:00:10,100
+Em relação
+
+1953
+01:00:10,100 --> 01:00:11,200
+aqui a nossos tópicos,
+
+1954
+01:00:12,140 --> 01:00:14,040
+se você quiser adicionar mais algo,
+
+1955
+01:00:14,160 --> 01:00:14,780
+a professora,
+
+1956
+01:00:14,920 --> 01:00:17,220
+a Nathina também quiser adicionar algo,
+
+1957
+01:00:17,460 --> 01:00:18,260
+fique à vontade,
+
+1958
+01:00:18,580 --> 01:00:19,040
+tá certo?
+
+1959
+01:00:21,160 --> 01:00:21,400
+Ah,
+
+1960
+01:00:21,540 --> 01:00:22,440
+não mais...
+
+1961
+01:00:22,440 --> 01:00:23,360
+Daniel,
+
+1962
+01:00:23,520 --> 01:00:24,760
+se quiser falar algo também,
+
+1963
+01:00:25,440 --> 01:00:26,100
+mas não mais,
+
+1964
+01:00:26,820 --> 01:00:28,120
+a explicação,
+
+1965
+01:00:28,120 --> 01:00:30,180
+primeiramente foi ótima,
+
+1966
+01:00:30,400 --> 01:00:30,660
+tá?
+
+1967
+01:00:30,660 --> 01:00:31,500
+Porque aqui,
+
+1968
+01:00:31,620 --> 01:00:32,980
+falando de uma pessoa que não entende,
+
+1969
+01:00:33,140 --> 01:00:34,280
+a explicação foi ótima,
+
+1970
+01:00:34,980 --> 01:00:35,580
+e também,
+
+1971
+01:00:35,820 --> 01:00:39,920
+as respostas que você nos trouxe,
+
+1972
+01:00:40,040 --> 01:00:41,100
+e foi um tópico que a gente,
+
+1973
+01:00:41,620 --> 01:00:43,080
+que a gente trouxe aqui,
+
+1974
+01:00:43,680 --> 01:00:45,600
+também respondeu de forma perfeita.
+
+1975
+01:00:45,600 --> 01:00:47,160
+muito obrigado.
+
+1976
+01:00:47,160 --> 01:00:50,620
+É que eu dou aula também de sala-tronco lá para a bioquímica,
+
+1977
+01:00:50,740 --> 01:00:51,560
+eu estou acostumada,
+
+1978
+01:00:51,660 --> 01:00:52,920
+eu falo de sala-tronco,
+
+1979
+01:00:53,880 --> 01:00:54,460
+mas enfim,
+
+1980
+01:00:55,440 --> 01:00:56,540
+é meio que a ideia é essa,
+
+1981
+01:00:56,680 --> 01:00:58,280
+uma das ideias, né?
+
+1982
+01:00:58,440 --> 01:01:01,940
+É você explicar sala-tronco para uma pessoa que não faz ideia,
+
+1983
+01:01:02,020 --> 01:01:02,280
+assim.
+
+1984
+01:01:02,280 --> 01:01:03,920
+O Vitor,
+
+1985
+01:01:04,560 --> 01:01:05,880
+eu só ando com os melhores,
+
+1986
+01:01:06,020 --> 01:01:07,600
+você agora entrou nessa equipe.
+
+1987
+01:01:09,520 --> 01:01:10,760
+Seja bem-vindo,
+
+1988
+01:01:11,460 --> 01:01:12,580
+né, Pedro?
+
+1989
+01:01:13,200 --> 01:01:15,680
+Eles também só andam com a melhor orientadora.
+
+1990
+01:01:16,300 --> 01:01:17,360
+É, tem que andar, né?
+
+1991
+01:01:18,260 --> 01:01:19,260
+Melhor dessas maquias.
+
+1992
+01:01:20,260 --> 01:01:21,000
+Tem como.
+
+1993
+01:01:23,000 --> 01:01:23,820
+Eu acho que,
+
+1994
+01:01:23,820 --> 01:01:25,240
+não tem mais dúvidas, né?
+
+1995
+01:01:26,380 --> 01:01:26,640
+Não,
+
+1996
+01:01:26,760 --> 01:01:28,220
+eu não tenho mais dúvidas.
+
+1997
+01:01:28,440 --> 01:01:28,820
+Realmente,
+
+1998
+01:01:28,960 --> 01:01:30,740
+se a gente tenta,
+
+1999
+01:01:30,740 --> 01:01:32,620
+é que eu acho que tem,
+
+2000
+01:01:33,180 --> 01:01:34,400
+eu vou ser sincera,
+
+2001
+01:01:34,540 --> 01:01:34,640
+assim,
+
+2002
+01:01:34,760 --> 01:01:36,080
+a doutora Silvia,
+
+2003
+01:01:36,220 --> 01:01:38,580
+que a gente tem contato no Ministério da Saúde,
+
+2004
+01:01:38,680 --> 01:01:39,800
+se eu mostrar isso para ela,
+
+2005
+01:01:40,020 --> 01:01:41,560
+eu tenho certeza que ela iria adorar,
+
+2006
+01:01:41,820 --> 01:01:41,940
+assim.
+
+2007
+01:01:42,240 --> 01:01:44,300
+Já é algo positivo.
+
+2008
+01:01:45,180 --> 01:01:46,020
+Ela, literalmente,
+
+2009
+01:01:46,100 --> 01:01:51,100
+ela comanda lá a área de projetos de inovação
+
+2010
+01:01:51,100 --> 01:01:51,940
+lá no Ministério da Saúde,
+
+2011
+01:01:52,020 --> 01:01:52,620
+lá em Brasília.
+
+2012
+01:01:53,240 --> 01:01:53,840
+Então, assim,
+
+2013
+01:01:53,840 --> 01:01:55,020
+é algo,
+
+2014
+01:01:55,740 --> 01:01:56,160
+é,
+
+2015
+01:01:56,240 --> 01:01:57,080
+é algo bom.
+
+2016
+01:01:57,260 --> 01:02:00,560
+E o bom foi que foi ela que buscou, né?
+
+2017
+01:02:00,740 --> 01:02:02,000
+Foi ela que buscou,
+
+2018
+01:02:02,120 --> 01:02:02,620
+não fui eu,
+
+2019
+01:02:02,680 --> 01:02:03,480
+ela me ligou,
+
+2020
+01:02:03,920 --> 01:02:05,600
+ela descobriu a liga no Instagram
+
+2021
+01:02:05,600 --> 01:02:07,120
+e achou meu número,
+
+2022
+01:02:07,200 --> 01:02:08,040
+não sei como,
+
+2023
+01:02:09,560 --> 01:02:10,180
+e me ligou.
+
+2024
+01:02:10,840 --> 01:02:12,440
+Mas tem no nosso Instagram,
+
+2025
+01:02:12,840 --> 01:02:13,880
+Pedro,
+
+2026
+01:02:14,180 --> 01:02:15,700
+as informações.
+
+2027
+01:02:16,500 --> 01:02:16,780
+E aí,
+
+2028
+01:02:17,260 --> 01:02:19,160
+é da nossa liga, né?
+
+2029
+01:02:19,160 --> 01:02:21,500
+Que o Pedro já deve ter falado também um pouquinho.
+
+2030
+01:02:21,820 --> 01:02:23,480
+Então, sinta-se convidado, né?
+
+2031
+01:02:23,600 --> 01:02:24,140
+Até para...
+
+2032
+01:02:24,140 --> 01:02:25,520
+Convidado na aula.
+
+2033
+01:02:26,360 --> 01:02:27,040
+Sim, claro.
+
+2034
+01:02:27,640 --> 01:02:28,260
+Com certeza.
+
+2035
+01:02:29,140 --> 01:02:29,680
+Com certeza.
+
+2036
+01:02:29,680 --> 01:02:33,140
+Da minha parte, assim...
+
+2037
+01:02:33,140 --> 01:02:34,880
+Eu acho que concluímos, né?
+
+2038
+01:02:36,240 --> 01:02:36,860
+O Daniel.
+
+2039
+01:02:38,000 --> 01:02:40,280
+Não, da minha parte, assim,
+
+2040
+01:02:40,320 --> 01:02:41,840
+achei um projeto muito interessante.
+
+2041
+01:02:42,840 --> 01:02:44,600
+É muito facilitador,
+
+2042
+01:02:44,700 --> 01:02:45,860
+vai facilitar bastante
+
+2043
+01:02:45,860 --> 01:02:48,800
+essa questão da doação também,
+
+2044
+01:02:48,920 --> 01:02:50,700
+do informativo.
+
+2045
+01:02:51,400 --> 01:02:53,220
+Então, gostei bastante desse projeto.
+
+2046
+01:02:53,360 --> 01:02:54,880
+Fico feliz de estar participando.
+
+2047
+01:02:54,880 --> 01:02:57,020
+felizmente,
+
+2048
+01:02:57,140 --> 01:02:58,920
+todas as dúvidas foram tiradas
+
+2049
+01:02:58,920 --> 01:03:00,520
+por enquanto, né?
+
+2050
+01:03:00,580 --> 01:03:02,160
+Pode ser que surja mais dúvidas.
+
+2051
+01:03:02,340 --> 01:03:04,020
+A ideia é ter mais dúvidas.
+
+2052
+01:03:04,680 --> 01:03:05,200
+A ideia...
+
+2053
+01:03:06,200 --> 01:03:08,460
+É vocês também trazerem sugestões.
+
+2054
+01:03:08,740 --> 01:03:09,640
+É, claro.
+
+2055
+01:03:10,020 --> 01:03:10,440
+Isso aí é bom.
+
+2056
+01:03:10,440 --> 01:03:13,280
+Daniel, eu acho que eu não vi o Daniel no grupo.
+
+2057
+01:03:13,500 --> 01:03:14,980
+Pode colocar, viu, Victor?
+
+2058
+01:03:16,440 --> 01:03:17,660
+Achei adicionado já.
+
+2059
+01:03:17,660 --> 01:03:19,840
+Eu estou lá.
+
+2060
+01:03:19,980 --> 01:03:20,920
+Me adicionaram lá.
+
+2061
+01:03:22,160 --> 01:03:24,180
+E aí, é isso, né?
+
+2062
+01:03:24,260 --> 01:03:26,540
+A gente quer também que vocês dois
+
+2063
+01:03:26,540 --> 01:03:31,540
+consigam entrar no que a gente está pensando
+
+2064
+01:03:31,540 --> 01:03:32,980
+e até dizer, olha,
+
+2065
+01:03:33,120 --> 01:03:34,280
+eu passei o final de semana
+
+2066
+01:03:34,280 --> 01:03:38,000
+e poderíamos acrescentar um IA para isso.
+
+2067
+01:03:38,000 --> 01:03:39,880
+ou poderíamos acrescentar
+
+2068
+01:03:39,880 --> 01:03:42,180
+uma realidade aumentada
+
+2069
+01:03:42,180 --> 01:03:43,460
+através do QR Conta.
+
+2070
+01:03:43,540 --> 01:03:44,740
+Vocês também têm
+
+2071
+01:03:44,740 --> 01:03:46,360
+uma liberdade
+
+2072
+01:03:46,360 --> 01:03:48,140
+de pensar conosco.
+
+2073
+01:03:48,540 --> 01:03:50,180
+É, se vocês vão desenvolver,
+
+2074
+01:03:50,380 --> 01:03:52,320
+a ideia do desenvolvimento
+
+2075
+01:03:52,320 --> 01:03:55,120
+é uma criação contínua.
+
+2076
+01:03:55,300 --> 01:03:57,600
+Então, eu acredito que
+
+2077
+01:03:57,600 --> 01:03:59,260
+faz muito sentido para mim,
+
+2078
+01:03:59,340 --> 01:03:59,800
+pelo menos,
+
+2079
+01:04:00,460 --> 01:04:01,540
+acredito que para o Iago,
+
+2080
+01:04:01,640 --> 01:04:02,280
+para o Matheus também,
+
+2081
+01:04:02,400 --> 01:04:02,960
+faz sentido,
+
+2082
+01:04:03,320 --> 01:04:04,440
+vocês agregarem também.
+
+2083
+01:04:04,560 --> 01:04:05,360
+Então, isso aqui é só
+
+2084
+01:04:05,360 --> 01:04:07,340
+o plantel.
+
+2085
+01:04:07,880 --> 01:04:09,120
+A gente vai ter que
+
+2086
+01:04:09,120 --> 01:04:10,700
+botar o time para jogar depois.
+
+2087
+01:04:11,180 --> 01:04:12,680
+Então, vocês vão ter que dar
+
+2088
+01:04:12,680 --> 01:04:13,480
+as ideias aí.
+
+2089
+01:04:13,820 --> 01:04:14,880
+Porque o time pode estar bom
+
+2090
+01:04:14,880 --> 01:04:15,620
+no primeiro tempo,
+
+2091
+01:04:15,680 --> 01:04:17,020
+no segundo tempo pode não estar.
+
+2092
+01:04:17,460 --> 01:04:17,960
+Então, tem que fazer
+
+2093
+01:04:17,960 --> 01:04:19,220
+umas alterações aí, né?
+
+2094
+01:04:20,400 --> 01:04:21,080
+Sim, sim, sim.
+
+2095
+01:04:21,080 --> 01:04:21,320
+Com certeza.
+
+2096
+01:04:22,700 --> 01:04:24,400
+Beleza, pode contar com a gente.
+
+2097
+01:04:25,880 --> 01:04:26,720
+Muito obrigado.
+
+2098
+01:04:28,040 --> 01:04:28,560
+Qualquer coisa,
+
+2099
+01:04:28,660 --> 01:04:29,540
+a gente vai se comunicando
+
+2100
+01:04:29,540 --> 01:04:31,120
+lá pelo grupo, tá?
+
+2101
+01:04:31,460 --> 01:04:32,440
+Qualquer dúvida,
+
+2102
+01:04:32,560 --> 01:04:33,760
+a gente joga lá no grupo,
+
+2103
+01:04:34,140 --> 01:04:35,020
+a gente marca lá.
+
+2104
+01:04:35,360 --> 01:04:36,640
+uma reunião onde
+
+2105
+01:04:36,640 --> 01:04:38,340
+vocês tenham disponibilidade,
+
+2106
+01:04:39,260 --> 01:04:39,460
+tá?
+
+2107
+01:04:39,980 --> 01:04:41,540
+Mas, novamente,
+
+2108
+01:04:42,200 --> 01:04:44,240
+agradecer, né,
+
+2109
+01:04:44,520 --> 01:04:45,800
+pela reunião de hoje,
+
+2110
+01:04:46,540 --> 01:04:47,740
+pela explicação do Pedro.
+
+2111
+01:04:48,660 --> 01:04:49,140
+E é isso.
+
+2112
+01:04:49,380 --> 01:04:50,420
+A gente vai se comunicando.
+
+2113
+01:04:51,140 --> 01:04:51,820
+Muito obrigado.
+
+2114
+01:04:51,820 --> 01:04:52,140
+Muito obrigado.
+
+2115
+01:04:52,140 --> 01:04:54,320
+Eu quero jogar essa gravação
+
+2116
+01:04:54,320 --> 01:04:54,960
+lá no grupo,
+
+2117
+01:04:55,800 --> 01:04:56,840
+para a gente também enviar
+
+2118
+01:04:56,840 --> 01:04:57,740
+para o nosso orientador,
+
+2119
+01:04:57,920 --> 01:05:00,200
+que ele não pode estar.
+
+2120
+01:05:00,340 --> 01:05:00,740
+Tá bom.
+
+2121
+01:05:00,740 --> 01:05:02,720
+A gente decidiu enviar para ele.
+
+2122
+01:05:03,240 --> 01:05:03,960
+Tá bom, tá bom.
+
+2123
+01:05:04,300 --> 01:05:05,120
+Mando sim, mando sim.
+
+2124
+01:05:05,520 --> 01:05:07,340
+Eu acho que deve computar aí tudo.
+
+2125
+01:05:07,580 --> 01:05:09,000
+Inclusive, ele fez a anotação aqui,
+
+2126
+01:05:09,060 --> 01:05:10,000
+eu nem vi isso.
+
+2127
+01:05:10,720 --> 01:05:12,800
+Fez a anotação da reunião inteira.
+
+2128
+01:05:13,380 --> 01:05:14,840
+Faça o documento
+
+2129
+01:05:14,840 --> 01:05:16,220
+para eu poder assinar, tá?
+
+2130
+01:05:17,520 --> 01:05:19,100
+Coloque lá no nosso grupo.
+
+2131
+01:05:19,440 --> 01:05:20,720
+O documento já está aqui comigo,
+
+2132
+01:05:20,960 --> 01:05:22,640
+a gente só vai adicionar as resoluções,
+
+2133
+01:05:22,720 --> 01:05:23,560
+com base dos tópicos,
+
+2134
+01:05:23,660 --> 01:05:25,740
+que a gente fez.
+
+2135
+01:05:26,360 --> 01:05:27,420
+E aí eu envio lá no grupo.
+
+2136
+01:05:28,740 --> 01:05:29,100
+Beleza.
+
+2137
+01:05:29,180 --> 01:05:29,440
+Ok?
+
+2138
+01:05:29,580 --> 01:05:30,460
+Eu vou adicionar também
+
+2139
+01:05:30,460 --> 01:05:31,280
+o nome da senhora aqui,
+
+2140
+01:05:31,360 --> 01:05:32,060
+como participante.
+
+2141
+01:05:32,060 --> 01:05:32,860
+e no início
+
+2142
+01:05:32,860 --> 01:05:34,280
+eu não tenho adicionado.
+
+2143
+01:05:36,780 --> 01:05:37,220
+Beleza.
+
+2144
+01:05:37,780 --> 01:05:38,800
+Muito obrigado aí.
+
+2145
+01:05:39,440 --> 01:05:39,900
+Boa noite.
+
+2146
+01:05:40,520 --> 01:05:41,340
+Boa noite.
+
+2147
+01:05:42,340 --> 01:05:42,740
+Tchau, tchau.
+
+2148
+01:05:42,740 --> 01:05:43,400
+Beleza, boa noite.
+
+2149
+01:05:43,780 --> 01:05:44,260
+Obrigado.
+
+2150
+01:05:45,220 --> 01:05:45,520
+Valeu.
+
+2151
+01:05:45,520 --> 01:05:53,120
+E aí
+
+2152
+01:05:53,120 --> 01:05:55,060
+E aí
+
+2153
+01:05:55,060 --> 01:05:56,100
+E aí
+
+2154
+01:05:56,100 --> 01:05:56,920
+E aí
+
+2155
+01:05:56,920 --> 01:05:57,540
+E aí
+
+2156
+01:05:57,540 --> 01:05:58,080
+E aí
+
+2157
+01:05:58,080 --> 01:05:58,500
+E aí
+
+2158
+01:05:58,500 --> 01:05:58,840
+E aí
+
+2159
+01:05:58,840 --> 01:05:59,140
+E aí
+
+2160
+01:05:59,140 --> 01:05:59,340
+E aí
+
+2161
+01:05:59,340 --> 01:05:59,480
+E aí
+
+2162
+01:05:59,480 --> 01:05:59,660
+E aí
+
+2163
+01:05:59,660 --> 01:05:59,780
+E aí
+
+2164
+01:05:59,780 --> 01:05:59,920
+E aí
+
+2165
+01:05:59,920 --> 01:06:00,060
+E aí
+
+2166
+01:06:00,060 --> 01:06:00,180
+E aí
+
+2167
+01:06:00,180 --> 01:06:00,280
+E aí
+
+2168
+01:06:00,280 --> 01:06:00,380
+E aí
+
+2169
+01:06:00,380 --> 01:06:00,540
+E aí
+
+2170
+01:06:00,540 --> 01:06:00,720
+E aí
+
+2171
+01:06:00,720 --> 01:06:00,900
+E aí
+
+2172
+01:06:00,900 --> 01:06:01,040
+E aí
+
+2173
+01:06:01,040 --> 01:06:01,220
+E aí
+
+2174
+01:06:01,220 --> 01:06:01,320
+E aí
+
+2175
+01:06:01,320 --> 01:06:01,500
+E aí
+
+2176
+01:06:01,500 --> 01:06:01,680
+E aí
+
+2177
+01:06:01,680 --> 01:06:01,820
+E aí
+
+2178
+01:06:01,820 --> 01:06:02,000
+E aí
+
+2179
+01:06:02,000 --> 01:06:02,220
+E aí
+
+2180
+01:06:02,220 --> 01:06:02,340
+E aí
+
+2181
+01:06:02,340 --> 01:06:02,480
+E aí
+
+2182
+01:06:02,480 --> 01:06:02,680
+E aí
+
+2183
+01:06:02,680 --> 01:06:02,840
+E aí
+
+2184
+01:06:02,840 --> 01:06:02,940
+E aí
+
+2185
+01:06:02,940 --> 01:06:03,120
+E aí
+
+2186
+01:06:03,120 --> 01:06:03,260
+E aí
+
+2187
+01:06:03,260 --> 01:06:03,340
+E aí
+
+2188
+01:06:03,340 --> 01:06:03,400
+E aí
+
+2189
+01:06:03,400 --> 01:06:03,440
+E aí
+
+2190
+01:06:03,440 --> 01:06:03,480
+E aí
+
+2191
+01:06:03,480 --> 01:06:03,540
+E aí
+
+2192
+01:06:03,540 --> 01:06:03,620
+E aí
+
+2193
+01:06:03,620 --> 01:06:03,720
+E aí
+
+2194
+01:06:03,720 --> 01:06:03,780
+E aí
+
+2195
+01:06:03,780 --> 01:06:03,860
+E aí
+
+2196
+01:06:03,860 --> 01:06:03,980
+E aí
+
+2197
+01:06:03,980 --> 01:06:04,140
+E aí
+
+2198
+01:06:04,140 --> 01:06:04,280
+E aí
+
+2199
+01:06:04,280 --> 01:06:04,440
+E aí
+
+2200
+01:06:04,440 --> 01:06:04,540
+E aí
+
+2201
+01:06:04,540 --> 01:06:04,660
+E aí
+
+2202
+01:06:04,660 --> 01:06:04,840
+E aí
+
+2203
+01:06:04,840 --> 01:06:04,980
+E aí
+
+2204
+01:06:04,980 --> 01:06:05,160
+E aí
+
+2205
+01:06:05,160 --> 01:06:05,300
+E aí
