@@ -5,9 +5,9 @@ export interface Account {
   id: string
   nome: string
   email: string
-  senha: string
   status: AccountStatus
   nivel: AccountLevel
+  podeValidar?: boolean
   avatar?: string
   documento1: string
   documento2: string
@@ -64,7 +64,20 @@ export interface Content {
   fonte: string
   visibilidade: Visibility
   status: PublishStatus
+  validacaoClinica: boolean
+  validadoPor: string
   anexos: Attachment[]
   atualizadoEm: string
   historico: HistoryEntry[]
+}
+
+export interface Dashboard {
+  publicados: number
+  rascunhos: number
+  contasAtivas: number
+  anexos: number
+  totalConteudos: number
+  recentes: { id: string; titulo: string; status: PublishStatus; atualizadoEm: string }[]
+  atividade: (HistoryEntry & { titulo: string })[]
+  porCategoria: { categoria: Category; total: number }[]
 }

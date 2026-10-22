@@ -1,18 +1,18 @@
 import { UserRound } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button, ConfirmPasswordModal, Field, OutlinedInput, OutlinedSelect } from '../../components/ui'
 import { useStore } from '../../data/store'
 import type { Account } from '../../data/types'
+import { api } from '../../lib/api'
 import { formatDate, today } from '../../lib/format'
 
 const UFS = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ')
 
 const newAccount = (): Account => ({
-  id: String(Date.now()).slice(-12).padStart(12, '0'),
+  id: 'novo',
   nome: '',
   email: '',
-  senha: 'mudar123',
   status: 'ativo',
   nivel: 'User',
   documento1: '',
@@ -38,15 +38,29 @@ export default function UserProfile() {
   const { id } = useParams()
   const [params] = useSearchParams()
   const navigate = useNavigate()
-  const { accounts, saveAccount, checkPassword } = useStore()
+  const { accounts, saveAccount, setAccountStatus, resetPassword } = useStore()
   const isNew = id === 'novo'
-  const original = isNew ? newAccount() : accounts.find((a) => a.id === id)
+  const [original, setOriginal] = useState<Account | null | undefined>(() =>
+    isNew ? newAccount() : accounts.find((a) => a.id === id),
+  )
 
-  const [form, setForm] = useState<Account | undefined>(original)
+  const [form, setForm] = useState<Account | null | undefined>(original)
   const [editing, setEditing] = useState(isNew || params.has('editar'))
   const [dialog, setDialog] = useState<Dialog>(null)
   const [notice, setNotice] = useState('')
+  const [busy, setBusy] = useState(false)
 
+  useEffect(() => {
+    if (original !== undefined) return
+    api<Account>(`/staff/accounts/${id}/`)
+      .then((account) => {
+        setOriginal(account)
+        setForm(account)
+      })
+      .catch(() => setOriginal(null))
+  }, [id, original])
+
+  if (original === undefined) return null
   if (!original || !form || original.status === 'cancelado') return <Navigate to="/usuarios" replace />
 
   const set = <K extends keyof Account>(key: K, value: Account[K]) => setForm({ ...form, [key]: value })
@@ -69,13 +83,39 @@ export default function UserProfile() {
     }
   }
 
+  async function run(action: () => Promise<void>) {
+    setBusy(true)
+    try {
+      await action()
+    } catch (err) {
+      setNotice(err instanceof Error ? err.message : 'Não foi possível salvar.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   function save(e: React.FormEvent) {
     e.preventDefault()
     if (!form) return
-    saveAccount(form)
-    if (isNew) navigate(`/usuarios/${form.id}`, { replace: true })
-    setEditing(false)
-    setNotice('Alterações salvas.')
+    void run(async () => {
+      const { account, senhaTemporaria } = await saveAccount(form, isNew)
+      setOriginal(account)
+      setForm(account)
+      setEditing(false)
+      setNotice(
+        senhaTemporaria
+          ? `Conta criada. Senha temporária: ${senhaTemporaria} — informe ao usuário e peça para trocá-la em Minha Conta.`
+          : 'Alterações salvas.',
+      )
+      if (isNew) navigate(`/usuarios/${account.id}`, { replace: true })
+    })
+  }
+
+  function changeStatus(status: Account['status'], senha?: string) {
+    return setAccountStatus(form!.id, status, senha).then((account) => {
+      setOriginal(account)
+      setForm(account)
+    })
   }
 
   const cities = form.cidade ? [form.cidade] : []
@@ -124,10 +164,8 @@ export default function UserProfile() {
             {form.status === 'bloqueado' ? (
               <button
                 type="button"
-                onClick={() => {
-                  saveAccount({ ...form, status: 'ativo' })
-                  setForm({ ...form, status: 'ativo' })
-                }}
+                disabled={busy}
+                onClick={() => void run(() => changeStatus('ativo'))}
                 className="h-5.5 w-20 rounded-full bg-green-600 text-xs font-semibold"
               >
                 Desbloquear
@@ -139,7 +177,13 @@ export default function UserProfile() {
             )}
             <button
               type="button"
-              onClick={() => setNotice(`Link de redefinição de senha enviado para ${form.email}.`)}
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  const senha = await resetPassword(form.id)
+                  setNotice(`Nova senha temporária de ${form.nome}: ${senha} — as sessões abertas foram encerradas.`)
+                })
+              }
               className="h-5.5 rounded-full border border-white px-3 text-xs font-semibold"
             >
               Resetar Senha
@@ -221,7 +265,9 @@ export default function UserProfile() {
             >
               Cancelar
             </Button>
-            <Button type="submit">Salvar Mudanças</Button>
+            <Button type="submit" disabled={busy}>
+              Salvar Mudanças
+            </Button>
           </>
         ) : (
           <Button variant="danger-outline" onClick={() => setDialog('delete')}>
@@ -234,11 +280,9 @@ export default function UserProfile() {
         <ConfirmPasswordModal
           title="Bloquear usuário"
           confirmLabel="Bloquear"
-          checkPassword={checkPassword}
           onClose={() => setDialog(null)}
-          onConfirm={() => {
-            saveAccount({ ...form, status: 'bloqueado' })
-            setForm({ ...form, status: 'bloqueado' })
+          onConfirm={async (senha) => {
+            await changeStatus('bloqueado', senha)
             setDialog(null)
           }}
         />
@@ -247,10 +291,9 @@ export default function UserProfile() {
         <ConfirmPasswordModal
           title="Deletar usuário"
           confirmLabel="Deletar"
-          checkPassword={checkPassword}
           onClose={() => setDialog(null)}
-          onConfirm={() => {
-            saveAccount({ ...form, status: 'cancelado' })
+          onConfirm={async (senha) => {
+            await setAccountStatus(form.id, 'cancelado', senha)
             navigate('/usuarios')
           }}
         />

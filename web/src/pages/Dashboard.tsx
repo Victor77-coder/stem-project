@@ -1,7 +1,9 @@
 import { FileCheck, FilePen, Paperclip, UserCheck, type LucideIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../data/store'
-import { CATEGORIES } from '../data/types'
+import { CATEGORIES, type Dashboard as DashboardData } from '../data/types'
+import { api } from '../lib/api'
 import { formatDate } from '../lib/format'
 
 function StatCard({ title, value, text, icon: Icon }: { title: string; value: number; text: string; icon: LucideIcon }) {
@@ -22,32 +24,28 @@ function StatCard({ title, value, text, icon: Icon }: { title: string; value: nu
 const panel = 'rounded-2xl bg-surface p-3 shadow-[0_3px_4px_rgba(0,0,0,0.2)]'
 
 export default function Dashboard() {
-  const { contents, accounts } = useStore()
-  const published = contents.filter((c) => c.status === 'publicado')
-  const drafts = contents.filter((c) => c.status === 'rascunho')
-  const recent = [...contents].sort((a, b) => b.atualizadoEm.localeCompare(a.atualizadoEm)).slice(0, 5)
-  const history = contents
-    .flatMap((c) => c.historico.map((h) => ({ ...h, titulo: c.titulo })))
-    .sort((a, b) => b.data.localeCompare(a.data))
-    .slice(0, 5)
+  const { contents } = useStore()
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    api<DashboardData>('/staff/dashboard/')
+      .then(setData)
+      .catch((err: Error) => setError(err.message))
+  }, [contents])
+
+  if (error) return <p className="p-10 text-center text-sm text-danger">{error}</p>
+  if (!data) return null
+  const recent = data.recentes
+  const history = data.atividade
 
   return (
     <div className="grid gap-6 p-5.5">
       <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
-        <StatCard title="Conteúdos publicados" value={published.length} text="Visíveis ao usuário final" icon={FileCheck} />
-        <StatCard title="Rascunhos" value={drafts.length} text="Aguardando fonte ou validação" icon={FilePen} />
-        <StatCard
-          title="Contas ativas"
-          value={accounts.filter((a) => a.status === 'ativo').length}
-          text="Administradores e editores"
-          icon={UserCheck}
-        />
-        <StatCard
-          title="Anexos"
-          value={contents.reduce((n, c) => n + c.anexos.length, 0)}
-          text="Arquivos enviados"
-          icon={Paperclip}
-        />
+        <StatCard title="Conteúdos publicados" value={data.publicados} text="Visíveis ao usuário final" icon={FileCheck} />
+        <StatCard title="Rascunhos" value={data.rascunhos} text="Aguardando fonte ou validação" icon={FilePen} />
+        <StatCard title="Contas ativas" value={data.contasAtivas} text="Administradores e editores" icon={UserCheck} />
+        <StatCard title="Anexos" value={data.anexos} text="Arquivos enviados" icon={Paperclip} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -81,7 +79,7 @@ export default function Dashboard() {
           <h3 className="mb-3 text-xs font-medium">Conteúdos por categoria</h3>
           <ul className="space-y-3 text-[11px]">
             {CATEGORIES.map((cat) => {
-              const n = contents.filter((c) => c.categoria === cat).length
+              const n = data.porCategoria.find((c) => c.categoria === cat)?.total ?? 0
               return (
                 <li key={cat}>
                   <div className="mb-1 flex justify-between">
@@ -89,7 +87,7 @@ export default function Dashboard() {
                     <span>{n}</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-[#d9d9d9]">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${(n / Math.max(contents.length, 1)) * 100}%` }} />
+                    <div className="h-full rounded-full bg-primary" style={{ width: `${(n / Math.max(data.totalConteudos, 1)) * 100}%` }} />
                   </div>
                 </li>
               )

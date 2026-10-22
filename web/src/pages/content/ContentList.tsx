@@ -16,7 +16,7 @@ const statusStyle: Record<Content['status'], string> = {
 }
 
 export default function ContentList() {
-  const { contents, saveContent, checkPassword, currentUser } = useStore()
+  const { contents, unpublishContent } = useStore()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const [toDelete, setToDelete] = useState<Content | null>(null)
@@ -105,6 +105,8 @@ export default function ContentList() {
             <dd>{preview.publicoAlvo.join(', ') || '—'}</dd>
             <dt className="font-semibold">Fonte</dt>
             <dd>{preview.fonte || 'Não informada'}</dd>
+            <dt className="font-semibold">Validação clínica</dt>
+            <dd>{preview.validacaoClinica ? `Validado por ${preview.validadoPor}` : 'Pendente'}</dd>
             <dt className="font-semibold">Atualizado em</dt>
             <dd>{formatDate(preview.atualizadoEm)}</dd>
             <dt className="font-semibold">Anexos</dt>
@@ -117,17 +119,9 @@ export default function ContentList() {
         <ConfirmPasswordModal
           title="Deletar Conteúdo"
           confirmLabel="Deletar"
-          checkPassword={checkPassword}
           onClose={() => setToDelete(null)}
-          onConfirm={() => {
-            saveContent({
-              ...toDelete,
-              status: 'inativo',
-              historico: [
-                ...toDelete.historico,
-                { autor: currentUser?.nome ?? '', acao: 'Despublicou o conteúdo', data: new Date().toISOString() },
-              ],
-            })
+          onConfirm={async (senha) => {
+            await unpublishContent(toDelete.id, senha)
             setToDelete(null)
           }}
         />

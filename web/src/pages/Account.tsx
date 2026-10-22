@@ -3,7 +3,7 @@ import { Button, Field, OutlinedInput } from '../components/ui'
 import { useStore } from '../data/store'
 
 export default function Account() {
-  const { currentUser, saveAccount } = useStore()
+  const { currentUser, updateMe, changePassword } = useStore()
   const [nome, setNome] = useState(currentUser?.nome ?? '')
   const [email, setEmail] = useState(currentUser?.email ?? '')
   const [senhaAtual, setSenhaAtual] = useState('')
@@ -12,20 +12,28 @@ export default function Account() {
 
   if (!currentUser) return null
 
-  function saveProfile(e: React.FormEvent) {
-    e.preventDefault()
-    saveAccount({ ...currentUser!, nome, email })
-    setMessage({ ok: true, text: 'Dados atualizados.' })
+  async function attempt(action: () => Promise<void>, success: string) {
+    try {
+      await action()
+      setMessage({ ok: true, text: success })
+    } catch (err) {
+      setMessage({ ok: false, text: err instanceof Error ? err.message : 'Não foi possível salvar.' })
+    }
   }
 
-  function changePassword(e: React.FormEvent) {
+  function saveProfile(e: React.FormEvent) {
     e.preventDefault()
-    if (senhaAtual !== currentUser!.senha) return setMessage({ ok: false, text: 'Senha atual incorreta.' })
+    void attempt(() => updateMe(nome, email), 'Dados atualizados.')
+  }
+
+  function changeOwnPassword(e: React.FormEvent) {
+    e.preventDefault()
     if (novaSenha.length < 8) return setMessage({ ok: false, text: 'A nova senha deve ter ao menos 8 caracteres.' })
-    saveAccount({ ...currentUser!, senha: novaSenha })
-    setSenhaAtual('')
-    setNovaSenha('')
-    setMessage({ ok: true, text: 'Senha alterada.' })
+    void attempt(async () => {
+      await changePassword(senhaAtual, novaSenha)
+      setSenhaAtual('')
+      setNovaSenha('')
+    }, 'Senha alterada.')
   }
 
   return (
@@ -47,7 +55,7 @@ export default function Account() {
           <Button type="submit">Salvar</Button>
         </div>
       </form>
-      <form onSubmit={changePassword}>
+      <form onSubmit={changeOwnPassword}>
         <h2 className="mb-3 text-lg">Alterar senha</h2>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Senha atual">

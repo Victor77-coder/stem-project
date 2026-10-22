@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Button, Modal, PasswordInput, ShieldIcon, TextInput } from '../components/ui'
 import { useStore } from '../data/store'
+import { api } from '../lib/api'
 
 type Dialog = 'forgot' | 'request' | 'requestSent' | 'forgotSent' | null
 
@@ -12,32 +13,45 @@ function EmailRequestModal({
   title,
   symbol,
   text,
+  path,
   onClose,
   onSent,
 }: {
   title: string
   symbol: '!' | '?'
   text: string
+  path: string
   onClose: () => void
   onSent: () => void
 }) {
   const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
   return (
     <Modal title={title} onClose={onClose}>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault()
-          onSent()
+          setBusy(true)
+          try {
+            await api(path, { method: 'POST', body: { email }, auth: false })
+            onSent()
+          } catch (err) {
+            setError(err instanceof Error ? err.message : '')
+          } finally {
+            setBusy(false)
+          }
         }}
       >
         <ShieldIcon symbol={symbol} />
         <p className="mb-4 text-sm">{text}</p>
         <TextInput icon={Mail} type="email" placeholder="Digite seu email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+        {error && <p className="mt-2 text-xs text-danger">{error}</p>}
         <div className="mt-6 flex justify-between gap-4">
           <Button variant="danger-outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={!isEmail(email)}>
+          <Button type="submit" disabled={!isEmail(email) || busy}>
             Enviar
           </Button>
         </div>
@@ -61,14 +75,22 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
   const [dialog, setDialog] = useState<Dialog>(null)
 
   if (currentUser) return <Navigate to="/dashboard" replace />
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (login(email, senha)) navigate('/dashboard')
-    else setError('E-mail ou senha inválidos.')
+    setBusy(true)
+    try {
+      await login(email, senha)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'E-mail ou senha inválidos.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -99,7 +121,7 @@ export default function Login() {
             </label>
           </div>
           {error && <p className="text-xs text-danger">{error}</p>}
-          <Button type="submit" className="mt-3 w-full">
+          <Button type="submit" className="mt-3 w-full" disabled={busy}>
             Entrar
           </Button>
           <p className="mt-3 text-center text-xs">
@@ -116,6 +138,7 @@ export default function Login() {
           title="Esqueci a senha"
           symbol="?"
           text='Digite seu E-mail e clique em "Enviar" para receber um email para redefinir sua senha.'
+          path="/staff/auth/password/forgot/"
           onClose={() => setDialog(null)}
           onSent={() => setDialog('forgotSent')}
         />
@@ -132,6 +155,7 @@ export default function Login() {
           title="Criar conta"
           symbol="!"
           text="Solicitar acesso ao administrador do sistema para criar sua conta"
+          path="/staff/auth/access-request/"
           onClose={() => setDialog(null)}
           onSent={() => setDialog('requestSent')}
         />
