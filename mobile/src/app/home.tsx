@@ -3,11 +3,13 @@ import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CentersFlow } from '@/components/centers/CentersFlow';
+import { InsightsFlow, type InsightScreen } from '@/components/insights/InsightsFlow';
 import { JourneyFlow } from '@/components/journey/JourneyFlow';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
 import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import { type CenterFilter } from '@/content/centers';
+import { INBOX } from '@/content/insights';
 import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
@@ -55,18 +57,24 @@ function DonorHome({
   name,
   sex,
   current,
+  unread,
   open,
   onJourney,
   onQuestionnaire,
   onCenters,
+  onStats,
+  onNotifications,
 }: {
   name: string;
   sex: Sexo;
   current: number;
+  unread: number;
   open: (route: LearnRoute) => void;
   onJourney: () => void;
   onQuestionnaire: () => void;
   onCenters: (filter?: CenterFilter) => void;
+  onStats: () => void;
+  onNotifications: () => void;
 }) {
   const card = homeCard('doador', current);
   return (
@@ -77,6 +85,8 @@ function DonorHome({
         chipBg={colors.primary100}
         chipFg={colors.primary600}
         subtitle="Que bom ter você por aqui. Veja seus próximos passos."
+        unread={unread}
+        onNotifications={onNotifications}
       />
       <JourneyCard
         background={colors.primary600}
@@ -112,7 +122,13 @@ function DonorHome({
             well: colors.warning100,
             onPress: onQuestionnaire,
           },
-          { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
+          {
+            title: 'Estatísticas do\nBrasil',
+            icon: 'bar-chart-outline',
+            iconColor: colors.textSecondary,
+            well: colors.surfaceMuted,
+            onPress: onStats,
+          },
         ]}
       />
       <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
@@ -150,16 +166,20 @@ function ReceptorHome({
   name,
   sex,
   current,
+  unread,
   open,
   onJourney,
   onCenters,
+  onNotifications,
 }: {
   name: string;
   sex: Sexo;
   current: number;
+  unread: number;
   open: (route: LearnRoute) => void;
   onJourney: () => void;
   onCenters: (filter?: CenterFilter) => void;
+  onNotifications: () => void;
 }) {
   const card = homeCard('receptor', current);
   return (
@@ -170,6 +190,8 @@ function ReceptorHome({
         chipBg={colors.teal100}
         chipFg={colors.teal600}
         subtitle="Você não está sozinho. Acompanhe cada etapa do seu tratamento."
+        unread={unread}
+        onNotifications={onNotifications}
       />
       <JourneyCard
         background={colors.success}
@@ -243,11 +265,17 @@ function ReceptorHome({
 }
 
 function LeigoHome({
+  unread,
   open,
   onCenters,
+  onStats,
+  onNotifications,
 }: {
+  unread: number;
   open: (route: LearnRoute) => void;
   onCenters: (filter?: CenterFilter) => void;
+  onStats: () => void;
+  onNotifications: () => void;
 }) {
   return (
     <>
@@ -257,6 +285,8 @@ function LeigoHome({
         chipBg={colors.surfaceMuted}
         chipFg={colors.textSecondary}
         subtitle="Explore conteúdos sobre células-tronco sem precisar de cadastro."
+        unread={unread}
+        onNotifications={onNotifications}
       />
       <JourneyCard
         background={colors.primary900}
@@ -291,7 +321,13 @@ function LeigoHome({
             well: colors.teal100,
             onPress: () => onCenters(),
           },
-          { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
+          {
+            title: 'Estatísticas do\nBrasil',
+            icon: 'bar-chart-outline',
+            iconColor: colors.textSecondary,
+            well: colors.surfaceMuted,
+            onPress: onStats,
+          },
         ]}
       />
       <ProfileInvite onPress={() => router.push('/profile')} />
@@ -311,6 +347,8 @@ export default function HomeScreen() {
   const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
   const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
+  const [insight, setInsight] = useState<InsightScreen | null>(null);
+  const [unread, setUnread] = useState(() => INBOX.filter((item) => !item.read).length);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'leigo' ? 'leigo' : profile;
@@ -323,6 +361,7 @@ export default function HomeScreen() {
 
   function onTab(id: TabId) {
     setOrientation(false);
+    setInsight(null);
     setTab(id);
     if (id === 'aprender') setLearnStack([{ name: 'library' }]);
     if (id === 'centros') setCentersFilter('todos');
@@ -330,8 +369,15 @@ export default function HomeScreen() {
 
   function openCenters(filter: CenterFilter = 'todos') {
     setOrientation(false);
+    setInsight(null);
     setCentersFilter(filter);
     setTab('centros');
+  }
+
+  function openInsight(screen: InsightScreen) {
+    setOrientation(false);
+    setTab('inicio');
+    setInsight(screen);
   }
 
   function openFromQuestionnaire(route: LearnRoute) {
@@ -347,7 +393,14 @@ export default function HomeScreen() {
   return (
     <View style={shell.shell}>
       <SafeAreaView style={shell.phone} edges={['top']}>
-        {tab === 'inicio' && orientation ? (
+        {tab === 'inicio' && insight ? (
+          <InsightsFlow
+            initial={insight}
+            email={draft.email}
+            onClose={() => setInsight(null)}
+            onUnread={setUnread}
+          />
+        ) : tab === 'inicio' && orientation ? (
           <OrientationFlow onClose={() => setOrientation(false)} onLearn={openFromQuestionnaire} />
         ) : tab === 'inicio' ? (
           <ScrollView style={shell.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={shell.content}>
@@ -356,21 +409,32 @@ export default function HomeScreen() {
                 name={draft.name}
                 sex={draft.sex}
                 current={progress.receptor}
+                unread={unread}
                 open={openLearn}
                 onJourney={openJourney}
                 onCenters={openCenters}
+                onNotifications={() => openInsight('inbox')}
               />
             ) : profile === 'leigo' ? (
-              <LeigoHome open={openLearn} onCenters={openCenters} />
+              <LeigoHome
+                unread={unread}
+                open={openLearn}
+                onCenters={openCenters}
+                onStats={() => openInsight('stats')}
+                onNotifications={() => openInsight('inbox')}
+              />
             ) : (
               <DonorHome
                 name={draft.name}
                 sex={draft.sex}
                 current={progress.doador}
+                unread={unread}
                 open={openLearn}
                 onJourney={openJourney}
                 onQuestionnaire={() => setOrientation(true)}
                 onCenters={openCenters}
+                onStats={() => openInsight('stats')}
+                onNotifications={() => openInsight('inbox')}
               />
             )}
           </ScrollView>
