@@ -3,6 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
+import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import {
   ArticleList,
@@ -29,7 +30,17 @@ function resolveProfile(query: string | string[] | undefined, saved: ProfileType
   return saved ?? 'doador';
 }
 
-function DonorHome({ name, sex, open }: { name: string; sex: Sexo; open: (route: LearnRoute) => void }) {
+function DonorHome({
+  name,
+  sex,
+  open,
+  onQuestionnaire,
+}: {
+  name: string;
+  sex: Sexo;
+  open: (route: LearnRoute) => void;
+  onQuestionnaire: () => void;
+}) {
   return (
     <>
       <HomeHeader
@@ -59,7 +70,13 @@ function DonorHome({ name, sex, open }: { name: string; sex: Sexo; open: (route:
             onPress: () => open({ name: 'library' }),
           },
           { title: 'Centros perto de\nmim', icon: 'location-outline', iconColor: colors.teal600, well: colors.teal100 },
-          { title: 'Questionário de\norientação', icon: 'clipboard-outline', iconColor: colors.warning700, well: colors.warning100 },
+          {
+            title: 'Questionário de\norientação',
+            icon: 'clipboard-outline',
+            iconColor: colors.warning700,
+            well: colors.warning100,
+            onPress: onQuestionnaire,
+          },
           { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
         ]}
       />
@@ -217,6 +234,7 @@ export default function HomeScreen() {
   const { draft } = useRegistration();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const [tab, setTab] = useState<TabId>('inicio');
+  const [orientation, setOrientation] = useState(false);
   const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
@@ -227,21 +245,29 @@ export default function HomeScreen() {
   }
 
   function onTab(id: TabId) {
+    setOrientation(false);
     setTab(id);
     if (id === 'aprender') setLearnStack([{ name: 'library' }]);
+  }
+
+  function openFromQuestionnaire(route: LearnRoute) {
+    setOrientation(false);
+    openLearn(route);
   }
 
   return (
     <View style={shell.shell}>
       <SafeAreaView style={shell.phone} edges={['top']}>
-        {tab === 'inicio' ? (
+        {tab === 'inicio' && orientation ? (
+          <OrientationFlow onClose={() => setOrientation(false)} onLearn={openFromQuestionnaire} />
+        ) : tab === 'inicio' ? (
           <ScrollView style={shell.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={shell.content}>
             {profile === 'receptor' ? (
               <ReceptorHome name={draft.name} sex={draft.sex} open={openLearn} />
             ) : profile === 'leigo' ? (
               <LeigoHome open={openLearn} />
             ) : (
-              <DonorHome name={draft.name} sex={draft.sex} open={openLearn} />
+              <DonorHome name={draft.name} sex={draft.sex} open={openLearn} onQuestionnaire={() => setOrientation(true)} />
             )}
           </ScrollView>
         ) : tab === 'aprender' ? (
