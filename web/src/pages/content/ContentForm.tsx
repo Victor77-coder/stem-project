@@ -1,9 +1,10 @@
 import { ChevronDown, FileImage, FileText, Trash2, Upload } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/ui'
 import { useStore } from '../../data/store'
 import { AUDIENCES, CATEGORIES, type Attachment, type Content, type PublishStatus, type Visibility } from '../../data/types'
+import { api } from '../../lib/api'
 import { formatDate, formatSize, today, uid } from '../../lib/format'
 
 const MAX_SIZE = 500 * 1024 ** 2
@@ -11,7 +12,7 @@ const MAX_SIZE = 500 * 1024 ** 2
 const field = 'w-full rounded-lg bg-field px-2.5 text-sm shadow-[0_2px_3px_rgba(0,0,0,0.25)] outline-none placeholder:text-ink focus:ring-2 focus:ring-primary/40'
 
 const blank = (): Content => ({
-  id: uid(),
+  id: '',
   titulo: '',
   descricao: '',
   categoria: CATEGORIES[0],
@@ -19,10 +20,14 @@ const blank = (): Content => ({
   fonte: '',
   visibilidade: 'Privado',
   status: 'rascunho',
+  validacaoClinica: false,
+  validadoPor: '',
   anexos: [],
   atualizadoEm: today(),
   historico: [],
 })
+
+type Pending = Attachment & { file: File }
 
 function PillSelect<T extends string>({ value, options, onChange, active }: { value: T; options: T[]; onChange: (v: T) => void; active: boolean }) {
   return (
@@ -49,32 +54,54 @@ export default function ContentForm() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { contents, saveContent, currentUser } = useStore()
-  const existing = contents.find((c) => c.id === id)
   const isNew = !id
+  const [existing, setExisting] = useState<Content | null | undefined>(() =>
+    isNew ? blank() : contents.find((c) => c.id === id),
+  )
 
   const [form, setForm] = useState<Content>(() => existing ?? blank())
+  const [pending, setPending] = useState<Pending[]>([])
+  const [removed, setRemoved] = useState<string[]>([])
   const [touched, setTouched] = useState({ visibilidade: !isNew, status: !isNew })
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
   const [dragging, setDragging] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  if (!isNew && !existing) return <Navigate to="/conteudo" replace />
+  useEffect(() => {
+    if (existing !== undefined) return
+    api<Content>(`/staff/contents/${id}/`)
+      .then((content) => {
+        setExisting(content)
+        setForm(content)
+      })
+      .catch(() => setExisting(null))
+  }, [id, existing])
+
+  if (existing === undefined) return null
+  if (!existing) return <Navigate to="/conteudo" replace />
 
   const set = <K extends keyof Content>(key: K, value: Content[K]) => setForm((f) => ({ ...f, [key]: value }))
+  const attachments: (Attachment | Pending)[] = [...form.anexos.filter((a) => !removed.includes(a.id)), ...pending]
 
   function addFiles(files: FileList | null) {
     if (!files) return
-    const accepted: Attachment[] = []
+    const accepted: Pending[] = []
     const rejected: string[] = []
     for (const file of Array.from(files)) {
       if (file.size > MAX_SIZE) rejected.push(file.name)
-      else accepted.push({ id: uid(), nome: file.name, tamanho: file.size, enviadoEm: today() })
+      else accepted.push({ id: uid(), nome: file.name, tamanho: file.size, enviadoEm: today(), file })
     }
     setError(rejected.length ? `Arquivo acima de 500 MB: ${rejected.join(', ')}` : '')
-    set('anexos', [...form.anexos, ...accepted])
+    setPending((list) => [...list, ...accepted])
   }
 
-  function submit(e: React.FormEvent) {
+  function removeAttachment(target: Attachment | Pending) {
+    if ('file' in target) setPending((list) => list.filter((p) => p.id !== target.id))
+    else setRemoved((list) => [...list, target.id])
+  }
+
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (form.status === 'publicado' && !form.fonte.trim()) {
       setError('Informe a fonte para publicar. Sem fonte o conteúdo permanece como rascunho.')
@@ -84,15 +111,15 @@ export default function ContentForm() {
       setError('Selecione ao menos um público-alvo.')
       return
     }
-    saveContent({
-      ...form,
-      atualizadoEm: today(),
-      historico: [
-        ...form.historico,
-        { autor: currentUser?.nome ?? '', acao: isNew ? 'Criou o conteúdo' : 'Editou o conteúdo', data: new Date().toISOString() },
-      ],
-    })
-    navigate('/conteudo')
+    setBusy(true)
+    try {
+      await saveContent(form, isNew, pending.map((p) => p.file), removed)
+      navigate('/conteudo')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível salvar o conteúdo.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   const label = 'mt-3 mb-2 block text-sm font-medium'
@@ -148,6 +175,21 @@ export default function ContentForm() {
         onChange={(e) => set('fonte', e.target.value)}
       />
 
+      <label className="mt-3 flex items-center gap-1.5 text-xs" title={currentUser?.podeValidar ? '' : 'Somente o validador clínico ou um administrador pode validar.'}>
+        <input
+          type="checkbox"
+          checked={form.validacaoClinica}
+          disabled={!currentUser?.podeValidar}
+          onChange={() => set('validacaoClinica', !form.validacaoClinica)}
+          className="size-3.5 accent-ink"
+        />
+        Validação clínica da liga
+        {form.validacaoClinica && form.validadoPor && <span className="text-ink/60">· {form.validadoPor}</span>}
+        {!currentUser?.podeValidar && !form.validacaoClinica && (
+          <span className="text-ink/60">· necessária para publicar</span>
+        )}
+      </label>
+
       <div className="flex flex-wrap gap-x-10">
         <div>
           <span className={label}>Visibilidade</span>
@@ -199,9 +241,9 @@ export default function ContentForm() {
       </button>
       <input ref={fileInput} type="file" multiple hidden onChange={(e) => addFiles(e.target.files)} />
 
-      {form.anexos.length > 0 && (
+      {attachments.length > 0 && (
         <ul className="mt-6">
-          {form.anexos.map((a) => {
+          {attachments.map((a) => {
             const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(a.nome)
             const Icon = isImage ? FileImage : FileText
             return (
@@ -215,7 +257,7 @@ export default function ContentForm() {
                 <button
                   type="button"
                   title="Remover anexo"
-                  onClick={() => set('anexos', form.anexos.filter((x) => x.id !== a.id))}
+                  onClick={() => removeAttachment(a)}
                 >
                   <Trash2 className="size-6 text-danger" strokeWidth={1.2} />
                 </button>
@@ -231,7 +273,9 @@ export default function ContentForm() {
         <Button variant="danger-outline" onClick={() => navigate('/conteudo')}>
           Cancelar
         </Button>
-        <Button type="submit">Salvar</Button>
+        <Button type="submit" disabled={busy}>
+          {busy ? 'Salvando…' : 'Salvar'}
+        </Button>
       </div>
     </form>
   )

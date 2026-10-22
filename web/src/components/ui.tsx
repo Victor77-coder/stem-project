@@ -139,24 +139,26 @@ export function ConfirmPasswordModal({
   confirmLabel,
   onClose,
   onConfirm,
-  checkPassword,
 }: {
   title: string
   confirmLabel: string
   onClose: () => void
-  onConfirm: () => void
-  checkPassword: (senha: string) => boolean
+  onConfirm: (senha: string) => Promise<void>
 }) {
   const [senha, setSenha] = useState('')
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!checkPassword(senha)) {
-      setError('Senha incorreta. Tente novamente.')
-      return
+    setBusy(true)
+    try {
+      await onConfirm(senha)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível concluir a ação.')
+    } finally {
+      setBusy(false)
     }
-    onConfirm()
   }
 
   return (
@@ -172,7 +174,7 @@ export function ConfirmPasswordModal({
           <Button variant="ghost-danger" onClick={onClose}>
             Cancelar
           </Button>
-          <Button variant="danger" type="submit" disabled={!senha}>
+          <Button variant="danger" type="submit" disabled={!senha || busy}>
             {confirmLabel}
           </Button>
         </div>

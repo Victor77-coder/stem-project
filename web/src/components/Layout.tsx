@@ -66,7 +66,7 @@ function Sidebar() {
       <button
         type="button"
         onClick={() => {
-          logout()
+          void logout()
           navigate('/login')
         }}
         className="mt-auto mb-16 flex items-center justify-center gap-2 text-xs text-danger"
@@ -102,7 +102,7 @@ function Header() {
       <div className="flex items-center justify-between gap-6 py-4">
         <div>
           <h1 className="text-lg font-semibold">{page?.title}</h1>
-          <p className="max-w-52 text-[10px] leading-snug">Painel administrativo do STEM Project — CélulAI.</p>
+          <p className="max-w-52 text-[10px] leading-snug">Painel administrativo do STEM Project.</p>
         </div>
         {page?.search && (
           <div className="relative w-full max-w-98">
@@ -134,7 +134,8 @@ export function Footer({ className = '' }: { className?: string }) {
 }
 
 export function AppLayout() {
-  const { currentUser } = useStore()
+  const { currentUser, ready } = useStore()
+  if (!ready) return null
   if (!currentUser) return <Navigate to="/login" replace />
 
   return (

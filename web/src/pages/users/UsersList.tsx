@@ -10,7 +10,7 @@ const cols = 'grid-cols-[2rem_1.6fr_2fr_1fr_0.8fr_5rem]'
 const FILTERS: (AccountStatus | 'todos')[] = ['todos', 'ativo', 'inativo', 'bloqueado']
 
 export default function UsersList() {
-  const { accounts, saveAccount, checkPassword } = useStore()
+  const { accounts, setAccountStatus } = useStore()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>('todos')
@@ -106,10 +106,9 @@ export default function UsersList() {
         <ConfirmPasswordModal
           title="Deletar usuário"
           confirmLabel="Deletar"
-          checkPassword={checkPassword}
           onClose={() => setToDelete(null)}
-          onConfirm={() => {
-            saveAccount({ ...toDelete, status: 'cancelado' })
+          onConfirm={async (senha) => {
+            await setAccountStatus(toDelete.id, 'cancelado', senha)
             setToDelete(null)
           }}
         />
