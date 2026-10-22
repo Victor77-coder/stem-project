@@ -10,10 +10,13 @@ import {
   cardMeta,
   catalogArticles,
   fold,
+  loadCatalog,
   searchArticles,
   type Article,
   type LibraryFilter,
 } from '@/content/learn';
+import { useRegistration } from '@/context/RegistrationContext';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 export type LearnRoute =
@@ -31,8 +34,31 @@ type Props = {
 };
 
 export function LearnFlow({ route, onChange, onBack }: Props) {
+  const { signedIn } = useRegistration();
   const [saved, setSaved] = useState<Record<string, boolean>>({});
+  const [, setCatalogVersion] = useState(0);
   const quizState = useRef({ step: 0, picks: [] as string[] });
+
+  useEffect(() => {
+    loadCatalog().then((changed) => changed && setCatalogVersion((value) => value + 1));
+  }, []);
+
+  useEffect(() => {
+    if (!signedIn) return;
+    api<string[]>('/me/saved/')
+      .then((ids) => setSaved(Object.fromEntries(ids.map((id) => [id, true]))))
+      .catch(() => undefined);
+  }, [signedIn]);
+
+  function toggleSave(id: string) {
+    const next = !saved[id];
+    setSaved((current) => ({ ...current, [id]: next }));
+    if (signedIn) {
+      api(`/me/saved/${id}/`, { method: next ? 'PUT' : 'DELETE' }).catch(() =>
+        setSaved((current) => ({ ...current, [id]: !next })),
+      );
+    }
+  }
 
   const openArticle = (id: string) => onChange({ name: 'article', id });
   const openQuiz = () => {
@@ -50,7 +76,7 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
         <ArticleScreen
           article={articleById(route.id)}
           saved={Boolean(saved[route.id])}
-          onToggleSave={() => setSaved((current) => ({ ...current, [route.id]: !current[route.id] }))}
+          onToggleSave={() => toggleSave(route.id)}
           onBack={onBack}
         />
       ) : null}

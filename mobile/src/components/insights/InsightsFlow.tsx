@@ -14,6 +14,8 @@ import {
   type NoticeKind,
   type StatYear,
 } from '@/content/insights';
+import { useRegistration } from '@/context/RegistrationContext';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 export type InsightScreen = 'stats' | 'inbox' | 'prefs';
@@ -58,27 +60,62 @@ type Props = {
   onUnread?: (count: number) => void;
 };
 
+export type ApiNotice = Omit<Notice, 'when' | 'group'> & { sentAt: string };
+
+export function toNotice(item: ApiNotice): Notice {
+  const sent = new Date(item.sentAt);
+  const today = sent.toDateString() === new Date().toDateString();
+  return {
+    ...item,
+    group: today ? 'hoje' : 'semana',
+    when: today
+      ? sent.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+      : sent.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+  };
+}
+
 export function InsightsFlow({ initial, email = '', onClose, onUnread }: Props) {
+  const { signedIn } = useRegistration();
   const [screen, setScreen] = useState<InsightScreen>(initial);
   const [notices, setNotices] = useState<Notice[]>(sessionInbox);
   const [prefs, setPrefs] = useState<Prefs>(sessionPrefs);
   const [filter, setFilter] = useState<InboxFilter>('todas');
 
   useEffect(() => {
-    sessionInbox = notices;
-    sessionPrefs = prefs;
+    if (!signedIn) return;
+    api<ApiNotice[]>('/me/inbox/')
+      .then((items) => setNotices(items.map(toNotice)))
+      .catch(() => undefined);
+    api<Prefs>('/me/preferences/')
+      .then(setPrefs)
+      .catch(() => undefined);
+  }, [signedIn]);
+
+  useEffect(() => {
+    if (!signedIn) {
+      sessionInbox = notices;
+      sessionPrefs = prefs;
+    }
     onUnread?.(notices.filter((item) => !item.read).length);
-  }, [notices, prefs, onUnread]);
+  }, [notices, prefs, onUnread, signedIn]);
+
+  function changePrefs(patch: Partial<Prefs>) {
+    setPrefs((current) => ({ ...current, ...patch }));
+    if (signedIn) api('/me/preferences/', { method: 'PATCH', body: patch }).catch(() => undefined);
+  }
+
+  function open(id: string) {
+    setNotices((list) => list.map((item) => (item.id === id ? { ...item, read: true } : item)));
+    if (signedIn) api(`/me/inbox/${id}/read/`, { method: 'POST' }).catch(() => undefined);
+  }
+
+  function clearRead() {
+    setNotices((list) => list.filter((item) => !item.read));
+    if (signedIn) api('/me/inbox/clear-read/', { method: 'POST' }).catch(() => undefined);
+  }
 
   if (screen === 'prefs') {
-    return (
-      <PreferencesScreen
-        email={email}
-        prefs={prefs}
-        onChange={(patch) => setPrefs((current) => ({ ...current, ...patch }))}
-        onBack={() => setScreen('inbox')}
-      />
-    );
+    return <PreferencesScreen email={email} prefs={prefs} onChange={changePrefs} onBack={() => setScreen('inbox')} />;
   }
 
   if (screen === 'inbox') {
@@ -87,8 +124,8 @@ export function InsightsFlow({ initial, email = '', onClose, onUnread }: Props) 
         notices={notices}
         filter={filter}
         onFilter={setFilter}
-        onOpen={(id) => setNotices((list) => list.map((item) => (item.id === id ? { ...item, read: true } : item)))}
-        onClearRead={() => setNotices((list) => list.filter((item) => !item.read))}
+        onOpen={open}
+        onClearRead={clearRead}
         onPrefs={() => setScreen('prefs')}
         onBack={onClose}
       />
@@ -128,14 +165,52 @@ function TopBar({
   );
 }
 
+type ApiStats = {
+  available: boolean;
+  years: string[];
+  headline: { donors: string; transplants: string };
+  regions: { name: string; value: number }[];
+  wait: string;
+  source: string;
+  extractedAt: string;
+};
+
+function localStats(year: StatYear, uf: string) {
+  return {
+    years: [...YEARS] as string[],
+    cards: headline(year),
+    bars: regionBars(year) as { name: string; value: number }[],
+    wait: waitFor(uf),
+    source: 'Fonte: DataSUS/Tabnet e REDOME · Atualizado em 08/2026',
+  };
+}
+
 function StatsScreen({ onBack }: { onBack: () => void }) {
   const [uf, setUf] = useState('AL');
   const [year, setYear] = useState<StatYear>('2025');
   const [picking, setPicking] = useState<null | 'uf' | 'year'>(null);
-  const bars = regionBars(year);
-  const max = Math.max(...bars.map((bar) => bar.value));
+  const [remote, setRemote] = useState<ApiStats | null>(null);
+
+  useEffect(() => {
+    api<ApiStats>(`/estatisticas/?ano=${year}&uf=${uf}`)
+      .then((data) => setRemote(data.available ? data : null))
+      .catch(() => setRemote(null));
+  }, [year, uf]);
+
+  const fallback = localStats(year, uf);
+  const stats = remote
+    ? {
+        years: remote.years,
+        cards: remote.headline,
+        bars: remote.regions,
+        wait: remote.wait,
+        source: `Fonte: ${remote.source} · Extraído em ${remote.extractedAt}`,
+      }
+    : fallback;
+  const bars = stats.bars;
+  const max = Math.max(1, ...bars.map((bar) => bar.value));
   const region = regionOf(uf);
-  const cards = headline(year);
+  const cards = stats.cards;
   const ufName = UFS.find(([code]) => code === uf)?.[1] ?? uf;
 
   return (
@@ -195,7 +270,7 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
 
         <View style={styles.waitCard}>
           <Text style={styles.waitLabel}>Tempo médio de espera por doador não aparentado</Text>
-          <Text style={styles.waitValue}>{waitFor(uf)}</Text>
+          <Text style={styles.waitValue}>{stats.wait}</Text>
           <Text style={styles.waitHint}>Recorte aproximado para {ufName}. Não é prazo de atendimento.</Text>
         </View>
 
@@ -205,7 +280,7 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
         </View>
         <View style={styles.source}>
           <Ionicons name="document-text-outline" size={14} color={colors.textSecondary} />
-          <Text style={styles.sourceText}>Fonte: DataSUS/Tabnet e REDOME · Atualizado em 08/2026</Text>
+          <Text style={styles.sourceText}>{stats.source}</Text>
         </View>
       </ScrollView>
 
@@ -214,7 +289,7 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
         title={picking === 'year' ? 'Ano' : 'Estado'}
         options={
           picking === 'year'
-            ? YEARS.map((item) => ({ id: item, label: item }))
+            ? stats.years.map((item) => ({ id: item, label: item }))
             : UFS.map(([code, name]) => ({ id: code, label: name }))
         }
         selected={picking === 'year' ? year : uf}
@@ -529,7 +604,7 @@ const styles = StyleSheet.create({
   info: { marginTop: 16, flexDirection: 'row', gap: 8, backgroundColor: colors.primary50, borderRadius: 12, padding: 12 },
   infoText: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.primary900 },
   backdrop: { flex: 1, backgroundColor: 'rgba(28,36,51,0.4)', justifyContent: 'flex-end' },
-  backdropHit: { ...StyleSheet.absoluteFillObject },
+  backdropHit: { ...StyleSheet.absoluteFill },
   sheet: { maxHeight: '70%', backgroundColor: colors.bg, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 16 },
   sheetTitle: { fontSize: 16, lineHeight: 24, fontWeight: '700', color: colors.ink, marginBottom: 8 },
   sheetList: { flexGrow: 0 },

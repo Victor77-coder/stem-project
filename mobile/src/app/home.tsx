@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CentersFlow } from '@/components/centers/CentersFlow';
-import { InsightsFlow, type InsightScreen } from '@/components/insights/InsightsFlow';
+import { InsightsFlow, type ApiNotice, type InsightScreen } from '@/components/insights/InsightsFlow';
 import { JourneyFlow } from '@/components/journey/JourneyFlow';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
 import { OrientationFlow } from '@/components/orientation/OrientationFlow';
@@ -24,6 +24,7 @@ import {
   shell,
 } from '@/components/home/parts';
 import { useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 function firstName(name: string, fallback: string) {
@@ -165,6 +166,8 @@ function DonorHome({
 function ReceptorHome({
   name,
   sex,
+  uf,
+  city,
   current,
   unread,
   open,
@@ -174,6 +177,8 @@ function ReceptorHome({
 }: {
   name: string;
   sex: Sexo;
+  uf: string;
+  city: string;
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
@@ -203,7 +208,7 @@ function ReceptorHome({
         action="Ver minha jornada"
         onAction={onJourney}
       />
-      <EstimateCard />
+      <EstimateCard uf={uf} city={city} />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
@@ -340,7 +345,7 @@ function LeigoHome({
 }
 
 export default function HomeScreen() {
-  const { draft, update } = useRegistration();
+  const { draft, update, save, signedIn } = useRegistration();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const [tab, setTab] = useState<TabId>('inicio');
   const [orientation, setOrientation] = useState(false);
@@ -353,6 +358,27 @@ export default function HomeScreen() {
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'leigo' ? 'leigo' : profile;
   const currentStep = profile === 'receptor' ? progress.receptor : progress.doador;
+
+  useEffect(() => {
+    if (!signedIn) return;
+    api<{ kind: ProfileType; current: number }>('/me/journey/')
+      .then(({ kind, current }) => {
+        if (kind !== 'leigo') setProgress((value) => ({ ...value, [kind]: current }));
+      })
+      .catch(() => undefined);
+    api<ApiNotice[]>('/me/inbox/')
+      .then((items) => setUnread(items.filter((item) => !item.read).length))
+      .catch(() => undefined);
+  }, [signedIn]);
+
+  function completeStep() {
+    if (profile === 'leigo') return;
+    const next = Math.min(progress[profile] + 1, 7);
+    setProgress((value) => ({ ...value, [profile]: next }));
+    if (signedIn && draft.profile === profile) {
+      api('/me/journey/', { method: 'PATCH', body: { current: next } }).catch(() => undefined);
+    }
+  }
 
   function openLearn(route: LearnRoute) {
     setLearnStack(route.name === 'library' ? [route] : [{ name: 'library' }, route]);
@@ -408,6 +434,8 @@ export default function HomeScreen() {
               <ReceptorHome
                 name={draft.name}
                 sex={draft.sex}
+                uf={draft.uf}
+                city={draft.city}
                 current={progress.receptor}
                 unread={unread}
                 open={openLearn}
@@ -448,10 +476,7 @@ export default function HomeScreen() {
           <JourneyFlow
             kind={journeyKind}
             current={currentStep}
-            onComplete={() => {
-              if (profile === 'leigo') return;
-              setProgress((value) => ({ ...value, [profile]: Math.min(value[profile] + 1, 7) }));
-            }}
+            onComplete={completeStep}
             onChooseProfile={(next) => {
               update({ profile: next });
               router.push('/profile');
@@ -464,7 +489,7 @@ export default function HomeScreen() {
             savedUf={draft.uf}
             savedCep={draft.cep}
             allowed={draft.allowLocation}
-            onAllowLocation={() => update({ allowLocation: true })}
+            onAllowLocation={() => void save({ allowLocation: true }).catch(() => update({ allowLocation: true }))}
           />
         ) : (
           <ProfileFlow
