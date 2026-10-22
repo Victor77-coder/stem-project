@@ -7,6 +7,7 @@ import { InsightsFlow, type InsightScreen } from '@/components/insights/Insights
 import { JourneyFlow } from '@/components/journey/JourneyFlow';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
 import { OrientationFlow } from '@/components/orientation/OrientationFlow';
+import { ProfileFlow } from '@/components/profile/ProfileFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import { type CenterFilter } from '@/content/centers';
 import { INBOX } from '@/content/insights';
@@ -20,7 +21,6 @@ import {
   ProfileInvite,
   QuickGrid,
   SectionTitle,
-  Soon,
   shell,
 } from '@/components/home/parts';
 import { useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
@@ -467,7 +467,12 @@ export default function HomeScreen() {
             onAllowLocation={() => update({ allowLocation: true })}
           />
         ) : (
-          <Soon title="Perfil" />
+          <ProfileFlow
+            profile={profile}
+            onNotifications={() => openInsight('prefs')}
+            onCenters={() => openCenters()}
+            onChooseProfile={() => router.push('/profile')}
+          />
         )}
         <TabBar value={tab} onChange={onTab} />
       </SafeAreaView>
