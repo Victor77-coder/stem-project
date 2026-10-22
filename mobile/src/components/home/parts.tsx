@@ -10,12 +10,16 @@ export function HomeHeader({
   chipBg,
   chipFg,
   subtitle,
+  unread = 0,
+  onNotifications,
 }: {
   greeting: string;
   chip: string;
   chipBg: string;
   chipFg: string;
   subtitle: string;
+  unread?: number;
+  onNotifications?: () => void;
 }) {
   return (
     <View style={styles.header}>
@@ -28,9 +32,9 @@ export function HomeHeader({
         </View>
         <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
-      <Pressable accessibilityRole="button" accessibilityLabel="Notificações" style={styles.bell}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Notificações" onPress={onNotifications} style={styles.bell}>
         <Ionicons name="notifications-outline" size={22} color={colors.ink} />
-        <View style={styles.badge} />
+        {unread > 0 ? <View style={styles.badge} /> : null}
       </Pressable>
     </View>
   );
