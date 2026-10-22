@@ -1,0 +1,26 @@
+services:
+  api:
+    command: ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"]
+    environment:
+      DJANGO_DEBUG: "1"
+      EMAIL_HOST: mailpit
+      EMAIL_PORT: "1025"
+    volumes:
+      - ./backend:/app
+      - media-data:/app/media
+    depends_on:
+      mailpit:
+        condition: service_started
+
+  db:
+    ports:
+      - "127.0.0.1:${STEM_DB_PORT:-5432}:5432"
+
+  cache:
+    ports:
+      - "127.0.0.1:${STEM_REDIS_PORT:-6380}:6379"
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:${STEM_MAILPIT_PORT:-8025}:8025"
