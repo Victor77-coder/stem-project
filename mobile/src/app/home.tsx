@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { JourneyFlow } from '@/components/journey/JourneyFlow';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
 import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
+import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
   CampaignCard,
@@ -30,17 +32,39 @@ function resolveProfile(query: string | string[] | undefined, saved: ProfileType
   return saved ?? 'doador';
 }
 
+function homeCard(kind: JourneyKind, current: number) {
+  const steps = kind === 'doador' ? DONOR_STEPS : receptorSteps('maceio');
+  if (current > steps.length) {
+    return {
+      title: 'Todas as etapas concluídas',
+      body: 'Você percorreu o guia. Siga as orientações do hemocentro ou da equipe médica.',
+      progress: '100%' as const,
+    };
+  }
+  const step = steps[current - 1];
+  return {
+    title: `Etapa ${current} de ${steps.length} · ${step.shortTitle}`,
+    body: step.homeBody ?? step.summary,
+    progress: progressPercent(current),
+  };
+}
+
 function DonorHome({
   name,
   sex,
+  current,
   open,
+  onJourney,
   onQuestionnaire,
 }: {
   name: string;
   sex: Sexo;
+  current: number;
   open: (route: LearnRoute) => void;
+  onJourney: () => void;
   onQuestionnaire: () => void;
 }) {
+  const card = homeCard('doador', current);
   return (
     <>
       <HomeHeader
@@ -54,10 +78,11 @@ function DonorHome({
         background={colors.primary600}
         accent={colors.primary600}
         eyebrow="Sua jornada de doação"
-        title="Etapa 2 de 6 · Coleta de amostra"
-        body="Leve um documento com foto ao hemocentro para coletar a amostra de sangue do cadastro."
-        progress="33%"
+        title={card.title}
+        body={card.body}
+        progress={card.progress}
         action="Ver minha jornada"
+        onAction={onJourney}
       />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
@@ -109,7 +134,20 @@ function DonorHome({
   );
 }
 
-function ReceptorHome({ name, sex, open }: { name: string; sex: Sexo; open: (route: LearnRoute) => void }) {
+function ReceptorHome({
+  name,
+  sex,
+  current,
+  open,
+  onJourney,
+}: {
+  name: string;
+  sex: Sexo;
+  current: number;
+  open: (route: LearnRoute) => void;
+  onJourney: () => void;
+}) {
+  const card = homeCard('receptor', current);
   return (
     <>
       <HomeHeader
@@ -123,10 +161,11 @@ function ReceptorHome({ name, sex, open }: { name: string; sex: Sexo; open: (rou
         background={colors.success}
         accent={colors.success}
         eyebrow="Sua jornada de tratamento"
-        title="Etapa 3 de 6 · Busca de doador compatível"
-        body="Seu cadastro foi enviado pela equipe médica. A busca é feita pelo SUS no REDOME."
-        progress="50%"
+        title={card.title}
+        body={card.body}
+        progress={card.progress}
         action="Ver minha jornada"
+        onAction={onJourney}
       />
       <EstimateCard />
       <SectionTitle>Acesso rápido</SectionTitle>
@@ -231,13 +270,16 @@ function LeigoHome({ open }: { open: (route: LearnRoute) => void }) {
 }
 
 export default function HomeScreen() {
-  const { draft } = useRegistration();
+  const { draft, update } = useRegistration();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const [tab, setTab] = useState<TabId>('inicio');
   const [orientation, setOrientation] = useState(false);
   const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
+  const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
+  const journeyKind = profile === 'leigo' ? 'leigo' : profile;
+  const currentStep = profile === 'receptor' ? progress.receptor : progress.doador;
 
   function openLearn(route: LearnRoute) {
     setLearnStack(route.name === 'library' ? [route] : [{ name: 'library' }, route]);
@@ -255,6 +297,11 @@ export default function HomeScreen() {
     openLearn(route);
   }
 
+  function openJourney() {
+    setOrientation(false);
+    setTab('jornada');
+  }
+
   return (
     <View style={shell.shell}>
       <SafeAreaView style={shell.phone} edges={['top']}>
@@ -263,11 +310,24 @@ export default function HomeScreen() {
         ) : tab === 'inicio' ? (
           <ScrollView style={shell.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={shell.content}>
             {profile === 'receptor' ? (
-              <ReceptorHome name={draft.name} sex={draft.sex} open={openLearn} />
+              <ReceptorHome
+                name={draft.name}
+                sex={draft.sex}
+                current={progress.receptor}
+                open={openLearn}
+                onJourney={openJourney}
+              />
             ) : profile === 'leigo' ? (
               <LeigoHome open={openLearn} />
             ) : (
-              <DonorHome name={draft.name} sex={draft.sex} open={openLearn} onQuestionnaire={() => setOrientation(true)} />
+              <DonorHome
+                name={draft.name}
+                sex={draft.sex}
+                current={progress.doador}
+                open={openLearn}
+                onJourney={openJourney}
+                onQuestionnaire={() => setOrientation(true)}
+              />
             )}
           </ScrollView>
         ) : tab === 'aprender' ? (
@@ -276,8 +336,21 @@ export default function HomeScreen() {
             onChange={(route) => setLearnStack((current) => [...current, route])}
             onBack={() => setLearnStack((current) => (current.length > 1 ? current.slice(0, -1) : current))}
           />
+        ) : tab === 'jornada' ? (
+          <JourneyFlow
+            kind={journeyKind}
+            current={currentStep}
+            onComplete={() => {
+              if (profile === 'leigo') return;
+              setProgress((value) => ({ ...value, [profile]: Math.min(value[profile] + 1, 7) }));
+            }}
+            onChooseProfile={(next) => {
+              update({ profile: next });
+              router.push('/profile');
+            }}
+          />
         ) : (
-          <Soon title={tab === 'jornada' ? 'Jornada' : tab === 'centros' ? 'Centros' : 'Perfil'} />
+          <Soon title={tab === 'centros' ? 'Centros' : 'Perfil'} />
         )}
         <TabBar value={tab} onChange={onTab} />
       </SafeAreaView>
