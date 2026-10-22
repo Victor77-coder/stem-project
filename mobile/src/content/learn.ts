@@ -161,6 +161,26 @@ export const ARTICLES: Article[] = [
     ],
   },
   {
+    id: 'quem-pode',
+    title: 'Quem pode ser doador de medula',
+    category: 'Conceito',
+    minutes: 3,
+    icon: 'git-network-outline',
+    ...concept,
+    list: 'direct',
+    source: 'Ministério da Saúde e INCA · Atualizado em 02/10/2026',
+    sections: [
+      {
+        title: 'Quem pode se cadastrar',
+        body: 'Pessoas entre 18 e 35 anos, com boa saúde, podem se cadastrar no REDOME. A permanência no cadastro vai até os 60 anos.',
+      },
+      {
+        title: 'O que este texto não faz',
+        body: 'A leitura não avalia se alguém pode doar. Essa decisão fica com a equipe do hemocentro e com os médicos do SUS.',
+      },
+    ],
+  },
+  {
     id: 'redome',
     title: 'REDOME: o registro brasileiro de doadores',
     category: 'Leis no Brasil',
@@ -273,6 +293,12 @@ export const FAQS: { id: string; question: string; answer: string }[] = [
     question: 'Quem paga pelo transplante?',
     answer:
       'No SUS, a busca de doador compatível é feita no REDOME, a partir do cadastro enviado pela equipe médica. Este app não cobra procedimento.',
+  },
+  {
+    id: 'hipertensao',
+    question: 'Hipertensão impede a doação?',
+    answer:
+      'Este app não responde se hipertensão impede a doação. A equipe do hemocentro avalia a saúde de cada pessoa. O questionário só sugere leituras e não decide quem pode doar ou receber.',
   },
   {
     id: 'agenda',

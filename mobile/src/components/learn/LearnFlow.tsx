@@ -20,7 +20,7 @@ export type LearnRoute =
   | { name: 'library'; category?: LibraryFilter }
   | { name: 'search'; query: string }
   | { name: 'article'; id: string }
-  | { name: 'faq' }
+  | { name: 'faq'; focus?: string }
   | { name: 'myths' }
   | { name: 'quiz' };
 
@@ -54,7 +54,7 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
           onBack={onBack}
         />
       ) : null}
-      {route.name === 'faq' ? <FaqScreen onBack={onBack} /> : null}
+      {route.name === 'faq' ? <FaqScreen onBack={onBack} focus={route.focus} /> : null}
       {route.name === 'myths' ? <MythsScreen onBack={onBack} /> : null}
       {route.name === 'quiz' ? <QuizScreen quizState={quizState} onBack={onBack} onChange={onChange} /> : null}
     </View>
@@ -270,9 +270,9 @@ function ArticleScreen({
   );
 }
 
-function FaqScreen({ onBack }: { onBack: () => void }) {
+function FaqScreen({ onBack, focus }: { onBack: () => void; focus?: string }) {
   const [query, setQuery] = useState('');
-  const [openId, setOpenId] = useState<string | null>(FAQS[0].id);
+  const [openId, setOpenId] = useState<string | null>(FAQS.some((item) => item.id === focus) ? focus! : FAQS[0].id);
   const needle = fold(query.trim());
   const items = FAQS.filter((item) => !needle || fold(`${item.question} ${item.answer}`).includes(needle));
 
