@@ -104,9 +104,9 @@ export function QuickGrid({
   );
 }
 
-export function CampaignCard() {
+export function CampaignCard({ onPress }: { onPress?: () => void }) {
   return (
-    <View style={styles.card}>
+    <Pressable accessibilityRole="button" onPress={onPress} style={styles.card}>
       <View style={styles.row}>
         <View style={[styles.well, { backgroundColor: colors.teal100 }]}>
           <Ionicons name="megaphone-outline" size={20} color={colors.teal600} />
@@ -125,7 +125,7 @@ export function CampaignCard() {
         </View>
       </View>
       <Text style={styles.source}>Fonte: Ministério da Saúde · Publicado em 12/10/2026</Text>
-    </View>
+    </Pressable>
   );
 }
 
