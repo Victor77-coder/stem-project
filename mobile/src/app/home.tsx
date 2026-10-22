@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CentersFlow } from '@/components/centers/CentersFlow';
 import { JourneyFlow } from '@/components/journey/JourneyFlow';
 import { LearnFlow, type LearnRoute } from '@/components/learn/LearnFlow';
 import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
+import { type CenterFilter } from '@/content/centers';
 import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
@@ -56,6 +58,7 @@ function DonorHome({
   open,
   onJourney,
   onQuestionnaire,
+  onCenters,
 }: {
   name: string;
   sex: Sexo;
@@ -63,6 +66,7 @@ function DonorHome({
   open: (route: LearnRoute) => void;
   onJourney: () => void;
   onQuestionnaire: () => void;
+  onCenters: (filter?: CenterFilter) => void;
 }) {
   const card = homeCard('doador', current);
   return (
@@ -94,7 +98,13 @@ function DonorHome({
             well: colors.primary100,
             onPress: () => open({ name: 'library' }),
           },
-          { title: 'Centros perto de\nmim', icon: 'location-outline', iconColor: colors.teal600, well: colors.teal100 },
+          {
+            title: 'Centros perto de\nmim',
+            icon: 'location-outline',
+            iconColor: colors.teal600,
+            well: colors.teal100,
+            onPress: () => onCenters(),
+          },
           {
             title: 'Questionário de\norientação',
             icon: 'clipboard-outline',
@@ -105,8 +115,10 @@ function DonorHome({
           { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
         ]}
       />
-      <SectionTitle link="Ver todas">Campanhas perto de você</SectionTitle>
-      <CampaignCard />
+      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
+        Campanhas perto de você
+      </SectionTitle>
+      <CampaignCard onPress={() => onCenters('campanha')} />
       <SectionTitle link="Ver mais" onLink={() => open({ name: 'library' })}>
         Recomendado para você
       </SectionTitle>
@@ -140,12 +152,14 @@ function ReceptorHome({
   current,
   open,
   onJourney,
+  onCenters,
 }: {
   name: string;
   sex: Sexo;
   current: number;
   open: (route: LearnRoute) => void;
   onJourney: () => void;
+  onCenters: (filter?: CenterFilter) => void;
 }) {
   const card = homeCard('receptor', current);
   return (
@@ -171,7 +185,13 @@ function ReceptorHome({
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
-          { title: 'Centros\ntransplantadores', icon: 'document-text-outline', iconColor: colors.teal600, well: colors.teal100 },
+          {
+            title: 'Centros\ntransplantadores',
+            icon: 'document-text-outline',
+            iconColor: colors.teal600,
+            well: colors.teal100,
+            onPress: () => onCenters('transplante'),
+          },
           {
             title: 'Entenda seu\ntratamento',
             icon: 'book-outline',
@@ -222,7 +242,13 @@ function ReceptorHome({
   );
 }
 
-function LeigoHome({ open }: { open: (route: LearnRoute) => void }) {
+function LeigoHome({
+  open,
+  onCenters,
+}: {
+  open: (route: LearnRoute) => void;
+  onCenters: (filter?: CenterFilter) => void;
+}) {
   return (
     <>
       <HomeHeader
@@ -258,13 +284,21 @@ function LeigoHome({ open }: { open: (route: LearnRoute) => void }) {
             well: colors.warning100,
             onPress: () => open({ name: 'myths' }),
           },
-          { title: 'Centros e\ncampanhas', icon: 'location-outline', iconColor: colors.teal600, well: colors.teal100 },
+          {
+            title: 'Centros e\ncampanhas',
+            icon: 'location-outline',
+            iconColor: colors.teal600,
+            well: colors.teal100,
+            onPress: () => onCenters(),
+          },
           { title: 'Estatísticas do\nBrasil', icon: 'bar-chart-outline', iconColor: colors.textSecondary, well: colors.surfaceMuted },
         ]}
       />
       <ProfileInvite onPress={() => router.push('/profile')} />
-      <SectionTitle link="Ver todas">Campanhas perto de você</SectionTitle>
-      <CampaignCard />
+      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
+        Campanhas perto de você
+      </SectionTitle>
+      <CampaignCard onPress={() => onCenters('campanha')} />
     </>
   );
 }
@@ -276,6 +310,7 @@ export default function HomeScreen() {
   const [orientation, setOrientation] = useState(false);
   const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
   const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
+  const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'leigo' ? 'leigo' : profile;
@@ -290,6 +325,13 @@ export default function HomeScreen() {
     setOrientation(false);
     setTab(id);
     if (id === 'aprender') setLearnStack([{ name: 'library' }]);
+    if (id === 'centros') setCentersFilter('todos');
+  }
+
+  function openCenters(filter: CenterFilter = 'todos') {
+    setOrientation(false);
+    setCentersFilter(filter);
+    setTab('centros');
   }
 
   function openFromQuestionnaire(route: LearnRoute) {
@@ -316,9 +358,10 @@ export default function HomeScreen() {
                 current={progress.receptor}
                 open={openLearn}
                 onJourney={openJourney}
+                onCenters={openCenters}
               />
             ) : profile === 'leigo' ? (
-              <LeigoHome open={openLearn} />
+              <LeigoHome open={openLearn} onCenters={openCenters} />
             ) : (
               <DonorHome
                 name={draft.name}
@@ -327,6 +370,7 @@ export default function HomeScreen() {
                 open={openLearn}
                 onJourney={openJourney}
                 onQuestionnaire={() => setOrientation(true)}
+                onCenters={openCenters}
               />
             )}
           </ScrollView>
@@ -349,8 +393,17 @@ export default function HomeScreen() {
               router.push('/profile');
             }}
           />
+        ) : tab === 'centros' ? (
+          <CentersFlow
+            initialFilter={centersFilter}
+            savedCity={draft.city}
+            savedUf={draft.uf}
+            savedCep={draft.cep}
+            allowed={draft.allowLocation}
+            onAllowLocation={() => update({ allowLocation: true })}
+          />
         ) : (
-          <Soon title={tab === 'centros' ? 'Centros' : 'Perfil'} />
+          <Soon title="Perfil" />
         )}
         <TabBar value={tab} onChange={onTab} />
       </SafeAreaView>
