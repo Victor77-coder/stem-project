@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/Button';
@@ -22,13 +23,29 @@ const profileLabel = {
 } as const;
 
 export default function ReviewScreen() {
-  const { draft, isLeigo } = useRegistration();
+  const { draft, isLeigo, signedIn, signUp, changeProfile } = useRegistration();
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  async function confirm() {
+    setBusy(true);
+    setError('');
+    try {
+      await (signedIn ? changeProfile() : signUp());
+      router.push('/conclusion');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível concluir o cadastro.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <Screen
       footer={
         <View style={{ gap: 10 }}>
-          <Button label="Confirmar cadastro" onPress={() => router.push('/conclusion')} />
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          <Button label={busy ? 'Enviando…' : 'Confirmar cadastro'} disabled={busy} onPress={confirm} />
           <Button label="Voltar e editar" variant="ghost" onPress={() => router.back()} />
         </View>
       }
@@ -73,5 +90,6 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   label: { ...type.caption, color: colors.muted, fontWeight: '600' },
+  error: { ...type.caption, color: colors.danger, textAlign: 'center' },
   value: { ...type.body, color: colors.ink },
 });

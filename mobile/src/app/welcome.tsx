@@ -10,9 +10,24 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
 export default function WelcomeScreen() {
-  const { update } = useRegistration();
+  const { update, signIn } = useRegistration();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  async function enter() {
+    setBusy(true);
+    setError('');
+    try {
+      await signIn(email, password);
+      router.replace('/home');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível entrar.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <Screen>
@@ -61,8 +76,10 @@ export default function WelcomeScreen() {
         <Text style={styles.forgotText}>Esqueci a minha senha</Text>
       </Pressable>
 
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
       <View style={styles.actions}>
-        <Button label="Entrar" onPress={() => router.replace('/home')} />
+        <Button label={busy ? 'Entrando…' : 'Entrar'} disabled={busy || !email.trim() || !password} onPress={enter} />
 
         <View style={styles.orRow}>
           <View style={styles.orLine} />
@@ -98,6 +115,7 @@ const styles = StyleSheet.create({
   subtitle: { ...type.body, color: colors.muted, textAlign: 'center' },
   forgot: { alignSelf: 'flex-end', marginTop: -8, paddingVertical: 4 },
   forgotText: { ...type.caption, color: colors.primary, fontWeight: '600' },
+  error: { ...type.caption, color: colors.danger },
   actions: { gap: 12, marginTop: 8 },
   orRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
   orLine: { flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: colors.line },

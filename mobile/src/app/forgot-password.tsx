@@ -6,6 +6,7 @@ import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
 import { Logo } from '@/components/Logo';
 import { Screen } from '@/components/Screen';
+import { api } from '@/lib/api';
 import { colors, type } from '@/theme';
 
 type Step = 'email' | 'code' | 'password' | 'done';
@@ -39,7 +40,24 @@ export default function ForgotPasswordScreen() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
   const codeInputRef = useRef<TextInput>(null);
+
+  async function call(path: string, body: Record<string, string>, next?: Step) {
+    setBusy(true);
+    setError('');
+    try {
+      await api(path, { method: 'POST', body: { identifier: contact, ...body }, auth: false });
+      if (next) setStep(next);
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível concluir agora.');
+      return false;
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (step !== 'code') return;
@@ -62,6 +80,7 @@ export default function ForgotPasswordScreen() {
   const canSave = hasMin && hasUpper && hasNumber && password === confirm && confirm.length > 0;
 
   function goBack() {
+    setError('');
     if (step === 'code') {
       setStep('email');
       return;
@@ -145,10 +164,10 @@ export default function ForgotPasswordScreen() {
           />
           <Button
             label="Enviar código"
-            disabled={contact.trim().length < 3}
+            disabled={contact.trim().length < 3 || busy}
             onPress={() => {
               setCode('');
-              setStep('code');
+              void call('/auth/password/forgot/', {}, 'code');
             }}
           />
           <View style={styles.info}>
@@ -188,7 +207,11 @@ export default function ForgotPasswordScreen() {
               style={styles.otpInput}
             />
           </View>
-          <Button label="Verificar" disabled={code.length < 6} onPress={() => setStep('password')} />
+          <Button
+            label="Verificar"
+            disabled={code.length < 6 || busy}
+            onPress={() => void call('/auth/password/verify/', { code }, 'password')}
+          />
           <Text style={styles.resend}>
             {secondsLeft > 0 ? (
               `Não recebeu? Reenviar em ${formatTimer(secondsLeft)}`
@@ -201,6 +224,7 @@ export default function ForgotPasswordScreen() {
                     setCode('');
                     setSecondsLeft(RESEND_SECONDS);
                     codeInputRef.current?.focus();
+                    void call('/auth/password/forgot/', {});
                   }}
                 >
                   Reenviar
@@ -234,9 +258,15 @@ export default function ForgotPasswordScreen() {
             <Rule ok={hasUpper} label="Uma letra maiúscula" />
             <Rule ok={hasNumber} label="Um número" />
           </View>
-          <Button label="Salvar nova senha" disabled={!canSave} onPress={() => setStep('done')} />
+          <Button
+            label="Salvar nova senha"
+            disabled={!canSave || busy}
+            onPress={() => void call('/auth/password/reset/', { code, password }, 'done')}
+          />
         </>
       ) : null}
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </Screen>
   );
 }
@@ -308,6 +338,7 @@ const styles = StyleSheet.create({
   },
   resend: { ...type.caption, color: TEXT_SECONDARY, textAlign: 'center' },
   resendLink: { color: colors.primary, fontWeight: '700' },
+  error: { ...type.caption, color: colors.danger, textAlign: 'center' },
   rules: {
     borderRadius: 16,
     backgroundColor: colors.field,

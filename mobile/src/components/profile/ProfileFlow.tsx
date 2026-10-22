@@ -1,5 +1,6 @@
-import { useEffect, useState, type ComponentProps, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ComponentProps, type ReactNode } from 'react';
 import {
+  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -21,6 +22,7 @@ import {
   type HistoryIcon,
 } from '@/content/profile';
 import { useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 type Screen =
@@ -63,47 +65,87 @@ const HISTORY_ICON: Record<HistoryIcon, keyof typeof Ionicons.glyphMap> = {
   person: 'person-outline',
 };
 
-let sessionHistory: HistoryEvent[] | null = null;
-let sessionClosed = false;
+type ApiHistory = { id: number; icon: HistoryIcon; title: string; detail: string; when: string };
+
+function fromApi(item: ApiHistory): HistoryEvent {
+  return { id: String(item.id), icon: item.icon, title: item.title, detail: item.detail, when: stamp(new Date(item.when)) };
+}
 
 export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfile }: Props) {
-  const { draft, update, reset } = useRegistration();
+  const { draft, update, signedIn, acceptedAt, save, signOut, deactivate } = useRegistration();
   const [screen, setScreen] = useState<Screen>('hub');
   const [confirm, setConfirm] = useState(false);
   const [exportNote, setExportNote] = useState('');
-  const [history, setHistory] = useState<HistoryEvent[]>(() => sessionHistory ?? seedHistory(profile));
+  const [history, setHistory] = useState<HistoryEvent[]>(() => (signedIn ? [] : seedHistory(profile)));
   const [physicalDraft, setPhysicalDraft] = useState<PhysicalForm | null>(null);
-  const shown = present(draft, profile);
+  const shown = present(draft, profile, acceptedAt);
 
-  useEffect(() => {
-    sessionClosed = false;
-  }, []);
+  const loadHistory = useCallback(() => {
+    if (!signedIn) return;
+    api<ApiHistory[]>('/me/history/')
+      .then((items) => setHistory(items.map(fromApi)))
+      .catch(() => undefined);
+  }, [signedIn]);
 
-  useEffect(() => {
-    if (!sessionClosed) sessionHistory = history;
-  }, [history]);
+  useEffect(loadHistory, [loadHistory]);
 
   function pushHistory(events: HistoryEvent[]) {
     if (!events.length) return;
     setHistory((list) => [...events, ...list]);
   }
 
-  function leave() {
-    sessionClosed = true;
-    sessionHistory = null;
-    reset();
+  async function persist(patch: Partial<RegistrationDraft>, events: HistoryEvent[], currentPassword?: string) {
+    try {
+      await save(patch, currentPassword);
+    } catch (err) {
+      Alert.alert('Não foi possível salvar', err instanceof Error ? err.message : 'Tente novamente.');
+      return false;
+    }
+    if (signedIn) loadHistory();
+    else pushHistory(events);
+    setScreen('hub');
+    return true;
+  }
+
+  async function leave() {
+    await signOut();
     router.replace('/welcome');
   }
 
+  async function inactivate(password: string) {
+    try {
+      await deactivate(password);
+    } catch (err) {
+      Alert.alert('Não foi possível inativar', err instanceof Error ? err.message : 'Tente novamente.');
+      return;
+    }
+    setConfirm(false);
+    router.replace('/welcome');
+  }
+
+  async function exportData() {
+    if (!signedIn || !shown.email) {
+      setExportNote('Adicione um e-mail em Dados da conta para receber a cópia.');
+      return;
+    }
+    try {
+      const data = await api<{ detail: string }>('/me/export/', { method: 'POST' });
+      setExportNote(`${data.detail} (${shown.emailMasked})`);
+    } catch (err) {
+      setExportNote(err instanceof Error ? err.message : 'Não foi possível enviar agora.');
+    }
+  }
+
   function savePhysical(next: PhysicalForm, prev: PhysicalForm) {
-    pushHistory(diffPhysical(prev, next));
-    update({
-      weight: stripUnit(next.weight),
-      height: stripUnit(next.height),
-      sex: next.sex,
-      comorbidities: next.comorbidities,
-    });
-    setScreen('hub');
+    void persist(
+      {
+        weight: stripUnit(next.weight),
+        height: stripUnit(next.height),
+        sex: next.sex,
+        comorbidities: next.comorbidities,
+      },
+      diffPhysical(prev, next),
+    );
   }
 
   return (
@@ -114,7 +156,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           shown={shown}
           onOpen={setScreen}
           onNotifications={onNotifications}
-          onLogout={leave}
+          onLogout={() => void leave()}
           onChooseProfile={onChooseProfile}
         />
       ) : null}
@@ -123,22 +165,11 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           shown={shown}
           draft={draft}
           onCancel={() => setScreen('hub')}
-          onSave={(patch, events) => {
-            pushHistory(events);
-            update(patch);
-            setScreen('hub');
-          }}
+          onSave={(patch, events, currentPassword) => void persist(patch, events, currentPassword)}
         />
       ) : null}
       {screen === 'contact' ? (
-        <ContactScreen
-          draft={draft}
-          onCancel={() => setScreen('hub')}
-          onSave={(patch) => {
-            update(patch);
-            setScreen('hub');
-          }}
-        />
+        <ContactScreen draft={draft} onCancel={() => setScreen('hub')} onSave={(patch) => void persist(patch, [])} />
       ) : null}
       {screen === 'physical' ? (
         <PhysicalScreen
@@ -167,11 +198,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           draft={draft}
           shown={shown}
           onCancel={() => setScreen('hub')}
-          onSave={(patch, events) => {
-            pushHistory(events);
-            update(patch);
-            setScreen('hub');
-          }}
+          onSave={(patch, events) => void persist(patch, events)}
         />
       ) : null}
       {screen === 'privacy' ? (
@@ -180,13 +207,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           exportNote={exportNote}
           onBack={() => setScreen('hub')}
           onReadTerm={() => router.push('/tcle')}
-          onExport={() =>
-            setExportNote(
-              shown.email
-                ? `A cópia será enviada para ${shown.emailMasked}.`
-                : 'Adicione um e-mail em Dados da conta para receber a cópia.',
-            )
-          }
+          onExport={() => void exportData()}
           onPermissions={() => setScreen('permissions')}
           onInactivate={() => setConfirm(true)}
         />
@@ -194,7 +215,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       {screen === 'permissions' ? (
         <PermissionsScreen
           allowed={draft.allowLocation}
-          onToggle={(allowLocation) => update({ allowLocation })}
+          onToggle={(allowLocation) => void save({ allowLocation }).catch(() => update({ allowLocation: !allowLocation }))}
           onNotifications={onNotifications}
           onBack={() => setScreen('privacy')}
         />
@@ -215,14 +236,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
         />
       ) : null}
 
-      <ConfirmSheet
-        visible={confirm}
-        onCancel={() => setConfirm(false)}
-        onConfirm={() => {
-          setConfirm(false);
-          leave();
-        }}
-      />
+      <ConfirmSheet visible={confirm} onCancel={() => setConfirm(false)} onConfirm={(password) => void inactivate(password)} />
     </View>
   );
 }
@@ -318,7 +332,7 @@ function AccountScreen({
   shown: Shown;
   draft: RegistrationDraft;
   onCancel: () => void;
-  onSave: (patch: Partial<RegistrationDraft>, events: HistoryEvent[]) => void;
+  onSave: (patch: Partial<RegistrationDraft>, events: HistoryEvent[], currentPassword: string) => void;
 }) {
   const [name, setName] = useState(draft.name || (shown.demo ? shown.name : ''));
   const [email, setEmail] = useState(draft.email || (shown.demo ? 'mn@gmail.com' : ''));
@@ -349,6 +363,7 @@ function AccountScreen({
         ...(nextPassword ? { password: nextPassword } : {}),
       },
       events,
+      currentPassword,
     );
   }
 
@@ -790,7 +805,16 @@ function TermsScreen({
   );
 }
 
-function ConfirmSheet({ visible, onCancel, onConfirm }: { visible: boolean; onCancel: () => void; onConfirm: () => void }) {
+function ConfirmSheet({
+  visible,
+  onCancel,
+  onConfirm,
+}: {
+  visible: boolean;
+  onCancel: () => void;
+  onConfirm: (password: string) => void;
+}) {
+  const [password, setPassword] = useState('');
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <View style={styles.sheetBackdrop}>
@@ -803,7 +827,8 @@ function ConfirmSheet({ visible, onCancel, onConfirm }: { visible: boolean; onCa
           <Text style={styles.sheetBody}>
             Seu perfil ficará inativo e seus dados pessoais serão anonimizados. Registros anonimizados são mantidos apenas para histórico, conforme a LGPD.
           </Text>
-          <Pressable accessibilityRole="button" onPress={onConfirm} style={styles.dangerBtn}>
+          <Field label="Confirme com sua senha" value={password} onChangeText={setPassword} secureTextEntry />
+          <Pressable accessibilityRole="button" onPress={() => onConfirm(password)} style={styles.dangerBtn}>
             <Text style={styles.primaryBtnText}>Sim, inativar conta</Text>
           </Pressable>
           <Pressable accessibilityRole="button" onPress={onCancel} style={styles.outlineBtn}>
@@ -1001,8 +1026,11 @@ type Shown = {
   termsWhen: string;
 };
 
-function present(draft: RegistrationDraft, profile: ProfileType): Shown {
-  const demo = !draft.name && !draft.email && !draft.weight && !draft.cep && !draft.cpf;
+function present(draft: RegistrationDraft, profile: ProfileType, acceptedAt: string | null): Shown {
+  const demo = !acceptedAt && !draft.name && !draft.email && !draft.weight && !draft.cep && !draft.cpf;
+  const accepted = acceptedAt ? new Date(acceptedAt) : null;
+  const acceptedDay = accepted ? accepted.toLocaleDateString('pt-BR') : '';
+  const acceptedTime = accepted ? accepted.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
   const leigo = profile === 'leigo';
   const sex: Sexo = draft.sex || (demo && !leigo ? 'feminino' : '');
   const name = leigo ? draft.name || 'Visitante' : draft.name || 'Maria Silva';
@@ -1026,9 +1054,17 @@ function present(draft: RegistrationDraft, profile: ProfileType): Shown {
     city,
     uf,
     locationLine: cep || place ? `CEP ${formatCep(cep) || '—'} · ${place || '—'}` : 'Informe seu CEP',
-    tcleHub: draft.tcleAccepted || (demo && !leigo) ? 'TCLE v1.0 aceito em 17/10/2026' : 'TCLE pendente',
-    tcleDetail: draft.tcleAccepted || (demo && !leigo) ? 'Versão 1.0 · aceito em 01/10/2026 às 21:15' : 'Versão 1.0 · aceite pendente',
-    termsWhen: draft.tcleAccepted || demo ? 'Aceito em 17/10/2026' : 'Aceite pendente',
+    tcleHub: accepted
+      ? `TCLE v${draft.tcleVersion} aceito em ${acceptedDay}`
+      : draft.tcleAccepted || (demo && !leigo)
+        ? 'TCLE v1.0 aceito em 17/10/2026'
+        : 'TCLE pendente',
+    tcleDetail: accepted
+      ? `Versão ${draft.tcleVersion} · aceito em ${acceptedDay} às ${acceptedTime}`
+      : draft.tcleAccepted || (demo && !leigo)
+        ? 'Versão 1.0 · aceito em 01/10/2026 às 21:15'
+        : 'Versão 1.0 · aceite pendente',
+    termsWhen: accepted ? `Aceito em ${acceptedDay}` : draft.tcleAccepted || demo ? 'Aceito em 17/10/2026' : 'Aceite pendente',
   };
 }
 
@@ -1072,8 +1108,7 @@ function extraComorbidities(selected: string[]) {
   return [...PROFILE_COMORBIDITIES, ...extra];
 }
 
-function stamp() {
-  const date = new Date();
+function stamp(date = new Date()) {
   const day = date.toLocaleDateString('pt-BR');
   const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   return `${day} · ${time}`;

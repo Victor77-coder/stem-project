@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,27 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
 export default function LeigoScreen() {
-  const { draft, update } = useRegistration();
+  const { draft, update, signUp } = useRegistration();
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  async function enter() {
+    update({ profile: 'leigo' });
+    if (!draft.email.trim()) {
+      router.push('/conclusion');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      await signUp();
+      router.push('/conclusion');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível salvar o contato.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     update({ profile: 'leigo' });
@@ -84,14 +104,9 @@ export default function LeigoScreen() {
         comorbidades ou TCLE.
       </Text>
 
-      <Button
-        label="Acessar aplicativo"
-        disabled={!draft.tcleAccepted}
-        onPress={() => {
-          update({ profile: 'leigo' });
-          router.push('/conclusion');
-        }}
-      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      <Button label={busy ? 'Enviando…' : 'Acessar aplicativo'} disabled={!draft.tcleAccepted || busy} onPress={enter} />
     </Screen>
   );
 }
@@ -123,4 +138,5 @@ const styles = StyleSheet.create({
   checkText: { ...type.secondary, color: colors.ink, flex: 1 },
   link: { color: colors.primary, fontWeight: '600' },
   caption: { ...type.caption, color: colors.muted },
+  error: { ...type.caption, color: colors.danger },
 });

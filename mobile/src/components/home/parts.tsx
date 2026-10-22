@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 type Ion = keyof typeof Ionicons.glyphMap;
@@ -156,7 +158,24 @@ export function ArticleList({
   );
 }
 
-export function EstimateCard() {
+type Estimate = { available: boolean; label?: string; value?: string; detail?: string; disclaimer: string };
+
+export function EstimateCard({ uf = '', city = '' }: { uf?: string; city?: string }) {
+  const [estimate, setEstimate] = useState<Estimate | null>(null);
+
+  useEffect(() => {
+    api<Estimate>(`/estimativa/?perfil=receptor&uf=${encodeURIComponent(uf)}`)
+      .then(setEstimate)
+      .catch(() => setEstimate(null));
+  }, [uf]);
+
+  const place = city && uf ? `${city}/${uf}` : uf || 'Maceió/AL';
+  const value = estimate ? (estimate.available ? estimate.value : estimate.detail) : '~120 dias';
+  const caption = estimate?.available ? `${estimate.label} · ${place}` : estimate ? '' : 'tempo médio até o transplante em Maceió/AL';
+  const note =
+    estimate?.disclaimer ??
+    'Aproximação estatística baseada em dados públicos e localização. Não é garantia de atendimento, procedimento ou prazo.';
+
   return (
     <View style={styles.estimate}>
       <View style={styles.estimateHead}>
@@ -164,12 +183,10 @@ export function EstimateCard() {
         <Text style={styles.estimateTitle}>Estimativa para a sua região</Text>
       </View>
       <View style={styles.estimateStat}>
-        <Text style={styles.estimateValue}>~120 dias</Text>
-        <Text style={styles.estimateCaption}>tempo médio até o transplante em Maceió/AL</Text>
+        <Text style={styles.estimateValue}>{value}</Text>
+        {caption ? <Text style={styles.estimateCaption}>{caption}</Text> : null}
       </View>
-      <Text style={styles.estimateNote}>
-        Aproximação estatística baseada em dados públicos e localização. Não é garantia de atendimento, procedimento ou prazo.
-      </Text>
+      <Text style={styles.estimateNote}>{note}</Text>
     </View>
   );
 }

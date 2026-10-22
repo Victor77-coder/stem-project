@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 export type Ion = keyof typeof Ionicons.glyphMap;
@@ -29,7 +30,7 @@ const disease = { well: colors.teal100, iconColor: colors.teal600 };
 const law = { well: colors.surfaceMuted, iconColor: colors.textSecondary };
 const myth = { well: colors.warning100, iconColor: colors.warning700 };
 
-export const ARTICLES: Article[] = [
+export let ARTICLES: Article[] = [
   {
     id: 'o-que-sao',
     title: 'Células-tronco: o que são e como podem salvar vidas',
@@ -247,7 +248,7 @@ export const ARTICLES: Article[] = [
   },
 ];
 
-export const MYTHS: { tag: 'Mito' | 'Verdade'; quote: string; body: string }[] = [
+export let MYTHS: { tag: 'Mito' | 'Verdade'; quote: string; body: string }[] = [
   {
     tag: 'Mito',
     quote: '“Doar medula é tirar um pedaço da coluna.”',
@@ -270,7 +271,7 @@ export const MYTHS: { tag: 'Mito' | 'Verdade'; quote: string; body: string }[] =
   },
 ];
 
-export const FAQS: { id: string; question: string; answer: string }[] = [
+export let FAQS: { id: string; question: string; answer: string }[] = [
   {
     id: 'dor',
     question: 'Doar medula óssea dói?',
@@ -307,8 +308,80 @@ export const FAQS: { id: string; question: string; answer: string }[] = [
   },
 ];
 
+type ApiArticle = {
+  id: string;
+  title: string;
+  summary: string;
+  category: string;
+  minutes: number;
+  list: Article['list'];
+  featured: boolean;
+  keywords: string;
+  tag: string;
+  validated: string;
+  source: string;
+  sections: { title: string; body: string }[];
+};
+
+const FROM_PANEL: Record<string, Category> = {
+  'O que é célula-tronco': 'Conceito',
+  'O que o Brasil autoriza': 'Leis no Brasil',
+  Doenças: 'Doenças',
+  Mitos: 'Mitos',
+};
+
+const LOOK: Record<Category, Pick<Article, 'icon' | 'well' | 'iconColor'>> = {
+  Conceito: { icon: 'git-network-outline', ...concept },
+  'Leis no Brasil': { icon: 'scale-outline', ...law },
+  Doenças: { icon: 'pulse-outline', ...disease },
+  Mitos: { icon: 'bulb-outline', ...myth },
+};
+
+let loaded: Promise<boolean> | null = null;
+
+/** Troca o conteúdo embarcado pelo publicado na API. Sem rede, ou sem nada publicado, o app segue com o embarcado. */
+export function loadCatalog(): Promise<boolean> {
+  loaded ??= api<ApiArticle[]>('/conteudos/')
+    .then((items) => {
+      const articles = items.flatMap((item): Article[] => {
+        const category = FROM_PANEL[item.category];
+        if (!category || item.tag) return [];
+        return [
+          {
+            id: item.id,
+            title: item.title,
+            category,
+            minutes: item.minutes,
+            ...LOOK[category],
+            list: item.list,
+            featured: item.featured || undefined,
+            keywords: item.keywords || undefined,
+            validated: item.validated || undefined,
+            source: item.source,
+            sections: item.sections,
+          },
+        ];
+      });
+      const myths = items
+        .filter((item) => item.category === 'Mitos' && (item.tag === 'Mito' || item.tag === 'Verdade'))
+        .map((item) => ({ tag: item.tag as 'Mito' | 'Verdade', quote: item.title, body: item.summary }));
+      const faqs = items
+        .filter((item) => item.category === 'FAQ')
+        .map((item) => ({ id: item.id.replace(/^faq-/, ''), question: item.title, answer: item.summary }));
+      if (articles.length) ARTICLES = articles;
+      if (myths.length) MYTHS = myths;
+      if (faqs.length) FAQS = faqs;
+      return Boolean(articles.length || myths.length || faqs.length);
+    })
+    .catch(() => {
+      loaded = null;
+      return false;
+    });
+  return loaded;
+}
+
 export function articleById(id: string) {
-  return ARTICLES.find((item) => item.id === id) ?? ARTICLES[1];
+  return ARTICLES.find((item) => item.id === id) ?? ARTICLES[1] ?? ARTICLES[0];
 }
 
 export function catalogArticles() {

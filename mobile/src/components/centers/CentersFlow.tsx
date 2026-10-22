@@ -15,9 +15,31 @@ import {
   type CenterResult,
   type Origin,
 } from '@/content/centers';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 type Screen = 'permission' | 'map' | 'list' | 'detail';
+
+type ApiCenter = Omit<CenterResult, 'cnes' | 'hours' | 'phone' | 'eventWhen' | 'km' | 'distance'> & {
+  cnes: string | null;
+  hours: string | null;
+  phone: string | null;
+  eventWhen: string | null;
+  km: number | null;
+  distance: string | null;
+};
+
+function fromApi(item: ApiCenter): CenterResult {
+  return {
+    ...item,
+    cnes: item.cnes ?? undefined,
+    hours: item.hours ?? undefined,
+    phone: item.phone ?? undefined,
+    eventWhen: item.eventWhen ?? undefined,
+    km: item.km ?? 0,
+    distance: item.distance ?? '',
+  };
+}
 
 type Props = {
   initialFilter?: CenterFilter;
@@ -51,8 +73,23 @@ export function CentersFlow({
   }, [initialFilter]);
 
   const nameQuery = query.replace(/\D/g, '').length === 8 ? '' : query;
-  const results = useMemo(() => listCenters(origin, filter, nameQuery), [origin, filter, nameQuery]);
-  const selected = selectedId ? centerById(selectedId, origin) : undefined;
+  const local = useMemo(() => listCenters(origin, filter, nameQuery), [origin, filter, nameQuery]);
+  const [remote, setRemote] = useState<CenterResult[] | null>(null);
+  const results = remote ?? local;
+  const selected = selectedId ? (results.find((item) => item.id === selectedId) ?? centerById(selectedId, origin)) : undefined;
+
+  useEffect(() => {
+    const params = new URLSearchParams({ lat: String(origin.lat), lng: String(origin.lng), raio: String(RADIUS_KM) });
+    if (filter !== 'todos') params.set('kind', filter);
+    if (nameQuery.trim()) params.set('q', nameQuery.trim());
+    let active = true;
+    api<{ results: ApiCenter[] }>(`/centros/?${params}`)
+      .then((data) => active && setRemote(data.results.map(fromApi)))
+      .catch(() => active && setRemote(null));
+    return () => {
+      active = false;
+    };
+  }, [origin, filter, nameQuery]);
 
   function onQuery(value: string) {
     setQuery(value);
