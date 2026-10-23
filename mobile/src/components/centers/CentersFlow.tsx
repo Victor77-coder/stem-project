@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   FILTERS,
@@ -16,7 +16,10 @@ import {
   type Origin,
 } from '@/content/centers';
 import { api } from '@/lib/api';
+import { hasLocationPermission, originFromCep, requestDeviceOrigin } from '@/lib/location';
 import { colors } from '@/theme';
+import { CentersMap } from './CentersMap';
+import { iconColor, kindIcon, wellColor } from './kind';
 
 type Screen = 'permission' | 'map' | 'list' | 'detail';
 
@@ -62,7 +65,12 @@ export function CentersFlow({
   const [cepMode, setCepMode] = useState(false);
   const [cep, setCep] = useState(savedCep);
   const [hint, setHint] = useState('');
-  const [origin, setOrigin] = useState<Origin>({ ...ORIGINS.maceio, mode: 'gps' });
+  const [locating, setLocating] = useState(false);
+  const [blocked, setBlocked] = useState(false);
+  const [origin, setOrigin] = useState<Origin>(() =>
+    savedCity ? originFromCity(savedCity, savedUf) : { ...ORIGINS.maceio, mode: 'cep' },
+  );
+  const queryRun = useRef(0);
   const [filter, setFilter] = useState<CenterFilter>(initialFilter);
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -94,7 +102,12 @@ export function CentersFlow({
   function onQuery(value: string) {
     setQuery(value);
     const digits = value.replace(/\D/g, '');
-    if (digits.length === 8 || /recife|macei[oó]/i.test(value)) {
+    const run = ++queryRun.current;
+    if (digits.length === 8) {
+      void originFromCep(digits).then((result) => {
+        if (result.ok && run === queryRun.current) setOrigin(result.origin);
+      });
+    } else if (/recife|macei[oó]/i.test(value)) {
       setOrigin(originFromQuery(value));
     }
   }
@@ -105,20 +118,65 @@ export function CentersFlow({
     setScreen('map');
   }
 
-  function allowGps() {
-    onAllowLocation?.();
-    const next = savedCity ? originFromCity(savedCity, savedUf, 'gps') : { ...ORIGINS.maceio, mode: 'gps' as const };
-    openMap(next);
-  }
+  const locate = useCallback(async () => {
+    setLocating(true);
+    const result = await requestDeviceOrigin();
+    setLocating(false);
+    if (result.ok) {
+      setBlocked(false);
+      setHint('');
+      if (!allowed) onAllowLocation?.();
+      setOrigin(result.origin);
+      setBrowse('map');
+      setScreen('map');
+      return;
+    }
+    setScreen('permission');
+    setCepMode(true);
+    if (result.reason === 'denied') {
+      setBlocked(!result.canAskAgain);
+      setHint('Sem permissão de localização. Informe o CEP ou a cidade.');
+    } else {
+      setHint('Não foi possível obter sua localização agora. Informe o CEP ou a cidade.');
+    }
+  }, [allowed, onAllowLocation]);
 
-  function submitCep() {
+  useEffect(() => {
+    if (!allowed) return;
+    // RF009: a posição é renovada a cada visita à aba, sem pedir permissão de novo se já houver.
+    void hasLocationPermission()
+      .catch(() => false)
+      .then((granted) => {
+        if (granted) void locate();
+        else setScreen('permission');
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!blocked) return;
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state !== 'active') return;
+      void hasLocationPermission().then((granted) => granted && void locate());
+    });
+    return () => subscription.remove();
+  }, [blocked, locate]);
+
+  async function submitCep() {
     const value = cep.trim();
     if (value.replace(/\D/g, '').length !== 8 && value.length < 3) {
       setHint('Informe um CEP com 8 dígitos ou o nome da cidade.');
       return;
     }
+    setLocating(true);
+    const result = await originFromCep(value);
+    setLocating(false);
+    if (!result.ok) {
+      setHint(result.message);
+      return;
+    }
     setHint('');
-    openMap(originFromQuery(value || savedCity || 'Maceió'));
+    openMap(result.origin);
   }
 
   function openDetail(id: string) {
@@ -132,10 +190,13 @@ export function CentersFlow({
         cepMode={cepMode}
         cep={cep}
         hint={hint}
+        locating={locating}
+        blocked={blocked && Platform.OS !== 'web'}
         onCep={setCep}
-        onAllow={allowGps}
+        onAllow={() => void locate()}
         onAskCep={() => setCepMode(true)}
-        onSubmitCep={submitCep}
+        onSubmitCep={() => void submitCep()}
+        onOpenSettings={() => void Linking.openSettings()}
       />
     );
   }
@@ -209,18 +270,24 @@ function PermissionScreen({
   cepMode,
   cep,
   hint,
+  locating,
+  blocked,
   onCep,
   onAllow,
   onAskCep,
   onSubmitCep,
+  onOpenSettings,
 }: {
   cepMode: boolean;
   cep: string;
   hint: string;
+  locating: boolean;
+  blocked: boolean;
   onCep: (value: string) => void;
   onAllow: () => void;
   onAskCep: () => void;
   onSubmitCep: () => void;
+  onOpenSettings: () => void;
 }) {
   return (
     <View style={styles.fill}>
@@ -254,13 +321,34 @@ function PermissionScreen({
       </ScrollView>
       <View style={styles.permissionFooter}>
         {cepMode ? (
-          <Pressable accessibilityRole="button" onPress={onSubmitCep} style={styles.primary}>
-            <Text style={styles.primaryText}>Ver centros próximos</Text>
-          </Pressable>
+          <>
+            <Pressable
+              accessibilityRole="button"
+              disabled={locating}
+              onPress={onSubmitCep}
+              style={[styles.primary, locating && styles.busy]}
+            >
+              <Text style={styles.primaryText}>{locating ? 'Buscando…' : 'Ver centros próximos'}</Text>
+            </Pressable>
+            {blocked ? (
+              <Pressable accessibilityRole="button" onPress={onOpenSettings} style={styles.ghost}>
+                <Text style={styles.ghostText}>Ativar localização nos ajustes</Text>
+              </Pressable>
+            ) : (
+              <Pressable accessibilityRole="button" disabled={locating} onPress={onAllow} style={styles.ghost}>
+                <Text style={styles.ghostText}>Usar minha localização</Text>
+              </Pressable>
+            )}
+          </>
         ) : (
           <>
-            <Pressable accessibilityRole="button" onPress={onAllow} style={styles.primary}>
-              <Text style={styles.primaryText}>Permitir localização</Text>
+            <Pressable
+              accessibilityRole="button"
+              disabled={locating}
+              onPress={onAllow}
+              style={[styles.primary, locating && styles.busy]}
+            >
+              <Text style={styles.primaryText}>{locating ? 'Localizando…' : 'Permitir localização'}</Text>
             </Pressable>
             <Pressable accessibilityRole="button" onPress={onAskCep} style={styles.ghost}>
               <Text style={styles.ghostText}>Informar só o CEP</Text>
@@ -302,7 +390,7 @@ function MapScreen({
 }) {
   return (
     <View style={styles.fill}>
-      <MockMap origin={origin} results={results} onOpen={onOpen} />
+      <CentersMap origin={origin} results={results} onOpen={onOpen} />
       <View style={styles.searchFloat}>
         <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
         <TextInput
@@ -407,7 +495,7 @@ function DetailScreen({
   return (
     <ScrollView style={styles.fill} contentContainerStyle={styles.detailScroll} showsVerticalScrollIndicator={false}>
       <View style={styles.hero}>
-        <MockMap origin={origin} results={pins} onOpen={onOpen} height={220} />
+        <CentersMap origin={origin} results={pins} onOpen={onOpen} height={248} focus={center} />
         <Pressable accessibilityRole="button" accessibilityLabel="Voltar" onPress={onBack} style={styles.backFab}>
           <Ionicons name="chevron-back" size={22} color={colors.ink} />
         </Pressable>
@@ -530,72 +618,6 @@ function KindChip({ kind }: { kind: CenterKind }) {
   );
 }
 
-function MockMap({
-  origin,
-  results,
-  onOpen,
-  height,
-}: {
-  origin: Origin;
-  results: CenterResult[];
-  onOpen: (id: string) => void;
-  height?: number;
-}) {
-  return (
-    <View style={[styles.map, height ? styles.mapHero : styles.mapFill]}>
-      <View style={[styles.block, { top: 48, left: 24, width: 90, height: 70 }]} />
-      <View style={[styles.block, { top: 40, right: 36, width: 80, height: 80, backgroundColor: colors.teal100 }]} />
-      <View style={[styles.block, { top: 160, left: 70, width: 110, height: 64 }]} />
-      <View style={[styles.block, { top: 210, right: 20, width: 96, height: 72, backgroundColor: '#DCE8F8' }]} />
-      <View style={[styles.streetH, { top: 128 }]} />
-      <View style={[styles.streetH, { top: 250 }]} />
-      <View style={[styles.streetV, { left: '38%' }]} />
-      <View style={[styles.streetV, { left: '68%' }]} />
-      <View style={[styles.userDot, { top: '46%', left: '48%' }]} />
-      {results.map((center) => {
-        const pin = project(origin, center);
-        return (
-          <Pressable
-            key={center.id}
-            accessibilityRole="button"
-            accessibilityLabel={center.shortName}
-            onPress={() => onOpen(center.id)}
-            style={[styles.pin, { top: pin.top, left: pin.left, backgroundColor: wellColor(center.kind) }]}
-          >
-            <Ionicons name={kindIcon(center.kind)} size={12} color={iconColor(center.kind)} />
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
-function project(origin: Origin, center: { lat: number; lng: number }) {
-  const x = 48 + (center.lng - origin.lng) * 420;
-  const y = 46 - (center.lat - origin.lat) * 420;
-  return {
-    top: `${Math.min(82, Math.max(14, y))}%` as const,
-    left: `${Math.min(84, Math.max(8, x))}%` as const,
-  };
-}
-
-function wellColor(kind: CenterKind) {
-  if (kind === 'transplante') return colors.primary100;
-  if (kind === 'campanha') return colors.warning100;
-  return colors.teal100;
-}
-
-function iconColor(kind: CenterKind) {
-  if (kind === 'transplante') return colors.primary600;
-  if (kind === 'campanha') return colors.warning700;
-  return colors.teal600;
-}
-
-function kindIcon(kind: CenterKind): keyof typeof Ionicons.glyphMap {
-  if (kind === 'campanha') return 'megaphone-outline';
-  return 'business-outline';
-}
-
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   permissionBody: { paddingHorizontal: 28, paddingTop: 48, paddingBottom: 24, alignItems: 'center' },
@@ -648,33 +670,7 @@ const styles = StyleSheet.create({
   primaryText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: '#FFFFFF' },
   ghost: { height: 44, alignItems: 'center', justifyContent: 'center' },
   ghostText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: colors.primary600 },
-  map: { backgroundColor: '#E7EEF6', overflow: 'hidden' },
-  mapFill: { flex: 1 },
-  mapHero: { height: 248, flexGrow: 0, flexShrink: 0 },
-  block: { position: 'absolute', borderRadius: 12, backgroundColor: '#F4F7FB' },
-  streetH: { position: 'absolute', left: 0, right: 0, height: 10, backgroundColor: '#F8FBFE' },
-  streetV: { position: 'absolute', top: 0, bottom: 0, width: 10, backgroundColor: '#F8FBFE' },
-  userDot: {
-    position: 'absolute',
-    width: 16,
-    height: 16,
-    marginLeft: -8,
-    marginTop: -8,
-    borderRadius: 8,
-    backgroundColor: colors.primary600,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-  },
-  pin: {
-    position: 'absolute',
-    width: 28,
-    height: 28,
-    marginLeft: -14,
-    marginTop: -14,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  busy: { opacity: 0.6 },
   searchFloat: {
     position: 'absolute',
     top: 12,

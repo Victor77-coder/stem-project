@@ -1,6 +1,7 @@
-import { AlertCircle, KeyRound, LockKeyhole, Mail, Send } from 'lucide-react'
+import { AlertCircle, Mail, Send } from 'lucide-react'
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
+import loginIllustration from '../assets/login-illustration.png'
 import { Button, Modal, PasswordInput, ShieldIcon, TextInput } from '../components/ui'
 import { useStore } from '../data/store'
 import { api } from '../lib/api'
@@ -95,11 +96,8 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <div className="hidden flex-[1.4] items-center justify-center bg-[#d9d9d9] md:flex">
-        <div className="relative flex size-80 items-center justify-center rounded-full bg-white/50">
-          <LockKeyhole className="size-32 text-[#3b82f6]" strokeWidth={1.2} />
-          <KeyRound className="absolute right-6 bottom-10 size-20 -rotate-12 text-[#2563eb]" strokeWidth={1.2} />
-        </div>
+      <div className="hidden flex-[1.4] items-center justify-center bg-[#dadada] md:flex">
+        <img src={loginIllustration} alt="" className="w-3/5 max-w-[500px]" />
       </div>
 
       <div className="flex flex-1 items-center justify-center p-8">
