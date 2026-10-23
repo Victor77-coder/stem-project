@@ -143,6 +143,7 @@ REST_FRAMEWORK = {
         'register': '20/hour',
         'password': '5/min',
         'request': '5/hour',
+        'geo': '30/min',
     },
     'EXCEPTION_HANDLER': 'config.exceptions.exception_handler',
 }

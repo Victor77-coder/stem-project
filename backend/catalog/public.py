@@ -9,9 +9,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from accounts.throttling import scoped
 from consent.models import ConsentDocument
 
 from .cache import cached_response
+from .geo import locate_cep, normalize_cep
 from .models import Attachment, Center, Content, EstimateRule, GlossaryTerm, JourneyStep, PublishStatus, Statistic
 
 RADIUS_KM = 50
@@ -233,6 +235,20 @@ def center_detail(request, slug):
     lat, lng = _float(request.query_params.get('lat')), _float(request.query_params.get('lng'))
     km = haversine_km(lat, lng, item.lat, item.lng) if None not in (lat, lng, item.lat, item.lng) else None
     return Response(center(item, km))
+
+
+@scoped('geo')
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def cep_location(request, cep):
+    """RF009: CEP digitado vira ponto de origem para /centros. O CEP não é associado a ninguém aqui."""
+    digits = normalize_cep(cep)
+    if digits is None:
+        return Response({'detail': 'Informe um CEP com 8 dígitos.'}, status=400)
+    found = locate_cep(digits)
+    if found is None:
+        return Response({'detail': 'Não encontramos a localização deste CEP.'}, status=404)
+    return Response(found)
 
 
 def _latest(indicator: str, recorte: str, period: str) -> Statistic | None:

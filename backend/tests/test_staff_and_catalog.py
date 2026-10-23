@@ -3,6 +3,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from rest_framework.test import APIClient
 
+from catalog import geo
 from catalog.models import Content
 
 from .conftest import DONOR, auth
@@ -145,6 +146,61 @@ def test_centers_sorted_by_distance_within_radius(api, seeded):
     assert [item['km'] for item in near] == sorted(item['km'] for item in near)
     recife = api.get('/api/v1/centros/', {'lat': -8.0476, 'lng': -34.877, 'kind': 'hemocentro'}).data['results']
     assert [item['id'] for item in recife] == ['hemope']
+
+
+BRASILAPI_HIT = {
+    'cep': '57035230',
+    'state': 'AL',
+    'city': 'Maceió',
+    'neighborhood': 'Ponta Verde',
+    'street': 'Rua Exemplo',
+    'location': {'type': 'Point', 'coordinates': {'latitude': '-9.6658', 'longitude': '-35.7350'}},
+}
+
+
+def fake_remote(responses):
+    calls = []
+
+    def get_json(url):
+        calls.append(url)
+        for prefix, payload in responses.items():
+            if url.startswith(prefix):
+                if isinstance(payload, Exception):
+                    raise payload
+                return payload
+        raise AssertionError(url)
+
+    return get_json, calls
+
+
+def test_cep_uses_brasilapi_coordinates_and_caches(api, monkeypatch):
+    get_json, calls = fake_remote({geo.BRASILAPI_URL[:30]: BRASILAPI_HIT})
+    monkeypatch.setattr(geo, '_get_json', get_json)
+    data = api.get('/api/v1/geo/cep/57035-230/').data
+    assert data == {
+        'cep': '57035230', 'address': 'Rua Exemplo', 'district': 'Ponta Verde', 'city': 'Maceió', 'uf': 'AL',
+        'lat': -9.6658, 'lng': -35.735, 'precision': 'cep',
+    }
+    assert api.get('/api/v1/geo/cep/57035230/').status_code == 200
+    assert len(calls) == 1
+
+
+def test_cep_without_coordinates_falls_back_to_city(api, monkeypatch):
+    get_json, calls = fake_remote({
+        geo.BRASILAPI_URL[:30]: {**BRASILAPI_HIT, 'location': {'type': 'Point', 'coordinates': {}}},
+        geo.NOMINATIM_URL: [{'lat': '-9.6498', 'lon': '-35.7089'}],
+    })
+    monkeypatch.setattr(geo, '_get_json', get_json)
+    data = api.get('/api/v1/geo/cep/57035230/').data
+    assert (data['lat'], data['lng'], data['precision']) == (-9.6498, -35.7089, 'cidade')
+    assert len(calls) == 2
+
+
+def test_cep_invalid_or_unknown(api, monkeypatch):
+    get_json, _ = fake_remote({geo.BRASILAPI_URL[:30]: OSError('404')})
+    monkeypatch.setattr(geo, '_get_json', get_json)
+    assert api.get('/api/v1/geo/cep/1234/').status_code == 400
+    assert api.get('/api/v1/geo/cep/99999999/').status_code == 404
 
 
 def test_estimate_always_carries_disclaimer(api, seeded):
