@@ -53,6 +53,7 @@ export const KIND_LABEL: Record<CenterKind, string> = {
 
 export const RADIUS_KM = 50;
 
+/** Origem de reserva: busca por nome de cidade e modo sem servidor. GPS e CEP usam coordenadas reais. */
 export const ORIGINS = {
   maceio: { lat: -9.6658, lng: -35.735, label: 'Maceió/AL', city: 'Maceió', uf: 'AL' },
   recife: { lat: -8.0476, lng: -34.877, label: 'Recife/PE', city: 'Recife', uf: 'PE' },

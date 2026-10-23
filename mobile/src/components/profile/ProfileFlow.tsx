@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState, type ComponentProps, type ReactNode } from 'react';
 import {
   Alert,
+  Linking,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,6 +25,7 @@ import {
 } from '@/content/profile';
 import { useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
+import { requestLocationPermission } from '@/lib/location';
 import { colors } from '@/theme';
 
 type Screen =
@@ -215,7 +218,12 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       {screen === 'permissions' ? (
         <PermissionsScreen
           allowed={draft.allowLocation}
-          onToggle={(allowLocation) => void save({ allowLocation }).catch(() => update({ allowLocation: !allowLocation }))}
+          onToggle={(allowLocation) =>
+            void (async () => {
+              if (allowLocation && !(await grantLocation())) return;
+              await save({ allowLocation }).catch(() => update({ allowLocation: !allowLocation }));
+            })()
+          }
           onNotifications={onNotifications}
           onBack={() => setScreen('privacy')}
         />
@@ -568,12 +576,28 @@ function LocationScreen({
         <Switch
           accessibilityLabel="Usar localização do aparelho"
           value={allow}
-          onValueChange={setAllow}
+          onValueChange={(value) => (value ? void grantLocation().then(setAllow) : setAllow(false))}
           trackColor={{ false: colors.borderSubtle, true: colors.primary600 }}
         />
       </View>
     </FormScreen>
   );
+}
+
+/** O opt-in do perfil só vale se o sistema também liberar o GPS; sem isso o app segue pelo CEP. */
+async function grantLocation() {
+  const { granted, canAskAgain } = await requestLocationPermission().catch(() => ({ granted: false, canAskAgain: false }));
+  if (!granted && !canAskAgain && Platform.OS !== 'web') {
+    Alert.alert(
+      'Localização bloqueada',
+      'Permita o acesso à localização nos ajustes do aparelho para ver centros perto de você.',
+      [
+        { text: 'Agora não', style: 'cancel' },
+        { text: 'Abrir ajustes', onPress: () => void Linking.openSettings() },
+      ],
+    );
+  }
+  return granted;
 }
 
 function PrivacyScreen({

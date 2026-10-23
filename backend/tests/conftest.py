@@ -10,7 +10,7 @@ from accounts.models import Role, User
 def _isolated(settings, tmp_path):
     settings.MEDIA_ROOT = tmp_path
     settings.CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
-    settings.REST_FRAMEWORK = {**settings.REST_FRAMEWORK, 'DEFAULT_THROTTLE_RATES': {k: '1000/min' for k in ('login', 'register', 'password', 'request')}}
+    settings.REST_FRAMEWORK = {**settings.REST_FRAMEWORK, 'DEFAULT_THROTTLE_RATES': {k: '1000/min' for k in ('login', 'register', 'password', 'request', 'geo')}}
     cache.clear()
 
 
