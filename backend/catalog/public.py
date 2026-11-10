@@ -255,26 +255,35 @@ def _latest(indicator: str, recorte: str, period: str) -> Statistic | None:
     return Statistic.objects.filter(indicador=indicator, recorte=recorte, periodo=period).order_by('-data_extracao').first()
 
 
+def _national_periods(indicator: str) -> set[str]:
+    return set(Statistic.objects.filter(indicador=indicator, recorte='BR').values_list('periodo', flat=True))
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def statistics(request):
     def build():
+        # A série anual é a de transplantes (Tabnet); doadores usa os mesmos anos (cadastros no ano, REDOME).
         years = sorted(
-            set(Statistic.objects.filter(indicador=Statistic.Indicator.DOADORES).values_list('periodo', flat=True)), reverse=True
+            _national_periods(Statistic.Indicator.TRANSPLANTES) or _national_periods(Statistic.Indicator.DOADORES), reverse=True
         )
         if not years:
             return {'years': [], 'available': False, 'detail': 'Estatísticas indisponíveis no momento.'}
         year = request.query_params.get('ano') if request.query_params.get('ano') in years else years[0]
-        uf = (request.query_params.get('uf') or 'AL').upper()
-        region = REGION_OF.get(uf, 'Nordeste')
-        donors = _latest(Statistic.Indicator.DOADORES, 'BR', year)
-        transplants = _latest(Statistic.Indicator.TRANSPLANTES, 'BR', year)
+        # uf=BR (padrão, como no app) é o recorte nacional; o tempo de espera só existe por região.
+        uf = (request.query_params.get('uf') or 'BR').upper()
+        national = uf == 'BR'
+        region = None if national else REGION_OF.get(uf, 'Nordeste')
+        # Os dois cartões seguem os filtros de Estado (Brasil ou UF, por residência) e de Ano. Doadores é o número
+        # de cadastros no ano, como o painel do REDOME com o filtro "Ano".
+        donors = _latest(Statistic.Indicator.DOADORES, uf, year)
+        transplants = _latest(Statistic.Indicator.TRANSPLANTES, uf, year)
         regions = []
         for name in ('Sudeste', 'Sul', 'Nordeste', 'Centro-Oeste', 'Norte'):
             row = _latest(Statistic.Indicator.TRANSPLANTES_REGIAO, name, year)
             if row:
                 regions.append({'name': name, 'value': int(row.valor)})
-        wait = _latest(Statistic.Indicator.ESPERA, region, year)
+        wait = _latest(Statistic.Indicator.ESPERA, region, year) if region else None
         rows = [row for row in (donors, transplants, wait) if row]
         return {
             'available': True,
@@ -288,7 +297,7 @@ def statistics(request):
             },
             'regions': regions,
             'wait': wait.rotulo if wait else '',
-            'source': rows[0].fonte if rows else '',
+            'source': '; '.join(dict.fromkeys(row.fonte for row in rows)),
             'extractedAt': br_date(max(row.data_extracao for row in rows)) if rows else '',
             'underreporting': any(row.aviso_subnotificacao for row in rows),
             'notice': UNDERREPORTING_NOTICE,
