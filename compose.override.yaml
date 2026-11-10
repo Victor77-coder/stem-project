@@ -12,6 +12,14 @@ services:
       mailpit:
         condition: service_started
 
+  celery-worker:
+    volumes:
+      - ./backend:/app
+
+  prefect-server:
+    ports:
+      - "127.0.0.1:${STEM_PREFECT_PORT:-4200}:4200"
+
   db:
     ports:
       - "127.0.0.1:${STEM_DB_PORT:-5432}:5432"

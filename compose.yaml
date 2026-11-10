@@ -1,11 +1,16 @@
+x-backend-env: &backend-env
+  DATABASE_URL: postgres://${POSTGRES_USER:-stem}:${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}@db:5432/${POSTGRES_DB:-stem}
+  REDIS_URL: redis://cache:6379/0
+  CELERY_BROKER_URL: redis://broker:6379/0
+  PREFECT_API_URL: http://prefect-server:4200/api
+  PREFECT_API_AUTH_STRING: ${PREFECT_AUTH:?defina PREFECT_AUTH no .env}
+
 services:
   api:
     build:
       context: ./backend
     env_file: .env
-    environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-stem}:${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}@db:5432/${POSTGRES_DB:-stem}
-      REDIS_URL: redis://cache:6379/0
+    environment: *backend-env
     ports:
       - "8000:8000"
     volumes:
@@ -16,12 +21,27 @@ services:
       # Redis é só cache: a API precisa subir e responder mesmo com ele fora do ar.
       cache:
         condition: service_started
+      broker:
+        condition: service_started
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/')"]
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 20s
+    restart: unless-stopped
+
+  celery-worker:
+    build:
+      context: ./backend
+    env_file: .env
+    environment: *backend-env
+    command: ["celery", "-A", "config", "worker", "-Q", "celery", "--loglevel=info", "--concurrency=2"]
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
     restart: unless-stopped
 
   db:
@@ -53,7 +73,96 @@ services:
       start_period: 5s
     restart: unless-stopped
 
+  # Fila do Celery. Separada do cache: com allkeys-lru o Redis de cache pode descartar tarefas.
+  broker:
+    image: redis:7.4
+    command: ["redis-server", "--maxmemory-policy", "noeviction", "--appendonly", "yes"]
+    volumes:
+      - broker-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  prefect-db:
+    image: postgres:17.6
+    environment:
+      POSTGRES_USER: prefect
+      POSTGRES_PASSWORD: ${PREFECT_DB_PASSWORD:-prefect}
+      POSTGRES_DB: prefect
+    volumes:
+      - prefect-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prefect -d prefect"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  prefect-server:
+    image: prefecthq/prefect:3-python3.11
+    command: ["prefect", "server", "start", "--host", "0.0.0.0"]
+    environment:
+      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:${PREFECT_DB_PASSWORD:-prefect}@prefect-db:5432/prefect
+      PREFECT_SERVER_API_AUTH_STRING: ${PREFECT_AUTH:?defina PREFECT_AUTH no .env}
+      PREFECT_UI_API_URL: /api
+    depends_on:
+      prefect-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4200/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+  # Só constrói a imagem que o prefect-worker executa a cada coleta.
+  collectors:
+    image: stem-collectors:local
+    build:
+      context: .
+      dockerfile: infra/collectors/Dockerfile
+    entrypoint: ["/bin/true"]
+    restart: "no"
+
+  prefect-worker:
+    image: stem-prefect-worker:local
+    build:
+      context: .
+      dockerfile: infra/collectors/Dockerfile.worker
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+      PREFECT_API_AUTH_STRING: ${PREFECT_AUTH:?defina PREFECT_AUTH no .env}
+      PREFECT_CLI_PROMPT: "0"
+      COLLECTORS_IMAGE: stem-collectors:local
+      COLLECTORS_NETWORK: stem-net
+      COLLECTORS_DATA_VOLUME: stem-collector-data
+      INGEST_URL: http://api:8000/api/internal/ingest/
+      INGEST_API_TOKEN: ${INGEST_API_TOKEN:?defina INGEST_API_TOKEN no .env}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+      collectors:
+        condition: service_completed_successfully
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+networks:
+  default:
+    name: stem-net
+
 volumes:
   db-data:
   cache-data:
   media-data:
+  broker-data:
+  prefect-db-data:
+  collector-data:
+    name: stem-collector-data

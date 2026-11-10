@@ -1,0 +1,13 @@
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+.git
+.data
+backend
+web
+mobile
+*.mp4
+*.pdf
+*.docx
+*.pages
+message-1.txt

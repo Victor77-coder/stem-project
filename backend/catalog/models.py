@@ -133,8 +133,19 @@ class Center(models.Model):
         TRANSPLANTE = 'transplante', 'Transplante'
         CAMPANHA = 'campanha', 'Campanha'
 
+    class Origin(models.TextChoices):
+        MANUAL = 'manual', 'Cadastro da equipe'
+        CNES = 'cnes', 'Coleta do CNES'
+
     slug = models.SlugField(max_length=60, unique=True)
     cnes = models.CharField(max_length=7, blank=True)
+    codigo_ibge = models.CharField(max_length=7, blank=True)
+    origem = models.CharField(
+        max_length=10, choices=Origin.choices, default=Origin.MANUAL, help_text='Centros manuais nunca são alterados pela coleta.'
+    )
+    revisar = models.BooleanField(default=False)
+    motivo_revisao = models.CharField(max_length=300, blank=True)
+    dados_cnes = models.JSONField(default=dict, blank=True, help_text='Último registro recebido do CNES, para comparar cargas.')
     nome = models.CharField(max_length=200)
     nome_curto = models.CharField(max_length=80)
     endereco = models.CharField(max_length=200)
@@ -158,6 +169,7 @@ class Center(models.Model):
         ordering = ['uf', 'cidade', 'nome']
         constraints = [
             published_needs(~Q(fonte='') & Q(fonte_data__isnull=False), 'centro_publicado_tem_fonte_e_data'),
+            models.UniqueConstraint(fields=['cnes'], condition=~Q(cnes=''), name='centro_cnes_unico'),
         ]
 
     def __str__(self):
