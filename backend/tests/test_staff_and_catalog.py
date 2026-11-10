@@ -212,8 +212,9 @@ def test_estimate_always_carries_disclaimer(api, seeded):
 
 def test_statistics_have_source_and_underreporting_notice(api, seeded):
     data = api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'PE'}).data
-    assert data['headline']['donors'] == '5,4 mi'
+    assert data['headline']['donors'] == '', 'o seed só tem doadores no Brasil'
     assert data['wait'] == '4,8 meses'
+    assert api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'BR'}).data['headline']['donors'] == '5,4 mi'
     assert data['underreporting'] is True and data['source']
 
 
