@@ -87,12 +87,19 @@ export function CentersFlow({
   const selected = selectedId ? (results.find((item) => item.id === selectedId) ?? centerById(selectedId, origin)) : undefined;
 
   useEffect(() => {
-    const params = new URLSearchParams({ lat: String(origin.lat), lng: String(origin.lng), raio: String(RADIUS_KM) });
+    const params = new URLSearchParams({
+      lat: String(origin.lat),
+      lng: String(origin.lng),
+      raio: String(RADIUS_KM),
+    });
     if (filter !== 'todos') params.set('kind', filter);
     if (nameQuery.trim()) params.set('q', nameQuery.trim());
     let active = true;
     api<{ results: ApiCenter[] }>(`/centros/?${params}`)
-      .then((data) => active && setRemote(data.results.map(fromApi)))
+      .then((data) => {
+        if (!active) return;
+        setRemote(data.results.map(fromApi));
+      })
       .catch(() => active && setRemote(null));
     return () => {
       active = false;

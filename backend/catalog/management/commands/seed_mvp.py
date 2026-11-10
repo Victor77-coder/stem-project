@@ -141,6 +141,7 @@ class Command(BaseCommand):
             slug = row.pop('slug')
             row['fonte_data'] = date.fromisoformat(row['fonte_data'])
             Center.objects.update_or_create(slug=slug, defaults={**row, 'status': PublishStatus.PUBLICADO})
+        Center.objects.filter(slug__in=data.RETIRED_CENTERS).update(status=PublishStatus.INATIVO)
 
     def _notices(self):
         now = timezone.now()
@@ -157,8 +158,12 @@ class Command(BaseCommand):
     def _statistics(self):
         extracted = date.fromisoformat(data.STATS_DATE)
         base = {'fonte': data.STATS_SOURCE, 'data_extracao': extracted}
+        # Números de exemplo só onde ainda não há dado real (coleta tcth ou cadastro no painel).
+        real = set(Statistic.objects.exclude(fonte=data.STATS_SOURCE).values_list('indicador', flat=True))
 
         def put(indicator, recorte, period, value, label):
+            if indicator in real:
+                return
             Statistic.objects.update_or_create(
                 indicador=indicator, recorte=recorte, periodo=period, data_extracao=extracted,
                 defaults={'valor': Decimal(str(value)), 'rotulo': label, **base},

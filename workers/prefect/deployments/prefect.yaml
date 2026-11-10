@@ -1,0 +1,40 @@
+name: stem
+prefect-version: "3.0.0"
+
+build: null
+push: null
+
+pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /app
+
+deployments:
+  - name: cnes-centros
+    description: Hemocentros e centros de transplante de medula (CNES) em todo o Brasil, competência mais recente
+    entrypoint: workers/flows/collect.py:collect_flow
+    work_pool:
+      name: stem-docker
+      work_queue_name: default
+    tags: [cnes, centros, monthly]
+    parameters:
+      source: cnes
+      ufs: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+    # O DATASUS publica a competência do CNES por volta do dia 15.
+    schedules:
+      - cron: "0 6 20 * *"
+        timezone: America/Maceio
+
+  - name: tcth-estatisticas
+    description: Transplantes de medula no SUS (DataSUS/Tabnet, SIH) e doadores no REDOME (painel Power BI), por UF, região e Brasil
+    entrypoint: workers/flows/collect.py:collect_flow
+    work_pool:
+      name: stem-docker
+      work_queue_name: default
+    tags: [tcth, estatisticas, monthly]
+    # Sempre nacional; a competência vazia usa a mais recente publicada no Tabnet.
+    parameters:
+      source: tcth
+    # Mensal: o SIH revisa os últimos meses e o total do REDOME muda ao longo do ano.
+    schedules:
+      - cron: "0 7 20 * *"
+        timezone: America/Maceio
