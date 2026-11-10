@@ -175,18 +175,25 @@ type ApiStats = {
   extractedAt: string;
 };
 
+// "Brasil" é o recorte nacional do filtro; a API recebe uf=BR.
+const NATIONAL = 'BR';
+const PLACES: [string, string][] = [[NATIONAL, 'Brasil'], ...UFS.map(([code, name]): [string, string] => [code, name])];
+
 function localStats(year: StatYear, uf: string) {
+  const national = uf === NATIONAL;
+  const cards = headline(year);
   return {
     years: [...YEARS] as string[],
-    cards: headline(year),
+    // Os dados locais só têm totais nacionais.
+    cards: national ? cards : { donors: '', transplants: '' },
     bars: regionBars(year) as { name: string; value: number }[],
-    wait: waitFor(uf),
+    wait: national ? '' : waitFor(uf),
     source: 'Fonte: DataSUS/Tabnet e REDOME · Atualizado em 08/2026',
   };
 }
 
 function StatsScreen({ onBack }: { onBack: () => void }) {
-  const [uf, setUf] = useState('AL');
+  const [uf, setUf] = useState(NATIONAL);
   const [year, setYear] = useState<StatYear>('2025');
   const [picking, setPicking] = useState<null | 'uf' | 'year'>(null);
   const [remote, setRemote] = useState<ApiStats | null>(null);
@@ -209,9 +216,10 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
     : fallback;
   const bars = stats.bars;
   const max = Math.max(1, ...bars.map((bar) => bar.value));
-  const region = regionOf(uf);
+  const national = uf === NATIONAL;
+  const region = national ? null : regionOf(uf);
   const cards = stats.cards;
-  const ufName = UFS.find(([code]) => code === uf)?.[1] ?? uf;
+  const ufName = PLACES.find(([code]) => code === uf)?.[1] ?? uf;
 
   return (
     <View style={styles.fill}>
@@ -235,20 +243,20 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
             <View style={[styles.miniWell, { backgroundColor: colors.primary100 }]}>
               <Ionicons name="people-outline" size={16} color={colors.primary600} />
             </View>
-            <Text style={styles.statValue}>{cards.donors}</Text>
+            <Text style={styles.statValue}>{cards.donors || '—'}</Text>
             <Text style={styles.statCaption}>doadores no REDOME</Text>
           </View>
           <View style={styles.statCard}>
             <View style={[styles.miniWell, { backgroundColor: colors.teal100 }]}>
               <Ionicons name="pulse-outline" size={16} color={colors.teal600} />
             </View>
-            <Text style={styles.statValue}>{cards.transplants}</Text>
-            <Text style={styles.statCaption}>transplantes de medula em {year}</Text>
+            <Text style={styles.statValue}>{cards.transplants || '—'}</Text>
+            <Text style={styles.statCaption}>transplantes de medula</Text>
           </View>
         </View>
 
         <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Transplantes de medula por região ({year})</Text>
+          <Text style={styles.panelTitle}>Transplantes de medula por região</Text>
           {bars.map((bar) => {
             const active = bar.name === region;
             return (
@@ -268,11 +276,13 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
           })}
         </View>
 
-        <View style={styles.waitCard}>
-          <Text style={styles.waitLabel}>Tempo médio de espera por doador não aparentado</Text>
-          <Text style={styles.waitValue}>{stats.wait}</Text>
-          <Text style={styles.waitHint}>Recorte aproximado para {ufName}. Não é prazo de atendimento.</Text>
-        </View>
+        {stats.wait ? (
+          <View style={styles.waitCard}>
+            <Text style={styles.waitLabel}>Tempo médio de espera por doador não aparentado</Text>
+            <Text style={styles.waitValue}>{stats.wait}</Text>
+            <Text style={styles.waitHint}>Recorte aproximado para {ufName}. Não é prazo de atendimento.</Text>
+          </View>
+        ) : null}
 
         <View style={styles.warn}>
           <Ionicons name="warning-outline" size={16} color={colors.danger600} />
@@ -290,7 +300,7 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
         options={
           picking === 'year'
             ? stats.years.map((item) => ({ id: item, label: item }))
-            : UFS.map(([code, name]) => ({ id: code, label: name }))
+            : PLACES.map(([code, name]) => ({ id: code, label: name }))
         }
         selected={picking === 'year' ? year : uf}
         onSelect={(id) => {
