@@ -1,0 +1,24 @@
+[project]
+name = "stem-workers"
+version = "0.1.0"
+description = "Coletores de dados públicos do STEM Project"
+# 3.11 é a versão das imagens de coleta e do worker Prefect. PySUS (SIH) exige < 3.12.
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "pyreaddbc>=1.2,<2",
+  "dbfread>=2.0,<3",
+]
+
+[project.optional-dependencies]
+worker = [
+  "prefect>=3,<4",
+  "docker>=7,<8",
+]
+dev = [
+  "pytest>=8.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["workers/tests"]
+pythonpath = ["."]
+addopts = "-q"

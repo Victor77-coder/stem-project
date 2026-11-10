@@ -1,0 +1,2852 @@
+{
+ "ST": [
+  {
+   "CNES": "2003899",
+   "CODUFMUN": "270430",
+   "COD_CEP": "57073417",
+   "TP_UNID": "69",
+   "NAT_JUR": "1023",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "2006197",
+   "CODUFMUN": "270430",
+   "COD_CEP": "57072900",
+   "TP_UNID": "05",
+   "NAT_JUR": "1104",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "2007029",
+   "CODUFMUN": "270430",
+   "COD_CEP": "57051380",
+   "TP_UNID": "39",
+   "NAT_JUR": "2062",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "2009250",
+   "CODUFMUN": "270430",
+   "COD_CEP": "57025200",
+   "TP_UNID": "07",
+   "NAT_JUR": "1112",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "4373650",
+   "CODUFMUN": "270430",
+   "COD_CEP": "57052827",
+   "TP_UNID": "69",
+   "NAT_JUR": "2062",
+   "VINC_SUS": "0"
+  },
+  {
+   "CNES": "0000434",
+   "CODUFMUN": "261160",
+   "COD_CEP": "50070555",
+   "TP_UNID": "05",
+   "NAT_JUR": "3999",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "0000809",
+   "CODUFMUN": "261160",
+   "COD_CEP": "52010300",
+   "TP_UNID": "07",
+   "NAT_JUR": "1147",
+   "VINC_SUS": "1"
+  },
+  {
+   "CNES": "5390095",
+   "CODUFMUN": "261390",
+   "COD_CEP": "56912450",
+   "TP_UNID": "39",
+   "NAT_JUR": "1147",
+   "VINC_SUS": "1"
+  }
+ ],
+ "HB": [
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1101",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "0101",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "0905",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "0903",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2601",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1602",
+   "CMPT_INI": "200801",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1712",
+   "CMPT_INI": "200803",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1515",
+   "CMPT_INI": "202603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "3801",
+   "CMPT_INI": "202507",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1420",
+   "CMPT_INI": "202508",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "3807",
+   "CMPT_INI": "202511",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2407",
+   "CMPT_INI": "201803",
+   "CMPT_FIM": "202804"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2902",
+   "CMPT_INI": "202605",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2413",
+   "CMPT_INI": "202511",
+   "CMPT_FIM": "202711"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "0202",
+   "CMPT_INI": "200710",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2802",
+   "CMPT_INI": "201404",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1504",
+   "CMPT_INI": "201811",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1505",
+   "CMPT_INI": "201811",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "3202",
+   "CMPT_INI": "201509",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "3203",
+   "CMPT_INI": "201509",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1902",
+   "CMPT_INI": "201909",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2610",
+   "CMPT_INI": "201403",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1901",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "2901",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2006197",
+   "SGRUPHAB": "1203",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "1901",
+   "CMPT_INI": "200208",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "1407",
+   "CMPT_INI": "201305",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "2802",
+   "CMPT_INI": "201408",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "1406",
+   "CMPT_INI": "200806",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "2601",
+   "CMPT_INI": "200209",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "2801",
+   "CMPT_INI": "200207",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "1420",
+   "CMPT_INI": "202508",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "2610",
+   "CMPT_INI": "201403",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "2009250",
+   "SGRUPHAB": "1408",
+   "CMPT_INI": "201404",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1602",
+   "CMPT_INI": "200801",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1717",
+   "CMPT_INI": "201301",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0305",
+   "CMPT_INI": "201609",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1202",
+   "CMPT_INI": "200910",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1104",
+   "CMPT_INI": "201201",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2411",
+   "CMPT_INI": "201203",
+   "CMPT_FIM": "202708"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2601",
+   "CMPT_INI": "200607",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1203",
+   "CMPT_INI": "199612",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1101",
+   "CMPT_INI": "199612",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2901",
+   "CMPT_INI": "199705",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1901",
+   "CMPT_INI": "199803",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2420",
+   "CMPT_INI": "201012",
+   "CMPT_FIM": "202802"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0401",
+   "CMPT_INI": "200210",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2701",
+   "CMPT_INI": "199909",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2408",
+   "CMPT_INI": "199903",
+   "CMPT_FIM": "202801"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1801",
+   "CMPT_INI": "200503",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1420",
+   "CMPT_INI": "202508",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0203",
+   "CMPT_INI": "202506",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0815",
+   "CMPT_INI": "202404",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3807",
+   "CMPT_INI": "202511",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3801",
+   "CMPT_INI": "202506",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3805",
+   "CMPT_INI": "202512",
+   "CMPT_FIM": "202612"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3516",
+   "CMPT_INI": "202511",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2470",
+   "CMPT_INI": "202510",
+   "CMPT_FIM": "202910"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2606",
+   "CMPT_INI": "200307",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2801",
+   "CMPT_INI": "200309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2604",
+   "CMPT_INI": "200307",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0803",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0804",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0805",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0806",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0802",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1415",
+   "CMPT_INI": "201710",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1204",
+   "CMPT_INI": "202003",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1419",
+   "CMPT_INI": "201510",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3515",
+   "CMPT_INI": "202212",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3508",
+   "CMPT_INI": "202212",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2403",
+   "CMPT_INI": "202003",
+   "CMPT_FIM": "202802"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2413",
+   "CMPT_INI": "202211",
+   "CMPT_FIM": "203009"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3202",
+   "CMPT_INI": "201409",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2407",
+   "CMPT_INI": "199903",
+   "CMPT_FIM": "202708"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2302",
+   "CMPT_INI": "202112",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2461",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1505",
+   "CMPT_INI": "201811",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2442",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2603",
+   "CMPT_INI": "202203",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2446",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2440",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1722",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2404",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "202709"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2611",
+   "CMPT_INI": "201404",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2402",
+   "CMPT_INI": "201509",
+   "CMPT_FIM": "202802"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1416",
+   "CMPT_INI": "201612",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0901",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0902",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0903",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0904",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0905",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0906",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0907",
+   "CMPT_INI": "200603",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1902",
+   "CMPT_INI": "201503",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0202",
+   "CMPT_INI": "201112",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1712",
+   "CMPT_INI": "201110",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1409",
+   "CMPT_INI": "201304",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3507",
+   "CMPT_INI": "202108",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3509",
+   "CMPT_INI": "202108",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3510",
+   "CMPT_INI": "202108",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3511",
+   "CMPT_INI": "202108",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "3512",
+   "CMPT_INI": "202108",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2401",
+   "CMPT_INI": "201310",
+   "CMPT_FIM": "202802"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2452",
+   "CMPT_INI": "202309",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1506",
+   "CMPT_INI": "202012",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2304",
+   "CMPT_INI": "202112",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2208",
+   "CMPT_INI": "201609",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2209",
+   "CMPT_INI": "201609",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2210",
+   "CMPT_INI": "201609",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2211",
+   "CMPT_INI": "201609",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1713",
+   "CMPT_INI": "202212",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "1504",
+   "CMPT_INI": "201811",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "0405",
+   "CMPT_INI": "201702",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2501",
+   "CMPT_INI": "200801",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000434",
+   "SGRUPHAB": "2409",
+   "CMPT_INI": "200711",
+   "CMPT_FIM": "202708"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "1710",
+   "CMPT_INI": "200709",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "1204",
+   "CMPT_INI": "200710",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "2416",
+   "CMPT_INI": "201403",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "1202",
+   "CMPT_INI": "200710",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "2601",
+   "CMPT_INI": "200604",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "1101",
+   "CMPT_INI": "200308",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "3601",
+   "CMPT_INI": "201411",
+   "CMPT_FIM": "999999"
+  },
+  {
+   "CNES": "0000809",
+   "SGRUPHAB": "2418",
+   "CMPT_INI": "202408",
+   "CMPT_FIM": "202808"
+  }
+ ],
+ "SR": [
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "113",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "115",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "121",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "121",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "126",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "126",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "129",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "140",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "140",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "141",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2003899",
+   "SERV_ESP": "145",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "105",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "106",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "106",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "107",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "108",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "110",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "110",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "110",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "111",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "111",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "112",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "112",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "112",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "112",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "113",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "114",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "114",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "116",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "117",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "119",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "120",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "120",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "121",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "122",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "122",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "122",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "122",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "123",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "123",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "124",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "124",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "125",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "125",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "125",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "126",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "127",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "130",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "130",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "130",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "130",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "130",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "131",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "131",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "131",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "132",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "132",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "132",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "132",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "132",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "133",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "133",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "134",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "135",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "135",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "135",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "135",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "135",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "136",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "136",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "139",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "139",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "139",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "140",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "140",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "140",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "140",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "140",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "141",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "141",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "141",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "141",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "142",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "142",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "142",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "142",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "145",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "146",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "146",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "148",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "148",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "149",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "149",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "149",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "149",
+   "CLASS_SR": "014"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "149",
+   "CLASS_SR": "015"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "150",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "151",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "151",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "153",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "160",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "162",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "162",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "163",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "164",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "164",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "164",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "164",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "168",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "169",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "170",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "174",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2006197",
+   "SERV_ESP": "174",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "120",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "120",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "144",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2007029",
+   "SERV_ESP": "145",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "110",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "112",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "112",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "112",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "115",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "120",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "121",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "121",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "122",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "125",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "126",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "131",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "014"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "134",
+   "CLASS_SR": "015"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "135",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "136",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "136",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "139",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "140",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "140",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "140",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "140",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "145",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "149",
+   "CLASS_SR": "015"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "163",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "165",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "170",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "2009250",
+   "SERV_ESP": "174",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "4373650",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "4373650",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "4373650",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "4373650",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "105",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "106",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "107",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "107",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "107",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "108",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "110",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "110",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "111",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "112",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "112",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "112",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "112",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "112",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "114",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "114",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "114",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "114",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "114",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "115",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "115",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "116",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "117",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "117",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "118",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "120",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "120",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "121",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "122",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "122",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "122",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "122",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "123",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "123",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "124",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "125",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "126",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "127",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "129",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "130",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "130",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "130",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "130",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "130",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "131",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "131",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "131",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "132",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "132",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "132",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "132",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "132",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "133",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "133",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "135",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "136",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "136",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "140",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "140",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "140",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "140",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "142",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "142",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "142",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "142",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "146",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "146",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "148",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "148",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "149",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "149",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "149",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "149",
+   "CLASS_SR": "014"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "149",
+   "CLASS_SR": "015"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "150",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "150",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "151",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "152",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "154",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "155",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "155",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "155",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "158",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "160",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "163",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "163",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "163",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "164",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "165",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "168",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "168",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "169",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "169",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "170",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "170",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "174",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000434",
+   "SERV_ESP": "174",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "120",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "120",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "121",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "121",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "122",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "125",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "126",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "126",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "126",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "126",
+   "CLASS_SR": "007"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "126",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "128",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "128",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "128",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "129",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "129",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "132",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "132",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "136",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "139",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "003"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "004"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "005"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "008"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "009"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "010"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "011"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "012"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "145",
+   "CLASS_SR": "013"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "148",
+   "CLASS_SR": "006"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "149",
+   "CLASS_SR": "002"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "149",
+   "CLASS_SR": "014"
+  },
+  {
+   "CNES": "0000809",
+   "SERV_ESP": "170",
+   "CLASS_SR": "001"
+  },
+  {
+   "CNES": "5390095",
+   "SERV_ESP": "128",
+   "CLASS_SR": "001"
+  }
+ ],
+ "_descricao": "Linhas reais do CNES (competencia 2609, AL e PE) recortadas para os casos de teste: 2003899 Hemoal, 4373650 Hemato (privado), 2007029 HEMOPAC (banco de sangue privado), 2006197 HUPAA (hospital geral), 2009250 Maternidade Escola Santa Monica, 0000434 IMIP, 0000809 Hemope, 5390095 Hemocentro Serra Talhada"
+}

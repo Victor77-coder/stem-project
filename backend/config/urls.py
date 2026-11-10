@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from ingestion.ingest_api import ingest
 
 @api_view(['GET'])
 @authentication_classes([])
@@ -19,6 +20,7 @@ api = [
     path('', include('participants.urls')),
     path('', include('engagement.urls')),
     path('', include('catalog.urls')),
+    path('', include('ingestion.urls')),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema')),
 ]
@@ -26,4 +28,5 @@ api = [
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api)),
+    path('api/internal/ingest/', ingest),
 ]

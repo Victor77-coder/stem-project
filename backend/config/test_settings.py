@@ -8,3 +8,6 @@ from .settings import *  # noqa: E402,F403
 
 PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_BROKER_URL = 'memory://'
+INGEST_API_TOKEN = 'test-ingest-token'
