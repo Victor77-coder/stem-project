@@ -141,6 +141,7 @@ class Command(BaseCommand):
             slug = row.pop('slug')
             row['fonte_data'] = date.fromisoformat(row['fonte_data'])
             Center.objects.update_or_create(slug=slug, defaults={**row, 'status': PublishStatus.PUBLICADO})
+        Center.objects.filter(slug__in=data.RETIRED_CENTERS).update(status=PublishStatus.INATIVO)
 
     def _notices(self):
         now = timezone.now()

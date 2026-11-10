@@ -171,30 +171,32 @@ RECEPTOR_STEPS = [
 CNES = 'CNES/DataSUS'
 HEMO_SERVICES = ['Doação de sangue', 'Cadastro de medula (REDOME)', 'Coleta HLA']
 
+# Centros com CNES ficam com origem 'cnes' e passam a ser atualizados pela coleta mensal
+# (workers/collectors/cnes). Os demais centros do recorte (ex.: transplante em Recife) vêm da coleta.
 CENTERS = [
+    # Sem CNES próprio: o único CNES do Hemoal é a sede (2003899). Mantido como cadastro da liga.
     {'slug': 'hemoal-trapiche', 'nome': 'Hemoal · Hemocentro de Alagoas', 'nome_curto': 'Hemoal · Trapiche',
      'endereco': 'Av. Jorge de Lima, 58 · Trapiche da Barra', 'endereco_lista': 'Av. Jorge de Lima, 58 · Trapiche',
      'cidade': 'Maceió', 'uf': 'AL', 'tipo': 'hemocentro', 'lat': -9.6725, 'lng': -35.7583,
-     'horario': 'Seg a sex · 7h às 18h · Sáb · 7h às 12h', 'telefone': '(82) 3315-2102', 'fonte': CNES, 'fonte_data': '2026-09-30',
-     'servicos': HEMO_SERVICES},
+     'horario': 'Seg a sex · 7h às 18h · Sáb · 7h às 12h', 'telefone': '(82) 3315-2102', 'fonte': 'Cadastro da liga (Hemoal)',
+     'fonte_data': '2026-09-30', 'servicos': HEMO_SERVICES, 'origem': 'manual'},
     {'slug': 'hemoal-sede', 'cnes': '2003899', 'nome': 'Hemoal · Sede', 'nome_curto': 'Hemoal · Sede',
      'endereco': 'Av. Menino Marcelo, 9974 · Cidade Universitária', 'cidade': 'Maceió', 'uf': 'AL', 'tipo': 'hemocentro',
      'lat': -9.555, 'lng': -35.77, 'horario': 'Seg a sex · 7h às 18h', 'telefone': '(82) 3373-9628', 'fonte': CNES,
-     'fonte_data': '2026-09-30', 'servicos': HEMO_SERVICES},
-    {'slug': 'hupaa', 'cnes': '2006197', 'nome': 'Hospital Universitário (HUPAA)', 'nome_curto': 'HUPAA',
-     'endereco': 'Av. Lourival Melo Mota, s/n · Tabuleiro do Martins', 'endereco_lista': 'Av. Lourival Melo Mota · Tabuleiro',
-     'cidade': 'Maceió', 'uf': 'AL', 'tipo': 'transplante', 'lat': -9.5556, 'lng': -35.7778, 'horario': 'Atendimento hospitalar 24h',
-     'telefone': '(82) 3214-1100', 'fonte': CNES, 'fonte_data': '2026-09-30',
-     'servicos': ['Transplante de medula', 'Acompanhamento hospitalar']},
+     'fonte_data': '2026-09-30', 'servicos': HEMO_SERVICES, 'origem': 'cnes', 'codigo_ibge': '2704302'},
     {'slug': 'mutirao-hemoal', 'nome': 'Mutirão de cadastro de doadores de medula', 'nome_curto': 'Mutirão de cadastro',
      'endereco': 'Hemoal · Av. Jorge de Lima, 58 · Trapiche da Barra', 'endereco_lista': 'Hemoal · Trapiche',
      'cidade': 'Maceió', 'uf': 'AL', 'tipo': 'campanha', 'lat': -9.6724, 'lng': -35.7578, 'evento_quando': '25 out · 8h–16h',
-     'fonte': 'Ministério da Saúde', 'fonte_data': '2026-10-12', 'servicos': ['Cadastro de medula (REDOME)']},
+     'fonte': 'Ministério da Saúde', 'fonte_data': '2026-10-12', 'servicos': ['Cadastro de medula (REDOME)'], 'origem': 'manual'},
     {'slug': 'hemope', 'cnes': '0000809', 'nome': 'Hemope · Fundação de Hematologia de Pernambuco', 'nome_curto': 'Hemope · Recife',
      'endereco': 'Rua Joaquim Nabuco, 171 · Graças', 'cidade': 'Recife', 'uf': 'PE', 'tipo': 'hemocentro', 'lat': -8.0479,
      'lng': -34.8981, 'horario': 'Consulte o horário no hemocentro', 'telefone': '(81) 3182-4695', 'fonte': CNES,
-     'fonte_data': '2026-09-30', 'servicos': HEMO_SERVICES, 'observacoes': 'Referência regional para transplante.'},
+     'fonte_data': '2026-09-30', 'servicos': HEMO_SERVICES, 'observacoes': 'Referência regional para transplante.',
+     'origem': 'cnes', 'codigo_ibge': '2611606'},
 ]
+
+# HUPAA saiu: no CNES ele não tem habilitação de transplante de medula (2401–2403).
+RETIRED_CENTERS = ['hupaa']
 
 # (id, tipo, título, mensagem, origem, uf, horas atrás, centro)
 NOTICES = [

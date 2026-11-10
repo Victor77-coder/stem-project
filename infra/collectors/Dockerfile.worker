@@ -1,0 +1,15 @@
+FROM prefecthq/prefect:3-python3.11
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    PREFECT_HOME=/opt/prefect
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir 'docker>=7,<8'
+
+COPY workers /app/workers
+RUN chmod +x /app/workers/prefect/entrypoint-worker.sh /app/workers/prefect/deploy.sh
+
+ENTRYPOINT ["/app/workers/prefect/entrypoint-worker.sh"]

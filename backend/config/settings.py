@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'consent',
     'catalog',
     'engagement',
+    'ingestion',
 ]
 
 MIDDLEWARE = [
@@ -173,6 +174,17 @@ if EMAIL_HOST:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'STEM Project <nao-responda@stem.local>')
+
+# Coletas: Prefect orquestra os coletores; Celery executa o que a API dispara (docs em workers/prefect/README.md).
+INGEST_API_TOKEN = os.environ.get('INGEST_API_TOKEN', '')
+# Publica direto o que a coleta do CNES trouxer. Desligue (0) para exigir aprovação no painel.
+CNES_AUTO_PUBLISH = env_bool('CNES_AUTO_PUBLISH', default=True)
+# Broker próprio (sem descarte por LRU): o Redis de cache pode apagar mensagens da fila.
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TASK_PUBLISH_RETRY_POLICY = {'max_retries': 2, 'interval_start': 0, 'interval_step': 0.5, 'interval_max': 1}
+CELERY_TIMEZONE = TIME_ZONE
 
 PASSWORD_RESET_CODE_MINUTES = 15
 PASSWORD_RESET_MAX_ATTEMPTS = 5
