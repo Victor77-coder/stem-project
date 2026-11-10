@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View, type TextInputInstance } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
@@ -42,7 +42,7 @@ export default function ForgotPasswordScreen() {
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const codeInputRef = useRef<TextInput>(null);
+  const codeInputRef = useRef<TextInputInstance>(null);
 
   async function call(path: string, body: Record<string, string>, next?: Step) {
     setBusy(true);
