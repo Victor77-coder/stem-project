@@ -57,11 +57,11 @@ def _checked_at(path: Path) -> datetime:
         return datetime.fromtimestamp(path.stat().st_mtime, UTC)
 
 
-def _download(url: str, path: Path, timeout: int, headers: dict[str, str] | None) -> None:
+def _download(url: str, path: Path, timeout: int, headers: dict[str, str] | None, data: bytes | None) -> None:
     fd, temp_name = tempfile.mkstemp(prefix=f'.{path.stem}.', suffix='.part', dir=path.parent)
     temp_path = Path(temp_name)
     try:
-        with os.fdopen(fd, 'wb') as file_obj, urlopen(Request(url, headers=headers or {}), timeout=timeout) as response:
+        with os.fdopen(fd, 'wb') as file_obj, urlopen(Request(url, data=data, headers=headers or {}), timeout=timeout) as response:
             for chunk in iter(lambda: response.read(CHUNK_SIZE_BYTES), b''):
                 file_obj.write(chunk)
         if temp_path.stat().st_size == 0:
@@ -82,13 +82,17 @@ def fetch_remote_file(
     timeout: int = 120,
     headers: dict[str, str] | None = None,
     max_age: timedelta = REVALIDATE_AFTER,
+    data: bytes | None = None,
 ) -> RemoteFile:
-    """Baixa ``url`` para ``path`` (HTTP ou FTP). Se a fonte falhar e houver cópia local, usa a cópia."""
+    """Baixa ``url`` para ``path`` (HTTP ou FTP). Se a fonte falhar e houver cópia local, usa a cópia.
+
+    Com ``data``, a requisição é um POST (consultas do Tabnet); ``path`` deve identificar a consulta.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     status = STATUS_FRESH
     if not path.exists() or datetime.now(UTC) - _checked_at(path) >= max_age:
         try:
-            _download(url, path, timeout, headers)
+            _download(url, path, timeout, headers, data)
             status = STATUS_DOWNLOADED
         except Exception as exc:  # noqa: BLE001
             if not path.exists():

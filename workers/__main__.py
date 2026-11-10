@@ -19,8 +19,10 @@ DEFAULT_OUTPUT_ROOT = Path('/app/.data') if Path('/app/.data').exists() else Pat
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Coleta uma fonte pública e envia o payload canônico para a API do STEM.')
     parser.add_argument('--source', required=True, choices=sorted(SOURCES))
-    parser.add_argument('--ufs', default=','.join(UFS), help='UFs separadas por vírgula. Padrão: todo o Brasil.')
-    parser.add_argument('--competencia', default='', help='AAMM. Vazio usa a mais recente publicada.')
+    parser.add_argument('--ufs', default=','.join(UFS), help='UFs separadas por vírgula. Padrão: todo o Brasil. A fonte tcth é sempre nacional.')
+    parser.add_argument(
+        '--competencia', default='', help='AAMM. Vazio usa a mais recente publicada. Na fonte tcth, coleta os anos completos até ela.'
+    )
     parser.add_argument('--run-id', type=int, default=None, help='CollectionRun criado pelo painel, se houver')
     parser.add_argument('--no-enrich', action='store_true', help='Não consulta nome e coordenadas no site do CNES')
     parser.add_argument('--output-root', type=Path, default=DEFAULT_OUTPUT_ROOT)
