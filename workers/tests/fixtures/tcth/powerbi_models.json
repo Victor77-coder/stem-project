@@ -1,0 +1,14 @@
+{
+ "models": [
+  {
+   "id": 3942715,
+   "dbName": "8691443b-4e34-48ff-b003-909864b0fc50"
+  }
+ ],
+ "exploration": {
+  "report": {
+   "objectId": "bbcbe65b-2173-4f50-83ae-c259d3a0153f",
+   "name": "resources/Layout.layout"
+  }
+ }
+}

@@ -23,3 +23,18 @@ deployments:
     schedules:
       - cron: "0 6 20 * *"
         timezone: America/Maceio
+
+  - name: tcth-estatisticas
+    description: Transplantes de medula no SUS (DataSUS/Tabnet, SIH) e doadores no REDOME (painel Power BI), por UF, região e Brasil
+    entrypoint: workers/flows/collect.py:collect_flow
+    work_pool:
+      name: stem-docker
+      work_queue_name: default
+    tags: [tcth, estatisticas, monthly]
+    # Sempre nacional; a competência vazia usa a mais recente publicada no Tabnet.
+    parameters:
+      source: tcth
+    # Mensal: o SIH revisa os últimos meses e o total do REDOME muda ao longo do ano.
+    schedules:
+      - cron: "0 7 20 * *"
+        timezone: America/Maceio
