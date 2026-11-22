@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   ARTICLES,
@@ -160,6 +160,10 @@ function Library({
           <Text style={styles.link}>Ver todos</Text>
         </Pressable>
       </View>
+      {category === 'Novidades' ? (
+        <Text style={styles.empty}>Notícias dos portais REDOME, Ameo, SBTMO e Abrale, publicadas automaticamente, sem revisão da liga.</Text>
+      ) : null}
+      {articles.length === 0 ? <Text style={styles.empty}>Nenhum conteúdo publicado nesta categoria ainda.</Text> : null}
       {articles.map((article) => (
         <ArticleRow key={article.id} article={article} onPress={() => onArticle(article.id)} />
       ))}
@@ -235,7 +239,8 @@ function ArticleScreen({
   onBack: () => void;
 }) {
   const share = async () => {
-    const message = [article.title, '', ...article.sections.map((section) => `${section.title}\n${section.body}`)].join('\n');
+    const body = article.sections.map((section) => `${section.title}\n${section.body}`);
+    const message = [article.title, '', ...body, ...(article.link ? ['', article.link] : [])].join('\n');
     try {
       await Share.share({ message });
     } catch {
@@ -280,6 +285,23 @@ function ArticleScreen({
         <Ionicons name="document-text-outline" size={16} color={colors.textSecondary} />
         <Text style={styles.noteText}>Fonte: {article.source}</Text>
       </View>
+      {article.automatic ? (
+        <View style={styles.note}>
+          <Ionicons name="newspaper-outline" size={16} color={colors.textSecondary} />
+          <Text style={styles.noteText}>Notícia publicada automaticamente a partir do portal de origem. Não passou pela revisão da liga.</Text>
+        </View>
+      ) : null}
+      {article.link ? (
+        <Pressable
+          accessibilityRole="link"
+          accessibilityHint="Abre a matéria completa no site da fonte"
+          onPress={() => Linking.openURL(article.link!).catch(() => undefined)}
+          style={styles.sourceLink}
+        >
+          <Text style={styles.link}>Ler a matéria completa</Text>
+          <Ionicons name="open-outline" size={16} color={colors.primary600} />
+        </Pressable>
+      ) : null}
       <View style={[styles.note, styles.disclaimer]}>
         <Ionicons name="information-circle-outline" size={16} color={colors.primary600} />
         <Text style={styles.disclaimerText}>Conteúdo educativo. Não substitui orientação médica.</Text>
@@ -625,6 +647,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   noteText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
+  sourceLink: { marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', minHeight: 44 },
   disclaimer: { backgroundColor: colors.primary50 },
   disclaimerText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.primary600 },
   actions: { marginTop: 16, flexDirection: 'row', gap: 10 },

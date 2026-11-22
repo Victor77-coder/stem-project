@@ -3,7 +3,7 @@ import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 export type Ion = keyof typeof Ionicons.glyphMap;
-export type Category = 'Conceito' | 'Leis no Brasil' | 'Doenças' | 'Mitos';
+export type Category = 'Conceito' | 'Leis no Brasil' | 'Doenças' | 'Mitos' | 'Novidades';
 
 export type Article = {
   id: string;
@@ -19,16 +19,21 @@ export type Article = {
   keywords?: string;
   validated?: string;
   source: string;
+  /** Matéria original, nas novidades coletadas dos portais */
+  link?: string;
+  /** Publicada pela coleta, sem validação clínica da liga */
+  automatic?: boolean;
   sections: { title: string; body: string }[];
 };
 
-export const CATEGORIES = ['Todos', 'Conceito', 'Leis no Brasil', 'Doenças'] as const;
+export const CATEGORIES = ['Todos', 'Conceito', 'Leis no Brasil', 'Doenças', 'Novidades'] as const;
 export type LibraryFilter = (typeof CATEGORIES)[number];
 
 const concept = { well: colors.primary100, iconColor: colors.primary600 };
 const disease = { well: colors.teal100, iconColor: colors.teal600 };
 const law = { well: colors.surfaceMuted, iconColor: colors.textSecondary };
 const myth = { well: colors.warning100, iconColor: colors.warning700 };
+const news = { well: colors.success100, iconColor: colors.success600 };
 
 export let ARTICLES: Article[] = [
   {
@@ -320,6 +325,8 @@ type ApiArticle = {
   tag: string;
   validated: string;
   source: string;
+  link: string;
+  automatic: boolean;
   sections: { title: string; body: string }[];
 };
 
@@ -328,6 +335,7 @@ const FROM_PANEL: Record<string, Category> = {
   'O que o Brasil autoriza': 'Leis no Brasil',
   Doenças: 'Doenças',
   Mitos: 'Mitos',
+  Novidades: 'Novidades',
 };
 
 const LOOK: Record<Category, Pick<Article, 'icon' | 'well' | 'iconColor'>> = {
@@ -335,6 +343,7 @@ const LOOK: Record<Category, Pick<Article, 'icon' | 'well' | 'iconColor'>> = {
   'Leis no Brasil': { icon: 'scale-outline', ...law },
   Doenças: { icon: 'pulse-outline', ...disease },
   Mitos: { icon: 'bulb-outline', ...myth },
+  Novidades: { icon: 'newspaper-outline', ...news },
 };
 
 let loaded: Promise<boolean> | null = null;
@@ -358,6 +367,8 @@ export function loadCatalog(): Promise<boolean> {
             keywords: item.keywords || undefined,
             validated: item.validated || undefined,
             source: item.source,
+            link: item.link || undefined,
+            automatic: item.automatic || undefined,
             sections: item.sections,
           },
         ];
