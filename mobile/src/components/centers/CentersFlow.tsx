@@ -83,6 +83,7 @@ export function CentersFlow({
   const nameQuery = query.replace(/\D/g, '').length === 8 ? '' : query;
   const local = useMemo(() => listCenters(origin, filter, nameQuery), [origin, filter, nameQuery]);
   const [remote, setRemote] = useState<CenterResult[] | null>(null);
+  const [offline, setOffline] = useState(false);
   const results = remote ?? local;
   const selected = selectedId ? (results.find((item) => item.id === selectedId) ?? centerById(selectedId, origin)) : undefined;
 
@@ -99,8 +100,13 @@ export function CentersFlow({
       .then((data) => {
         if (!active) return;
         setRemote(data.results.map(fromApi));
+        setOffline(false);
       })
-      .catch(() => active && setRemote(null));
+      .catch(() => {
+        if (!active) return;
+        setRemote(null);
+        setOffline(true);
+      });
     return () => {
       active = false;
     };
@@ -227,6 +233,7 @@ export function CentersFlow({
         filter={filter}
         query={query}
         results={results}
+        offline={offline}
         onFilter={setFilter}
         onQuery={onQuery}
         onOpen={openDetail}
@@ -244,6 +251,7 @@ export function CentersFlow({
       filter={filter}
       query={query}
       results={results}
+      offline={offline}
       onFilter={setFilter}
       onQuery={onQuery}
       onOpen={openDetail}
@@ -376,11 +384,23 @@ function CheckRow({ text }: { text: string }) {
   );
 }
 
+function OfflineNotice() {
+  return (
+    <View style={styles.offline} accessibilityRole="alert">
+      <Ionicons name="cloud-offline-outline" size={18} color={colors.warning700} />
+      <Text style={styles.offlineText}>
+        Sem conexão com o servidor. Mostrando só os centros salvos no app, que podem não estar perto de você.
+      </Text>
+    </View>
+  );
+}
+
 function MapScreen({
   origin,
   filter,
   query,
   results,
+  offline,
   onFilter,
   onQuery,
   onOpen,
@@ -390,6 +410,7 @@ function MapScreen({
   filter: CenterFilter;
   query: string;
   results: CenterResult[];
+  offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
   onOpen: (id: string) => void;
@@ -410,6 +431,7 @@ function MapScreen({
       </View>
       <View style={styles.sheet}>
         <View style={styles.handle} />
+        {offline ? <OfflineNotice /> : null}
         <View style={styles.sheetHead}>
           <Text style={styles.sheetTitle}>
             Perto de você · {results.length} {results.length === 1 ? 'unidade' : 'unidades'}
@@ -434,6 +456,7 @@ function ListScreen({
   filter,
   query,
   results,
+  offline,
   onFilter,
   onQuery,
   onOpen,
@@ -443,6 +466,7 @@ function ListScreen({
   filter: CenterFilter;
   query: string;
   results: CenterResult[];
+  offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
   onOpen: (id: string) => void;
@@ -470,6 +494,7 @@ function ListScreen({
           style={styles.searchInput}
         />
       </View>
+      {offline ? <OfflineNotice /> : null}
       <FilterRow value={filter} onChange={onFilter} />
       {results.length === 0 ? (
         <Text style={styles.empty}>Nenhuma unidade neste raio para o filtro escolhido.</Text>
@@ -718,6 +743,17 @@ const styles = StyleSheet.create({
   sheetTitle: { flex: 1, fontSize: 16, lineHeight: 24, fontWeight: '700', color: colors.ink },
   link: { fontSize: 14, lineHeight: 21, fontWeight: '600', color: colors.primary600 },
   sheetList: { marginTop: 4 },
+  offline: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginTop: 4,
+    marginBottom: 8,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: colors.warning100,
+  },
+  offlineText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.warning700 },
   chips: { gap: 8, paddingVertical: 12 },
   chip: { height: 32, borderRadius: 999, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
   chipOn: { backgroundColor: colors.primary600 },
