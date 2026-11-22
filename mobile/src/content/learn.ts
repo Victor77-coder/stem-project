@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
+import type { ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 export type Ion = keyof typeof Ionicons.glyphMap;
-export type Category = 'Conceito' | 'Leis no Brasil' | 'Doenças' | 'Mitos';
+export type Category = 'Conceito' | 'Leis no Brasil' | 'Doenças' | 'Mitos' | 'Novidades';
 
 export type Article = {
   id: string;
@@ -19,16 +20,23 @@ export type Article = {
   keywords?: string;
   validated?: string;
   source: string;
+  /** Matéria original, nas novidades coletadas dos portais */
+  link?: string;
+  /** Publicada pela coleta, sem validação clínica da liga */
+  automatic?: boolean;
+  /** Perfis do painel (Doador, Receptor, Leigo); nas novidades, decide quem vê a notícia */
+  audience?: string[];
   sections: { title: string; body: string }[];
 };
 
-export const CATEGORIES = ['Todos', 'Conceito', 'Leis no Brasil', 'Doenças'] as const;
+export const CATEGORIES = ['Todos', 'Conceito', 'Leis no Brasil', 'Doenças', 'Novidades'] as const;
 export type LibraryFilter = (typeof CATEGORIES)[number];
 
 const concept = { well: colors.primary100, iconColor: colors.primary600 };
 const disease = { well: colors.teal100, iconColor: colors.teal600 };
 const law = { well: colors.surfaceMuted, iconColor: colors.textSecondary };
 const myth = { well: colors.warning100, iconColor: colors.warning700 };
+const news = { well: colors.success100, iconColor: colors.success600 };
 
 export let ARTICLES: Article[] = [
   {
@@ -313,6 +321,7 @@ type ApiArticle = {
   title: string;
   summary: string;
   category: string;
+  audience: string[];
   minutes: number;
   list: Article['list'];
   featured: boolean;
@@ -320,6 +329,8 @@ type ApiArticle = {
   tag: string;
   validated: string;
   source: string;
+  link: string;
+  automatic: boolean;
   sections: { title: string; body: string }[];
 };
 
@@ -328,6 +339,7 @@ const FROM_PANEL: Record<string, Category> = {
   'O que o Brasil autoriza': 'Leis no Brasil',
   Doenças: 'Doenças',
   Mitos: 'Mitos',
+  Novidades: 'Novidades',
 };
 
 const LOOK: Record<Category, Pick<Article, 'icon' | 'well' | 'iconColor'>> = {
@@ -335,6 +347,7 @@ const LOOK: Record<Category, Pick<Article, 'icon' | 'well' | 'iconColor'>> = {
   'Leis no Brasil': { icon: 'scale-outline', ...law },
   Doenças: { icon: 'pulse-outline', ...disease },
   Mitos: { icon: 'bulb-outline', ...myth },
+  Novidades: { icon: 'newspaper-outline', ...news },
 };
 
 let loaded: Promise<boolean> | null = null;
@@ -358,6 +371,9 @@ export function loadCatalog(): Promise<boolean> {
             keywords: item.keywords || undefined,
             validated: item.validated || undefined,
             source: item.source,
+            link: item.link || undefined,
+            automatic: item.automatic || undefined,
+            audience: item.audience,
             sections: item.sections,
           },
         ];
@@ -384,8 +400,17 @@ export function articleById(id: string) {
   return ARTICLES.find((item) => item.id === id) ?? ARTICLES[1] ?? ARTICLES[0];
 }
 
-export function catalogArticles() {
-  return ARTICLES.filter((item) => item.list !== 'direct');
+const AUDIENCE: Record<ProfileType, string> = { doador: 'Doador', receptor: 'Receptor', leigo: 'Leigo' };
+
+/** Novidade vai só para o perfil do seu tema (doação ou tratamento); o restante do acervo vale para todos. */
+export function articlesFor(profile: ProfileType) {
+  return ARTICLES.filter(
+    (item) => item.category !== 'Novidades' || !item.audience || item.audience.includes(AUDIENCE[profile]),
+  );
+}
+
+export function catalogArticles(profile: ProfileType) {
+  return articlesFor(profile).filter((item) => item.list !== 'direct');
 }
 
 export function fold(value: string) {
@@ -395,9 +420,9 @@ export function fold(value: string) {
     .toLowerCase();
 }
 
-export function searchArticles(query: string) {
+export function searchArticles(query: string, profile: ProfileType) {
   const needle = fold(query.trim());
-  const source = catalogArticles();
+  const source = catalogArticles(profile);
   if (!needle) return source;
   return source.filter((article) => {
     const haystack = fold([article.title, article.category, article.keywords ?? ''].join(' '));

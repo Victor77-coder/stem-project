@@ -1,4 +1,4 @@
-from . import cnes, tcth
+from . import cnes, novidades, tcth
 
 # Mesma ordem de workers/collectors/cnes/collector.py (UFS).
 BR_UFS = (
@@ -10,10 +10,12 @@ BR_UFS = (
 APPLIERS = {
     'cnes': cnes.apply,
     'tcth': tcth.apply,
+    'novidades': novidades.apply,
 }
 
 # Fonte -> deployment Prefect que executa o coletor.
 DEPLOYMENTS = {
     'cnes': 'stem.collect/cnes-centros',
     'tcth': 'stem.collect/tcth-estatisticas',
+    'novidades': 'stem.collect/novidades-portais',
 }

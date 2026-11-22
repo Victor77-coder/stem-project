@@ -160,7 +160,7 @@ export function ArticleList({
 
 type Estimate = { available: boolean; label?: string; value?: string; detail?: string; disclaimer: string };
 
-export function EstimateCard({ uf = '', city = '' }: { uf?: string; city?: string }) {
+export function EstimateCard({ uf = '', city = '', onStats }: { uf?: string; city?: string; onStats?: () => void }) {
   const [estimate, setEstimate] = useState<Estimate | null>(null);
 
   useEffect(() => {
@@ -187,6 +187,12 @@ export function EstimateCard({ uf = '', city = '' }: { uf?: string; city?: strin
         {caption ? <Text style={styles.estimateCaption}>{caption}</Text> : null}
       </View>
       <Text style={styles.estimateNote}>{note}</Text>
+      {onStats ? (
+        <Pressable accessibilityRole="button" onPress={onStats} style={styles.estimateLink}>
+          <Text style={styles.estimateLinkText}>Ver estatísticas de transplantes</Text>
+          <Ionicons name="chevron-forward" size={16} color={colors.warning700} />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -359,6 +365,8 @@ const styles = StyleSheet.create({
   estimateValue: { fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.warning700 },
   estimateCaption: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.warning700 },
   estimateNote: { fontSize: 14, lineHeight: 21, color: colors.warning700 },
+  estimateLink: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start', paddingVertical: 4 },
+  estimateLinkText: { fontSize: 14, lineHeight: 21, fontWeight: '600', color: colors.warning700 },
   invite: {
     marginTop: 16,
     backgroundColor: colors.primary100,

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import * as Location from 'expo-location';
-import { originFromQuery, type Origin } from '@/content/centers';
+import { ORIGINS, originFromQuery, type Origin } from '@/content/centers';
 import { api, ApiError } from '@/lib/api';
 
 /** RF009: as coordenadas do aparelho só existem em memória; nada aqui é gravado ou enviado ao perfil. */
@@ -95,7 +95,16 @@ type CepLocation = {
 
 export type CepOriginResult = { ok: true; origin: Origin; offline?: boolean } | { ok: false; message: string };
 
-/** CEP vira coordenada no backend (BrasilAPI + centro da cidade). Sem servidor, cai no fixture embarcado. */
+const OFFLINE_CEP_MESSAGE = 'Sem conexão com o servidor para localizar este CEP. Tente novamente em instantes.';
+
+/** Só as cidades do fixture embarcado têm origem offline; qualquer outro CEP iria parar em Maceió por engano. */
+function offlineOriginForCep(digits: string): Origin | null {
+  if (digits.startsWith('50')) return { ...ORIGINS.recife, mode: 'cep' };
+  if (digits.startsWith('57')) return { ...ORIGINS.maceio, mode: 'cep' };
+  return null;
+}
+
+/** CEP vira coordenada no backend (BrasilAPI + centro da cidade). Sem servidor, cai no fixture embarcado se houver. */
 export async function originFromCep(value: string): Promise<CepOriginResult> {
   const digits = value.replace(/\D/g, '');
   if (digits.length !== 8) return { ok: true, origin: originFromQuery(value) };
@@ -110,6 +119,7 @@ export async function originFromCep(value: string): Promise<CepOriginResult> {
     if (error instanceof ApiError && error.status !== 0 && error.status < 500) {
       return { ok: false, message: error.message };
     }
-    return { ok: true, origin: originFromQuery(value), offline: true };
+    const origin = offlineOriginForCep(digits);
+    return origin ? { ok: true, origin, offline: true } : { ok: false, message: OFFLINE_CEP_MESSAGE };
   }
 }

@@ -18,11 +18,18 @@ from .models import Attachment, Center, Content, EstimateRule, GlossaryTerm, Jou
 
 RADIUS_KM = 50
 MAX_RADIUS_KM = 300
+# Nada no raio (ex.: Alagoas não tem centro de transplante): mostra os mais próximos fora dele.
+NEAREST_OUTSIDE_RADIUS = 5
 ESTIMATE_DISCLAIMER = (
     'Estimativa exclusivamente preditiva, baseada em dados públicos. '
     'Não é confirmação de atendimento, procedimento, vaga ou prazo.'
 )
 UNDERREPORTING_NOTICE = 'Algumas unidades podem não reportar ao DataSUS. Os números podem estar abaixo do real.'
+# ?perfil= do app: o doador vê onde se cadastrar e o receptor, onde se trata. Sem perfil, ou leigo, tudo.
+CENTER_KINDS_BY_PROFILE = {
+    'doador': [Center.Kind.HEMOCENTRO, Center.Kind.CAMPANHA],
+    'receptor': [Center.Kind.TRANSPLANTE],
+}
 REGION_OF = {
     **dict.fromkeys(['AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO'], 'Norte'),
     **dict.fromkeys(['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'], 'Nordeste'),
@@ -65,6 +72,9 @@ def article(content: Content, request) -> dict:
         'tag': content.selo,
         'validated': f'Validado pela equipe médica da liga · {br_date(content.validado_em)}' if content.validado_em else '',
         'source': content.fonte,
+        'link': content.link_original,
+        # Notícia publicada pela coleta, sem validação clínica: o app avisa o leitor.
+        'automatic': content.is_collected_news and content.validado_em is None,
         'sections': content.secoes or [{'title': '', 'body': content.descricao}],
         'updatedAt': content.atualizado_em.isoformat(),
         'attachments': [
@@ -193,13 +203,18 @@ def _float(value):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def centers(request):
-    """Contrato de GET /centros?lat=&lng=&q=&kind=. Coordenadas do aparelho não são gravadas (RF008)."""
+    """Contrato de GET /centros?lat=&lng=&q=&kind=&perfil=. Coordenadas do aparelho não são gravadas (RF008).
+
+    Com coordenadas e nenhuma unidade no raio, devolve as mais próximas fora dele e ``outsideRadius: true``.
+    """
     params = request.query_params
     lat, lng = _float(params.get('lat')), _float(params.get('lng'))
     radius = min(_float(params.get('raio')) or RADIUS_KM, MAX_RADIUS_KM)
 
     def build():
         query = Center.objects.filter(status=PublishStatus.PUBLICADO)
+        if kinds := CENTER_KINDS_BY_PROFILE.get(params.get('perfil')):
+            query = query.filter(tipo__in=kinds)
         if params.get('kind') in Center.Kind.values:
             query = query.filter(tipo=params['kind'])
         if params.get('uf'):
@@ -211,14 +226,14 @@ def centers(request):
                 Q(nome__icontains=q) | Q(endereco__icontains=q) | Q(cidade__icontains=q) | Q(cnes=q) | Q(nome_curto__icontains=q)
             )
         if lat is None or lng is None:
-            return {'results': [center(item) for item in query], 'lastUpdate': _last_update(query)}
-        near = []
-        for item in query.exclude(lat__isnull=True).exclude(lng__isnull=True):
-            km = haversine_km(lat, lng, item.lat, item.lng)
-            if km <= radius:
-                near.append((km, item))
-        near.sort(key=lambda pair: pair[0])
-        return {'results': [center(item, km) for km, item in near], 'lastUpdate': _last_update(query)}
+            return {'results': [center(item) for item in query], 'lastUpdate': _last_update(query), 'outsideRadius': False}
+        located = query.exclude(lat__isnull=True).exclude(lng__isnull=True)
+        by_distance = sorted(((haversine_km(lat, lng, item.lat, item.lng), item) for item in located), key=lambda pair: pair[0])
+        near = [(km, item) for km, item in by_distance if km <= radius]
+        outside = not near and bool(by_distance)
+        if outside:
+            near = by_distance[:NEAREST_OUTSIDE_RADIUS]
+        return {'results': [center(item, km) for km, item in near], 'lastUpdate': _last_update(query), 'outsideRadius': outside}
 
     return cached_response(request, build)
 
@@ -274,16 +289,19 @@ def statistics(request):
         uf = (request.query_params.get('uf') or 'BR').upper()
         national = uf == 'BR'
         region = None if national else REGION_OF.get(uf, 'Nordeste')
+        # ?perfil= do app: o doador vê os cadastros no REDOME; o receptor, transplantes e espera. Sem perfil, tudo.
+        profile = request.query_params.get('perfil')
+        for_donor, for_recipient = profile != 'receptor', profile != 'doador'
         # Os dois cartões seguem os filtros de Estado (Brasil ou UF, por residência) e de Ano. Doadores é o número
         # de cadastros no ano, como o painel do REDOME com o filtro "Ano".
-        donors = _latest(Statistic.Indicator.DOADORES, uf, year)
-        transplants = _latest(Statistic.Indicator.TRANSPLANTES, uf, year)
+        donors = _latest(Statistic.Indicator.DOADORES, uf, year) if for_donor else None
+        transplants = _latest(Statistic.Indicator.TRANSPLANTES, uf, year) if for_recipient else None
         regions = []
-        for name in ('Sudeste', 'Sul', 'Nordeste', 'Centro-Oeste', 'Norte'):
+        for name in ('Sudeste', 'Sul', 'Nordeste', 'Centro-Oeste', 'Norte') if for_recipient else ():
             row = _latest(Statistic.Indicator.TRANSPLANTES_REGIAO, name, year)
             if row:
                 regions.append({'name': name, 'value': int(row.valor)})
-        wait = _latest(Statistic.Indicator.ESPERA, region, year) if region else None
+        wait = _latest(Statistic.Indicator.ESPERA, region, year) if region and for_recipient else None
         rows = [row for row in (donors, transplants, wait) if row]
         return {
             'available': True,

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from workers.collectors.cnes.collector import UFS, collect as collect_cnes
+from workers.collectors.novidades.collector import collect as collect_novidades
 from workers.collectors.tcth.collector import collect as collect_tcth
 
 
@@ -22,8 +23,14 @@ def _tcth(params: dict[str, Any], output_root: Path) -> dict[str, Any]:
     return collect_tcth(params.get('competencia') or None, output_root)
 
 
+def _novidades(params: dict[str, Any], output_root: Path) -> dict[str, Any]:
+    # Portais nacionais: o filtro de UFs não se aplica. A competência (AAMM) faz uma carga retroativa desde aquele mês.
+    return collect_novidades(params.get('competencia') or None, output_root)
+
+
 # Cada fonte recebe parâmetros simples e devolve o payload canônico que a API do STEM ingere.
 SOURCES: dict[str, Callable[[dict[str, Any], Path], dict[str, Any]]] = {
     'cnes': _cnes,
     'tcth': _tcth,
+    'novidades': _novidades,
 }

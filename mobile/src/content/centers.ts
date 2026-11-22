@@ -1,7 +1,8 @@
 /**
- * Contrato do futuro GET /centros?lat=&lng=&q=&kind=.
+ * Contrato do futuro GET /centros?lat=&lng=&q=&kind=&perfil=.
  * Fixture mínimo para as telas; a coleta CNES entra no Django e substitui CENTERS.
  */
+import type { ProfileType } from '@/context/RegistrationContext';
 
 export type CenterKind = 'hemocentro' | 'transplante' | 'campanha';
 export type CenterFilter = 'todos' | CenterKind;
@@ -44,6 +45,24 @@ export const FILTERS: { id: CenterFilter; label: string }[] = [
   { id: 'transplante', label: 'Transplante' },
   { id: 'campanha', label: 'Campanhas' },
 ];
+
+/** O doador vê onde se cadastrar; o receptor, onde se trata. O leigo vê tudo. Igual ao ?perfil= da API. */
+export const KINDS_FOR: Record<ProfileType, CenterKind[]> = {
+  doador: ['hemocentro', 'campanha'],
+  receptor: ['transplante'],
+  leigo: ['hemocentro', 'transplante', 'campanha'],
+};
+
+/** Filtros do perfil. Com um tipo só, não há o que filtrar. */
+export function filtersFor(profile: ProfileType) {
+  const kinds = KINDS_FOR[profile];
+  return kinds.length > 1 ? FILTERS.filter((item) => item.id === 'todos' || kinds.includes(item.id)) : [];
+}
+
+/** Um filtro de outro perfil (ex.: "Transplante" para o doador) volta para "Todos". */
+export function filterOf(profile: ProfileType, value: CenterFilter): CenterFilter {
+  return value === 'todos' || KINDS_FOR[profile].includes(value) ? value : 'todos';
+}
 
 export const KIND_LABEL: Record<CenterKind, string> = {
   hemocentro: 'Hemocentro',
@@ -153,9 +172,10 @@ export function originFromQuery(value: string): Origin {
   return { ...ORIGINS.maceio, mode: 'cep' };
 }
 
-export function listCenters(origin: Origin, kind: CenterFilter, query = ''): CenterResult[] {
+export function listCenters(origin: Origin, kind: CenterFilter, query = '', kinds = KINDS_FOR.leigo): CenterResult[] {
   const needle = query.trim().toLowerCase();
   return CENTERS.filter((center) => {
+    if (!kinds.includes(center.kind)) return false;
     if (kind !== 'todos' && center.kind !== kind) return false;
     const km = haversineKm(origin, center);
     if (km > RADIUS_KM) return false;

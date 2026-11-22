@@ -173,6 +173,7 @@ function ReceptorHome({
   open,
   onJourney,
   onCenters,
+  onStats,
   onNotifications,
 }: {
   name: string;
@@ -184,6 +185,7 @@ function ReceptorHome({
   open: (route: LearnRoute) => void;
   onJourney: () => void;
   onCenters: (filter?: CenterFilter) => void;
+  onStats: () => void;
   onNotifications: () => void;
 }) {
   const card = homeCard('receptor', current);
@@ -208,7 +210,7 @@ function ReceptorHome({
         action="Ver minha jornada"
         onAction={onJourney}
       />
-      <EstimateCard uf={uf} city={city} />
+      <EstimateCard uf={uf} city={city} onStats={onStats} />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
@@ -422,6 +424,7 @@ export default function HomeScreen() {
         {tab === 'inicio' && insight ? (
           <InsightsFlow
             initial={insight}
+            profile={profile}
             email={draft.email}
             onClose={() => setInsight(null)}
             onUnread={setUnread}
@@ -441,6 +444,7 @@ export default function HomeScreen() {
                 open={openLearn}
                 onJourney={openJourney}
                 onCenters={openCenters}
+                onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
               />
             ) : profile === 'leigo' ? (
@@ -469,6 +473,7 @@ export default function HomeScreen() {
         ) : tab === 'aprender' ? (
           <LearnFlow
             route={learn}
+            profile={profile}
             onChange={(route) => setLearnStack((current) => [...current, route])}
             onBack={() => setLearnStack((current) => (current.length > 1 ? current.slice(0, -1) : current))}
           />
@@ -485,6 +490,7 @@ export default function HomeScreen() {
         ) : tab === 'centros' ? (
           <CentersFlow
             initialFilter={centersFilter}
+            profile={profile}
             savedCity={draft.city}
             savedUf={draft.uf}
             savedCep={draft.cep}

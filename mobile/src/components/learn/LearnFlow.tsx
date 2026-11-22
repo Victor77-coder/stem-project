@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  ARTICLES,
   CATEGORIES,
   FAQS,
   MYTHS,
   articleById,
+  articlesFor,
   cardMeta,
   catalogArticles,
   fold,
@@ -15,7 +15,7 @@ import {
   type Article,
   type LibraryFilter,
 } from '@/content/learn';
-import { useRegistration } from '@/context/RegistrationContext';
+import { useRegistration, type ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
@@ -29,11 +29,12 @@ export type LearnRoute =
 
 type Props = {
   route: LearnRoute;
+  profile: ProfileType;
   onChange: (route: LearnRoute) => void;
   onBack: () => void;
 };
 
-export function LearnFlow({ route, onChange, onBack }: Props) {
+export function LearnFlow({ route, profile, onChange, onBack }: Props) {
   const { signedIn } = useRegistration();
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [, setCatalogVersion] = useState(0);
@@ -69,9 +70,15 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
   return (
     <View style={styles.fill}>
       {route.name === 'library' ? (
-        <Library initialCategory={route.category ?? 'Todos'} onChange={onChange} onArticle={openArticle} onQuiz={openQuiz} />
+        <Library
+          initialCategory={route.category ?? 'Todos'}
+          profile={profile}
+          onChange={onChange}
+          onArticle={openArticle}
+          onQuiz={openQuiz}
+        />
       ) : null}
-      {route.name === 'search' ? <SearchScreen initialQuery={route.query} onArticle={openArticle} /> : null}
+      {route.name === 'search' ? <SearchScreen initialQuery={route.query} profile={profile} onArticle={openArticle} /> : null}
       {route.name === 'article' ? (
         <ArticleScreen
           article={articleById(route.id)}
@@ -89,22 +96,25 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
 
 function Library({
   initialCategory,
+  profile,
   onChange,
   onArticle,
   onQuiz,
 }: {
   initialCategory: LibraryFilter;
+  profile: ProfileType;
   onChange: (route: LearnRoute) => void;
   onArticle: (id: string) => void;
   onQuiz: () => void;
 }) {
   const [category, setCategory] = useState<LibraryFilter>(initialCategory);
-  const featured = ARTICLES.find((item) => item.featured);
+  const visible = articlesFor(profile);
+  const featured = visible.find((item) => item.featured);
   const showFeatured = featured && (category === 'Todos' || featured.category === category);
   const articles =
     category === 'Todos'
-      ? ARTICLES.filter((item) => item.list === 'recent')
-      : catalogArticles().filter((item) => item.category === category);
+      ? visible.filter((item) => item.list === 'recent')
+      : catalogArticles(profile).filter((item) => item.category === category);
 
   return (
     <ScrollView style={styles.fill} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -160,6 +170,10 @@ function Library({
           <Text style={styles.link}>Ver todos</Text>
         </Pressable>
       </View>
+      {category === 'Novidades' ? (
+        <Text style={styles.empty}>Notícias dos portais REDOME, Ameo, SBTMO e Abrale, publicadas automaticamente, sem revisão da liga.</Text>
+      ) : null}
+      {articles.length === 0 ? <Text style={styles.empty}>Nenhum conteúdo publicado nesta categoria ainda.</Text> : null}
       {articles.map((article) => (
         <ArticleRow key={article.id} article={article} onPress={() => onArticle(article.id)} />
       ))}
@@ -167,9 +181,17 @@ function Library({
   );
 }
 
-function SearchScreen({ initialQuery, onArticle }: { initialQuery: string; onArticle: (id: string) => void }) {
+function SearchScreen({
+  initialQuery,
+  profile,
+  onArticle,
+}: {
+  initialQuery: string;
+  profile: ProfileType;
+  onArticle: (id: string) => void;
+}) {
   const [query, setQuery] = useState(initialQuery);
-  const results = searchArticles(query);
+  const results = searchArticles(query, profile);
   const needle = query.trim();
 
   return (
@@ -235,7 +257,8 @@ function ArticleScreen({
   onBack: () => void;
 }) {
   const share = async () => {
-    const message = [article.title, '', ...article.sections.map((section) => `${section.title}\n${section.body}`)].join('\n');
+    const body = article.sections.map((section) => `${section.title}\n${section.body}`);
+    const message = [article.title, '', ...body, ...(article.link ? ['', article.link] : [])].join('\n');
     try {
       await Share.share({ message });
     } catch {
@@ -280,6 +303,23 @@ function ArticleScreen({
         <Ionicons name="document-text-outline" size={16} color={colors.textSecondary} />
         <Text style={styles.noteText}>Fonte: {article.source}</Text>
       </View>
+      {article.automatic ? (
+        <View style={styles.note}>
+          <Ionicons name="newspaper-outline" size={16} color={colors.textSecondary} />
+          <Text style={styles.noteText}>Notícia publicada automaticamente a partir do portal de origem. Não passou pela revisão da liga.</Text>
+        </View>
+      ) : null}
+      {article.link ? (
+        <Pressable
+          accessibilityRole="link"
+          accessibilityHint="Abre a matéria completa no site da fonte"
+          onPress={() => Linking.openURL(article.link!).catch(() => undefined)}
+          style={styles.sourceLink}
+        >
+          <Text style={styles.link}>Ler a matéria completa</Text>
+          <Ionicons name="open-outline" size={16} color={colors.primary600} />
+        </Pressable>
+      ) : null}
       <View style={[styles.note, styles.disclaimer]}>
         <Ionicons name="information-circle-outline" size={16} color={colors.primary600} />
         <Text style={styles.disclaimerText}>Conteúdo educativo. Não substitui orientação médica.</Text>
@@ -625,6 +665,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   noteText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
+  sourceLink: { marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', minHeight: 44 },
   disclaimer: { backgroundColor: colors.primary50 },
   disclaimerText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.primary600 },
   actions: { marginTop: 16, flexDirection: 'row', gap: 10 },

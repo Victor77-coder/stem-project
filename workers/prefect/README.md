@@ -50,13 +50,22 @@ docker compose exec prefect-worker prefect deployment run 'stem.collect/tcth-est
 docker compose exec prefect-worker prefect deployment run 'stem.collect/tcth-estatisticas' --param competencia=2412
 ```
 
-Pelo painel (administrador): `POST /api/v1/staff/collections/` com `{"source": "cnes"}` ou `{"source": "tcth"}` coleta o Brasil inteiro. O histórico de cargas fica em `GET /api/v1/staff/collections/`.
+```bash
+# Novidades dos portais (REDOME, Ameo, SBTMO, Abrale), últimos 30 dias
+docker compose exec prefect-worker prefect deployment run 'stem.collect/novidades-portais'
+
+# Carga retroativa desde janeiro de 2026
+docker compose exec prefect-worker prefect deployment run 'stem.collect/novidades-portais' --param competencia=2601
+```
+
+Pelo painel (administrador): `POST /api/v1/staff/collections/` com `{"source": "cnes"}`, `{"source": "tcth"}` ou `{"source": "novidades"}` coleta o Brasil inteiro. O histórico de cargas fica em `GET /api/v1/staff/collections/`.
 
 ## Rodar um coletor sem Prefect
 
 ```bash
 python -m workers --source cnes --ufs AL --competencia 2609 --skip-ingest
 python -m workers --source tcth --skip-ingest
+python -m workers --source novidades --competencia 2608 --skip-ingest
 ```
 
 ## Nova fonte
@@ -111,3 +120,35 @@ Limites conhecidos:
 - O SIH conta só transplantes pagos pelo SUS. Os da rede privada não aparecem, por isso o aviso de subnotificação.
 - O tempo médio de busca de doador (`espera`) não tem fonte pública aberta e continua com os números de exemplo do seed.
 - O painel do REDOME também tem os novos cadastros por ano de cadastro (página "Evolução"), por UF. Ainda não é coletado: exige um indicador novo.
+
+## Novidades dos portais (`novidades`)
+
+Alimenta a categoria Novidades do módulo Aprender.
+
+- Com `NOVIDADES_AUTO_PUBLISH=1` (padrão), matéria nova entra **publicada, sem validação clínica**, e um rascunho deixado por uma coleta anterior é publicado na carga seguinte. Com `NOVIDADES_AUTO_PUBLISH=0`, entra como rascunho e a equipe aprova no painel.
+- A dispensa de validação vale só para a notícia coletada (categoria Novidades com `link_original`), também quando a equipe publica ou edita pelo painel. Mudar a categoria dela exige validação, como qualquer conteúdo (restrição `conteudo_publicado_validado` no banco).
+- A API pública marca essas notícias com `automatic: true` e `validated` vazio. O app mostra o aviso "Não passou pela revisão da liga".
+- Isso é uma exceção ao RF13 e ao RS008 do documento de requisitos, que exigem validação clínica antes de publicar.
+
+| Portal | Endereço | O que entra |
+|---|---|---|
+| REDOME/INCA | `redome.inca.gov.br/wp-json/wp/v2/posts` | Tudo (o portal só publica sobre medula) |
+| Ameo | `ameo.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
+| SBTMO | `sbtmo.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
+| Abrale | `abrale.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
+
+- Todos usam a API pública do WordPress, sem login, filtrando por data no servidor (`after`). O robots.txt dos quatro libera esse caminho.
+- "Cita o tema": título ou resumo com medula, célula(s)-tronco, TMO, TCTH, transplante, REDOME, hematopoiético ou cordão umbilical (sem acento e como palavra inteira). Ex.: de 18 posts da Abrale entre agosto e novembro de 2026, entrou 1 (consulta pública da Conitec sobre TMO).
+- Vem só título, resumo (até 600 caracteres), data e link. O texto da matéria não é copiado: no app, o botão leva para o original.
+- A notícia entra com fonte `<Portal> · Publicado em dd/mm/aaaa`, visibilidade pública, os três públicos e o link em `Content.link_original`. O histórico registra "Coleta automática" como autor.
+- O link original identifica a matéria: coletas seguintes não recriam nem alteram o texto do que já veio. O que a equipe removeu (Deletar, status inativo) continua removido.
+- Janela padrão de 30 dias com agendamento semanal. `competencia=AAMM` coleta desde o primeiro dia daquele mês, com teto de 500 posts por portal.
+- Um portal fora do ar vira aviso e os outros seguem; se nenhum responder, a carga falha.
+- O firewall da Abrale recusa o User-Agent `Python-urllib`. O coletor se identifica como `STEM-coletor/0.1`.
+
+Fontes avaliadas e deixadas de fora:
+
+- INCA e Ministério da Saúde (gov.br): sem RSS nem API JSON que funcionem. Ficam como referência manual da liga.
+- Agência FAPESP: o RSS só traz as 7 notícias mais recentes de todos os assuntos, sem data. Uma coleta semanal perderia quase tudo.
+- DataSUS/Tabnet: só números agregados, já coletados na fonte `tcth`.
+- Campanhas: nenhum desses portais publica agenda local com data e endereço. Campanhas continuam sendo cadastradas no painel.

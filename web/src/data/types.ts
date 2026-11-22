@@ -69,6 +69,8 @@ export interface Content {
   anexos: Attachment[]
   atualizadoEm: string
   historico: HistoryEntry[]
+  /** Matéria original de uma novidade coletada dos portais. Só leitura no painel. */
+  linkOriginal: string
 }
 
 export interface Dashboard {

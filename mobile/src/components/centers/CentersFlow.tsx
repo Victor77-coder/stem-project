@@ -2,11 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  FILTERS,
+  KINDS_FOR,
   KIND_LABEL,
   ORIGINS,
   RADIUS_KM,
   centerById,
+  filterOf,
+  filtersFor,
   listCenters,
   originFromCity,
   originFromQuery,
@@ -15,6 +17,7 @@ import {
   type CenterResult,
   type Origin,
 } from '@/content/centers';
+import type { ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { hasLocationPermission, originFromCep, requestDeviceOrigin } from '@/lib/location';
 import { colors } from '@/theme';
@@ -44,8 +47,11 @@ function fromApi(item: ApiCenter): CenterResult {
   };
 }
 
+type FilterOption = { id: CenterFilter; label: string };
+
 type Props = {
   initialFilter?: CenterFilter;
+  profile: ProfileType;
   savedCity?: string;
   savedUf?: string;
   savedCep?: string;
@@ -55,6 +61,7 @@ type Props = {
 
 export function CentersFlow({
   initialFilter = 'todos',
+  profile,
   savedCity = '',
   savedUf = '',
   savedCep = '',
@@ -71,19 +78,24 @@ export function CentersFlow({
     savedCity ? originFromCity(savedCity, savedUf) : { ...ORIGINS.maceio, mode: 'cep' },
   );
   const queryRun = useRef(0);
-  const [filter, setFilter] = useState<CenterFilter>(initialFilter);
+  const kinds = KINDS_FOR[profile];
+  const filters = useMemo(() => filtersFor(profile), [profile]);
+  const [filter, setFilter] = useState<CenterFilter>(() => filterOf(profile, initialFilter));
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [browse, setBrowse] = useState<'map' | 'list'>('map');
 
   useEffect(() => {
-    setFilter(initialFilter);
-  }, [initialFilter]);
+    setFilter(filterOf(profile, initialFilter));
+  }, [initialFilter, profile]);
 
   const nameQuery = query.replace(/\D/g, '').length === 8 ? '' : query;
-  const local = useMemo(() => listCenters(origin, filter, nameQuery), [origin, filter, nameQuery]);
-  const [remote, setRemote] = useState<CenterResult[] | null>(null);
-  const results = remote ?? local;
+  const local = useMemo(() => listCenters(origin, filter, nameQuery, kinds), [origin, filter, nameQuery, kinds]);
+  const [remote, setRemote] = useState<{ results: CenterResult[]; outsideRadius: boolean } | null>(null);
+  const [offline, setOffline] = useState(false);
+  const results = remote?.results ?? local;
+  // Nada no raio (ex.: centro de transplante em Alagoas): a API manda os mais próximos fora dele.
+  const outsideRadius = remote?.outsideRadius ?? false;
   const selected = selectedId ? (results.find((item) => item.id === selectedId) ?? centerById(selectedId, origin)) : undefined;
 
   useEffect(() => {
@@ -91,20 +103,26 @@ export function CentersFlow({
       lat: String(origin.lat),
       lng: String(origin.lng),
       raio: String(RADIUS_KM),
+      perfil: profile,
     });
     if (filter !== 'todos') params.set('kind', filter);
     if (nameQuery.trim()) params.set('q', nameQuery.trim());
     let active = true;
-    api<{ results: ApiCenter[] }>(`/centros/?${params}`)
+    api<{ results: ApiCenter[]; outsideRadius?: boolean }>(`/centros/?${params}`)
       .then((data) => {
         if (!active) return;
-        setRemote(data.results.map(fromApi));
+        setRemote({ results: data.results.map(fromApi), outsideRadius: Boolean(data.outsideRadius) });
+        setOffline(false);
       })
-      .catch(() => active && setRemote(null));
+      .catch(() => {
+        if (!active) return;
+        setRemote(null);
+        setOffline(true);
+      });
     return () => {
       active = false;
     };
-  }, [origin, filter, nameQuery]);
+  }, [origin, filter, nameQuery, profile]);
 
   function onQuery(value: string) {
     setQuery(value);
@@ -225,8 +243,11 @@ export function CentersFlow({
       <ListScreen
         origin={origin}
         filter={filter}
+        filters={filters}
         query={query}
         results={results}
+        outsideRadius={outsideRadius}
+        offline={offline}
         onFilter={setFilter}
         onQuery={onQuery}
         onOpen={openDetail}
@@ -242,8 +263,11 @@ export function CentersFlow({
     <MapScreen
       origin={origin}
       filter={filter}
+      filters={filters}
       query={query}
       results={results}
+      outsideRadius={outsideRadius}
+      offline={offline}
       onFilter={setFilter}
       onQuery={onQuery}
       onOpen={openDetail}
@@ -376,11 +400,36 @@ function CheckRow({ text }: { text: string }) {
   );
 }
 
+function OfflineNotice() {
+  return (
+    <View style={styles.offline} accessibilityRole="alert">
+      <Ionicons name="cloud-offline-outline" size={18} color={colors.warning700} />
+      <Text style={styles.offlineText}>
+        Sem conexão com o servidor. Mostrando só os centros salvos no app, que podem não estar perto de você.
+      </Text>
+    </View>
+  );
+}
+
+function OutsideRadiusNotice() {
+  return (
+    <View style={styles.outside}>
+      <Ionicons name="information-circle-outline" size={18} color={colors.textSecondary} />
+      <Text style={styles.outsideText}>
+        Nenhuma unidade num raio de {RADIUS_KM} km. Mostrando as mais próximas, com a distância de cada uma.
+      </Text>
+    </View>
+  );
+}
+
 function MapScreen({
   origin,
   filter,
+  filters,
   query,
   results,
+  outsideRadius,
+  offline,
   onFilter,
   onQuery,
   onOpen,
@@ -388,8 +437,11 @@ function MapScreen({
 }: {
   origin: Origin;
   filter: CenterFilter;
+  filters: FilterOption[];
   query: string;
   results: CenterResult[];
+  outsideRadius: boolean;
+  offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
   onOpen: (id: string) => void;
@@ -410,15 +462,17 @@ function MapScreen({
       </View>
       <View style={styles.sheet}>
         <View style={styles.handle} />
+        {offline ? <OfflineNotice /> : null}
+        {outsideRadius ? <OutsideRadiusNotice /> : null}
         <View style={styles.sheetHead}>
           <Text style={styles.sheetTitle}>
-            Perto de você · {results.length} {results.length === 1 ? 'unidade' : 'unidades'}
+            {outsideRadius ? 'Mais próximas' : 'Perto de você'} · {results.length} {results.length === 1 ? 'unidade' : 'unidades'}
           </Text>
           <Pressable accessibilityRole="button" onPress={onList}>
             <Text style={styles.link}>Ver lista</Text>
           </Pressable>
         </View>
-        <FilterRow value={filter} onChange={onFilter} />
+        <FilterRow options={filters} value={filter} onChange={onFilter} />
         <ScrollView style={styles.sheetList} showsVerticalScrollIndicator={false}>
           {results.slice(0, 4).map((center) => (
             <CenterRow key={center.id} center={center} onPress={() => onOpen(center.id)} />
@@ -432,8 +486,11 @@ function MapScreen({
 function ListScreen({
   origin,
   filter,
+  filters,
   query,
   results,
+  outsideRadius,
+  offline,
   onFilter,
   onQuery,
   onOpen,
@@ -441,8 +498,11 @@ function ListScreen({
 }: {
   origin: Origin;
   filter: CenterFilter;
+  filters: FilterOption[];
   query: string;
   results: CenterResult[];
+  outsideRadius: boolean;
+  offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
   onOpen: (id: string) => void;
@@ -458,7 +518,7 @@ function ListScreen({
         </Pressable>
       </View>
       <Text style={styles.pageSubtitle}>
-        {origin.label} · raio de {RADIUS_KM} km
+        {origin.label} · {outsideRadius ? 'mais próximas, fora do raio de' : 'raio de'} {RADIUS_KM} km
       </Text>
       <View style={[styles.searchFloat, styles.searchInList]}>
         <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
@@ -470,7 +530,9 @@ function ListScreen({
           style={styles.searchInput}
         />
       </View>
-      <FilterRow value={filter} onChange={onFilter} />
+      {offline ? <OfflineNotice /> : null}
+      {outsideRadius ? <OutsideRadiusNotice /> : null}
+      <FilterRow options={filters} value={filter} onChange={onFilter} />
       {results.length === 0 ? (
         <Text style={styles.empty}>Nenhuma unidade neste raio para o filtro escolhido.</Text>
       ) : (
@@ -577,10 +639,19 @@ function InfoRow({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: s
   );
 }
 
-function FilterRow({ value, onChange }: { value: CenterFilter; onChange: (value: CenterFilter) => void }) {
+function FilterRow({
+  options,
+  value,
+  onChange,
+}: {
+  options: FilterOption[];
+  value: CenterFilter;
+  onChange: (value: CenterFilter) => void;
+}) {
+  if (!options.length) return null;
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-      {FILTERS.map((item) => {
+      {options.map((item) => {
         const on = item.id === value;
         return (
           <Pressable
@@ -718,6 +789,28 @@ const styles = StyleSheet.create({
   sheetTitle: { flex: 1, fontSize: 16, lineHeight: 24, fontWeight: '700', color: colors.ink },
   link: { fontSize: 14, lineHeight: 21, fontWeight: '600', color: colors.primary600 },
   sheetList: { marginTop: 4 },
+  offline: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginTop: 4,
+    marginBottom: 8,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: colors.warning100,
+  },
+  offlineText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.warning700 },
+  outside: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginTop: 4,
+    marginBottom: 8,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: colors.surfaceMuted,
+  },
+  outsideText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
   chips: { gap: 8, paddingVertical: 12 },
   chip: { height: 32, borderRadius: 999, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
   chipOn: { backgroundColor: colors.primary600 },

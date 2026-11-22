@@ -38,3 +38,18 @@ deployments:
     schedules:
       - cron: "0 7 20 * *"
         timezone: America/Maceio
+
+  - name: novidades-portais
+    description: Notícias sobre medula óssea e células-tronco (REDOME, Ameo, SBTMO, Abrale) como rascunhos para a liga validar
+    entrypoint: workers/flows/collect.py:collect_flow
+    work_pool:
+      name: stem-docker
+      work_queue_name: default
+    tags: [novidades, conteudo, weekly]
+    # Competência vazia: últimos 30 dias. AAMM faz carga retroativa desde aquele mês.
+    parameters:
+      source: novidades
+    # Semanal, com janela de 30 dias: matéria já coletada não é recriada.
+    schedules:
+      - cron: "0 8 * * 1"
+        timezone: America/Maceio
