@@ -25,6 +25,7 @@ const blank = (): Content => ({
   anexos: [],
   atualizadoEm: today(),
   historico: [],
+  linkOriginal: '',
 })
 
 type Pending = Attachment & { file: File }
@@ -174,6 +175,15 @@ export default function ContentForm() {
         value={form.fonte}
         onChange={(e) => set('fonte', e.target.value)}
       />
+      {form.linkOriginal && (
+        <p className="mt-2 text-xs">
+          Notícia coletada automaticamente da{' '}
+          <a href={form.linkOriginal} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline">
+            matéria original
+          </a>
+          . Pode ser publicada sem validação clínica.
+        </p>
+      )}
 
       <label className="mt-3 flex items-center gap-1.5 text-xs" title={currentUser?.podeValidar ? '' : 'Somente o validador clínico ou um administrador pode validar.'}>
         <input
@@ -185,7 +195,7 @@ export default function ContentForm() {
         />
         Validação clínica da liga
         {form.validacaoClinica && form.validadoPor && <span className="text-ink/60">· {form.validadoPor}</span>}
-        {!currentUser?.podeValidar && !form.validacaoClinica && (
+        {!currentUser?.podeValidar && !form.validacaoClinica && !form.linkOriginal && (
           <span className="text-ink/60">· necessária para publicar</span>
         )}
       </label>

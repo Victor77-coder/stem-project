@@ -105,6 +105,16 @@ export default function ContentList() {
             <dd>{preview.publicoAlvo.join(', ') || '—'}</dd>
             <dt className="font-semibold">Fonte</dt>
             <dd>{preview.fonte || 'Não informada'}</dd>
+            {preview.linkOriginal && (
+              <>
+                <dt className="font-semibold">Matéria original</dt>
+                <dd className="truncate">
+                  <a href={preview.linkOriginal} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                    {preview.linkOriginal}
+                  </a>
+                </dd>
+              </>
+            )}
             <dt className="font-semibold">Validação clínica</dt>
             <dd>{preview.validacaoClinica ? `Validado por ${preview.validadoPor}` : 'Pendente'}</dd>
             <dt className="font-semibold">Atualizado em</dt>
