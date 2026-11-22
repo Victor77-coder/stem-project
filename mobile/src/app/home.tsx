@@ -173,6 +173,7 @@ function ReceptorHome({
   open,
   onJourney,
   onCenters,
+  onStats,
   onNotifications,
 }: {
   name: string;
@@ -184,6 +185,7 @@ function ReceptorHome({
   open: (route: LearnRoute) => void;
   onJourney: () => void;
   onCenters: (filter?: CenterFilter) => void;
+  onStats: () => void;
   onNotifications: () => void;
 }) {
   const card = homeCard('receptor', current);
@@ -208,7 +210,7 @@ function ReceptorHome({
         action="Ver minha jornada"
         onAction={onJourney}
       />
-      <EstimateCard uf={uf} city={city} />
+      <EstimateCard uf={uf} city={city} onStats={onStats} />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
@@ -442,6 +444,7 @@ export default function HomeScreen() {
                 open={openLearn}
                 onJourney={openJourney}
                 onCenters={openCenters}
+                onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
               />
             ) : profile === 'leigo' ? (
