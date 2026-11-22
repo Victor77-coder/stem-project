@@ -73,6 +73,7 @@ def content_payload(content: Content, history: list[dict]) -> dict:
         'destaque': content.destaque,
         'lista': content.lista,
         'selo': content.selo,
+        'linkOriginal': content.link_original,
     }
 
 
@@ -151,7 +152,7 @@ def save_content(content: Content | None, data: dict, user: User) -> Content:
     if content.status == PublishStatus.PUBLICADO:
         if not content.fonte:
             raise ValidationError({'fonte': [NO_SOURCE]})
-        if content.validado_por_id is None:
+        if content.validado_por_id is None and not content.is_collected_news:
             raise ValidationError({'validacaoClinica': [NO_VALIDATION]})
 
     content.save()

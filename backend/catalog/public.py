@@ -65,6 +65,9 @@ def article(content: Content, request) -> dict:
         'tag': content.selo,
         'validated': f'Validado pela equipe médica da liga · {br_date(content.validado_em)}' if content.validado_em else '',
         'source': content.fonte,
+        'link': content.link_original,
+        # Notícia publicada pela coleta, sem validação clínica: o app avisa o leitor.
+        'automatic': content.is_collected_news and content.validado_em is None,
         'sections': content.secoes or [{'title': '', 'body': content.descricao}],
         'updatedAt': content.atualizado_em.isoformat(),
         'attachments': [

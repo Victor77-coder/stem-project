@@ -179,6 +179,8 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'STEM Project <nao-res
 INGEST_API_TOKEN = os.environ.get('INGEST_API_TOKEN', '')
 # Publica direto o que a coleta do CNES trouxer. Desligue (0) para exigir aprovação no painel.
 CNES_AUTO_PUBLISH = env_bool('CNES_AUTO_PUBLISH', default=True)
+# Publica direto as novidades coletadas dos portais, sem validação clínica. Desligue (0) para a equipe aprovar no painel.
+NOVIDADES_AUTO_PUBLISH = env_bool('NOVIDADES_AUTO_PUBLISH', default=True)
 # Broker próprio (sem descarte por LRU): o Redis de cache pode apagar mensagens da fila.
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 CELERY_TASK_IGNORE_RESULT = True

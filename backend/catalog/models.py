@@ -53,6 +53,9 @@ class Content(models.Model):
     destaque = models.BooleanField(default=False)
     lista = models.CharField(max_length=10, choices=Listing.choices, default=Listing.CATALOG)
     selo = models.CharField(max_length=10, blank=True, help_text='Mito ou Verdade, nos cartões de mitos.')
+    link_original = models.URLField(
+        max_length=500, blank=True, help_text='Matéria original de uma novidade coletada. Identifica a matéria entre as coletas.'
+    )
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
@@ -60,11 +63,20 @@ class Content(models.Model):
         ordering = ['-atualizado_em']
         constraints = [
             published_needs(~Q(fonte=''), 'conteudo_publicado_tem_fonte'),
-            published_needs(Q(validado_por__isnull=False), 'conteudo_publicado_validado'),
+            # Novidade coletada (categoria Novidades com link original) é publicada sem validação clínica.
+            published_needs(
+                Q(validado_por__isnull=False) | (Q(categoria='Novidades') & ~Q(link_original='')), 'conteudo_publicado_validado'
+            ),
+            models.UniqueConstraint(fields=['link_original'], condition=~Q(link_original=''), name='conteudo_link_original_unico'),
         ]
 
     def __str__(self):
         return self.titulo
+
+    @property
+    def is_collected_news(self) -> bool:
+        """Notícia trazida pela coleta dos portais: dispensa a validação clínica para ser publicada."""
+        return self.categoria == self.Category.NOVIDADES and bool(self.link_original)
 
 
 class Attachment(models.Model):
