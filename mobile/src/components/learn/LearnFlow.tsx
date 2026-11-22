@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  ARTICLES,
   CATEGORIES,
   FAQS,
   MYTHS,
   articleById,
+  articlesFor,
   cardMeta,
   catalogArticles,
   fold,
@@ -15,7 +15,7 @@ import {
   type Article,
   type LibraryFilter,
 } from '@/content/learn';
-import { useRegistration } from '@/context/RegistrationContext';
+import { useRegistration, type ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
@@ -29,11 +29,12 @@ export type LearnRoute =
 
 type Props = {
   route: LearnRoute;
+  profile: ProfileType;
   onChange: (route: LearnRoute) => void;
   onBack: () => void;
 };
 
-export function LearnFlow({ route, onChange, onBack }: Props) {
+export function LearnFlow({ route, profile, onChange, onBack }: Props) {
   const { signedIn } = useRegistration();
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [, setCatalogVersion] = useState(0);
@@ -69,9 +70,15 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
   return (
     <View style={styles.fill}>
       {route.name === 'library' ? (
-        <Library initialCategory={route.category ?? 'Todos'} onChange={onChange} onArticle={openArticle} onQuiz={openQuiz} />
+        <Library
+          initialCategory={route.category ?? 'Todos'}
+          profile={profile}
+          onChange={onChange}
+          onArticle={openArticle}
+          onQuiz={openQuiz}
+        />
       ) : null}
-      {route.name === 'search' ? <SearchScreen initialQuery={route.query} onArticle={openArticle} /> : null}
+      {route.name === 'search' ? <SearchScreen initialQuery={route.query} profile={profile} onArticle={openArticle} /> : null}
       {route.name === 'article' ? (
         <ArticleScreen
           article={articleById(route.id)}
@@ -89,22 +96,25 @@ export function LearnFlow({ route, onChange, onBack }: Props) {
 
 function Library({
   initialCategory,
+  profile,
   onChange,
   onArticle,
   onQuiz,
 }: {
   initialCategory: LibraryFilter;
+  profile: ProfileType;
   onChange: (route: LearnRoute) => void;
   onArticle: (id: string) => void;
   onQuiz: () => void;
 }) {
   const [category, setCategory] = useState<LibraryFilter>(initialCategory);
-  const featured = ARTICLES.find((item) => item.featured);
+  const visible = articlesFor(profile);
+  const featured = visible.find((item) => item.featured);
   const showFeatured = featured && (category === 'Todos' || featured.category === category);
   const articles =
     category === 'Todos'
-      ? ARTICLES.filter((item) => item.list === 'recent')
-      : catalogArticles().filter((item) => item.category === category);
+      ? visible.filter((item) => item.list === 'recent')
+      : catalogArticles(profile).filter((item) => item.category === category);
 
   return (
     <ScrollView style={styles.fill} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -171,9 +181,17 @@ function Library({
   );
 }
 
-function SearchScreen({ initialQuery, onArticle }: { initialQuery: string; onArticle: (id: string) => void }) {
+function SearchScreen({
+  initialQuery,
+  profile,
+  onArticle,
+}: {
+  initialQuery: string;
+  profile: ProfileType;
+  onArticle: (id: string) => void;
+}) {
   const [query, setQuery] = useState(initialQuery);
-  const results = searchArticles(query);
+  const results = searchArticles(query, profile);
   const needle = query.trim();
 
   return (

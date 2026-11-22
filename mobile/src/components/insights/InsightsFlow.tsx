@@ -14,7 +14,7 @@ import {
   type NoticeKind,
   type StatYear,
 } from '@/content/insights';
-import { useRegistration } from '@/context/RegistrationContext';
+import { useRegistration, type ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
@@ -55,6 +55,7 @@ const ICONS: Record<NoticeKind, keyof typeof Ionicons.glyphMap> = {
 
 type Props = {
   initial: InsightScreen;
+  profile: ProfileType;
   email?: string;
   onClose: () => void;
   onUnread?: (count: number) => void;
@@ -74,7 +75,7 @@ export function toNotice(item: ApiNotice): Notice {
   };
 }
 
-export function InsightsFlow({ initial, email = '', onClose, onUnread }: Props) {
+export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }: Props) {
   const { signedIn } = useRegistration();
   const [screen, setScreen] = useState<InsightScreen>(initial);
   const [notices, setNotices] = useState<Notice[]>(sessionInbox);
@@ -132,7 +133,7 @@ export function InsightsFlow({ initial, email = '', onClose, onUnread }: Props) 
     );
   }
 
-  return <StatsScreen onBack={onClose} />;
+  return <StatsScreen profile={profile} onBack={onClose} />;
 }
 
 function TopBar({
@@ -192,17 +193,26 @@ function localStats(year: StatYear, uf: string) {
   };
 }
 
-function StatsScreen({ onBack }: { onBack: () => void }) {
+// O doador vê os cadastros no REDOME; o receptor, transplantes e espera. Igual ao ?perfil= da API.
+const SUBTITLE: Record<ProfileType, string> = {
+  doador: 'Dados públicos agregados sobre o cadastro de doadores de medula.',
+  receptor: 'Dados públicos agregados sobre transplantes de medula.',
+  leigo: 'Dados públicos agregados sobre transplantes de células-tronco.',
+};
+
+function StatsScreen({ profile, onBack }: { profile: ProfileType; onBack: () => void }) {
+  const forDonor = profile !== 'receptor';
+  const forRecipient = profile !== 'doador';
   const [uf, setUf] = useState(NATIONAL);
   const [year, setYear] = useState<StatYear>('2025');
   const [picking, setPicking] = useState<null | 'uf' | 'year'>(null);
   const [remote, setRemote] = useState<ApiStats | null>(null);
 
   useEffect(() => {
-    api<ApiStats>(`/estatisticas/?ano=${year}&uf=${uf}`)
+    api<ApiStats>(`/estatisticas/?ano=${year}&uf=${uf}&perfil=${profile}`)
       .then((data) => setRemote(data.available ? data : null))
       .catch(() => setRemote(null));
-  }, [year, uf]);
+  }, [year, uf, profile]);
 
   const fallback = localStats(year, uf);
   const stats = remote
@@ -226,7 +236,7 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
       <TopBar title="Estatísticas" onBack={onBack} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.pageTitle}>Panorama no Brasil</Text>
-        <Text style={styles.pageSubtitle}>Dados públicos agregados sobre transplantes de células-tronco.</Text>
+        <Text style={styles.pageSubtitle}>{SUBTITLE[profile]}</Text>
         <View style={styles.filterRow}>
           <Pressable accessibilityRole="button" onPress={() => setPicking('uf')} style={styles.filterChip}>
             <Ionicons name="chevron-down" size={14} color={colors.primary600} />
@@ -239,44 +249,50 @@ function StatsScreen({ onBack }: { onBack: () => void }) {
         </View>
 
         <View style={styles.statRow}>
-          <View style={styles.statCard}>
-            <View style={[styles.miniWell, { backgroundColor: colors.primary100 }]}>
-              <Ionicons name="people-outline" size={16} color={colors.primary600} />
-            </View>
-            <Text style={styles.statValue}>{cards.donors || '—'}</Text>
-            <Text style={styles.statCaption}>doadores no REDOME</Text>
-          </View>
-          <View style={styles.statCard}>
-            <View style={[styles.miniWell, { backgroundColor: colors.teal100 }]}>
-              <Ionicons name="pulse-outline" size={16} color={colors.teal600} />
-            </View>
-            <Text style={styles.statValue}>{cards.transplants || '—'}</Text>
-            <Text style={styles.statCaption}>transplantes de medula</Text>
-          </View>
-        </View>
-
-        <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Transplantes de medula por região</Text>
-          {bars.map((bar) => {
-            const active = bar.name === region;
-            return (
-              <View key={bar.name} style={styles.barRow}>
-                <Text style={[styles.barLabel, active && styles.barLabelOn]}>{bar.name}</Text>
-                <View style={styles.barTrack}>
-                  <View
-                    style={[
-                      styles.barFill,
-                      { width: `${Math.max(8, (bar.value / max) * 100)}%`, backgroundColor: active ? colors.teal600 : colors.primary600 },
-                    ]}
-                  />
-                </View>
-                <Text style={styles.barValue}>{bar.value.toLocaleString('pt-BR')}</Text>
+          {forDonor ? (
+            <View style={styles.statCard}>
+              <View style={[styles.miniWell, { backgroundColor: colors.primary100 }]}>
+                <Ionicons name="people-outline" size={16} color={colors.primary600} />
               </View>
-            );
-          })}
+              <Text style={styles.statValue}>{cards.donors || '—'}</Text>
+              <Text style={styles.statCaption}>doadores no REDOME</Text>
+            </View>
+          ) : null}
+          {forRecipient ? (
+            <View style={styles.statCard}>
+              <View style={[styles.miniWell, { backgroundColor: colors.teal100 }]}>
+                <Ionicons name="pulse-outline" size={16} color={colors.teal600} />
+              </View>
+              <Text style={styles.statValue}>{cards.transplants || '—'}</Text>
+              <Text style={styles.statCaption}>transplantes de medula</Text>
+            </View>
+          ) : null}
         </View>
 
-        {stats.wait ? (
+        {forRecipient ? (
+          <View style={styles.panel}>
+            <Text style={styles.panelTitle}>Transplantes de medula por região</Text>
+            {bars.map((bar) => {
+              const active = bar.name === region;
+              return (
+                <View key={bar.name} style={styles.barRow}>
+                  <Text style={[styles.barLabel, active && styles.barLabelOn]}>{bar.name}</Text>
+                  <View style={styles.barTrack}>
+                    <View
+                      style={[
+                        styles.barFill,
+                        { width: `${Math.max(8, (bar.value / max) * 100)}%`, backgroundColor: active ? colors.teal600 : colors.primary600 },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.barValue}>{bar.value.toLocaleString('pt-BR')}</Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
+
+        {forRecipient && stats.wait ? (
           <View style={styles.waitCard}>
             <Text style={styles.waitLabel}>Tempo médio de espera por doador não aparentado</Text>
             <Text style={styles.waitValue}>{stats.wait}</Text>

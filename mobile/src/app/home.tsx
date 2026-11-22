@@ -422,6 +422,7 @@ export default function HomeScreen() {
         {tab === 'inicio' && insight ? (
           <InsightsFlow
             initial={insight}
+            profile={profile}
             email={draft.email}
             onClose={() => setInsight(null)}
             onUnread={setUnread}
@@ -469,6 +470,7 @@ export default function HomeScreen() {
         ) : tab === 'aprender' ? (
           <LearnFlow
             route={learn}
+            profile={profile}
             onChange={(route) => setLearnStack((current) => [...current, route])}
             onBack={() => setLearnStack((current) => (current.length > 1 ? current.slice(0, -1) : current))}
           />
@@ -485,6 +487,7 @@ export default function HomeScreen() {
         ) : tab === 'centros' ? (
           <CentersFlow
             initialFilter={centersFilter}
+            profile={profile}
             savedCity={draft.city}
             savedUf={draft.uf}
             savedCep={draft.cep}

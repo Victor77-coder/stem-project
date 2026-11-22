@@ -2,11 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  FILTERS,
+  KINDS_FOR,
   KIND_LABEL,
   ORIGINS,
   RADIUS_KM,
   centerById,
+  filterOf,
+  filtersFor,
   listCenters,
   originFromCity,
   originFromQuery,
@@ -15,6 +17,7 @@ import {
   type CenterResult,
   type Origin,
 } from '@/content/centers';
+import type { ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { hasLocationPermission, originFromCep, requestDeviceOrigin } from '@/lib/location';
 import { colors } from '@/theme';
@@ -44,8 +47,11 @@ function fromApi(item: ApiCenter): CenterResult {
   };
 }
 
+type FilterOption = { id: CenterFilter; label: string };
+
 type Props = {
   initialFilter?: CenterFilter;
+  profile: ProfileType;
   savedCity?: string;
   savedUf?: string;
   savedCep?: string;
@@ -55,6 +61,7 @@ type Props = {
 
 export function CentersFlow({
   initialFilter = 'todos',
+  profile,
   savedCity = '',
   savedUf = '',
   savedCep = '',
@@ -71,17 +78,19 @@ export function CentersFlow({
     savedCity ? originFromCity(savedCity, savedUf) : { ...ORIGINS.maceio, mode: 'cep' },
   );
   const queryRun = useRef(0);
-  const [filter, setFilter] = useState<CenterFilter>(initialFilter);
+  const kinds = KINDS_FOR[profile];
+  const filters = useMemo(() => filtersFor(profile), [profile]);
+  const [filter, setFilter] = useState<CenterFilter>(() => filterOf(profile, initialFilter));
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [browse, setBrowse] = useState<'map' | 'list'>('map');
 
   useEffect(() => {
-    setFilter(initialFilter);
-  }, [initialFilter]);
+    setFilter(filterOf(profile, initialFilter));
+  }, [initialFilter, profile]);
 
   const nameQuery = query.replace(/\D/g, '').length === 8 ? '' : query;
-  const local = useMemo(() => listCenters(origin, filter, nameQuery), [origin, filter, nameQuery]);
+  const local = useMemo(() => listCenters(origin, filter, nameQuery, kinds), [origin, filter, nameQuery, kinds]);
   const [remote, setRemote] = useState<CenterResult[] | null>(null);
   const [offline, setOffline] = useState(false);
   const results = remote ?? local;
@@ -92,6 +101,7 @@ export function CentersFlow({
       lat: String(origin.lat),
       lng: String(origin.lng),
       raio: String(RADIUS_KM),
+      perfil: profile,
     });
     if (filter !== 'todos') params.set('kind', filter);
     if (nameQuery.trim()) params.set('q', nameQuery.trim());
@@ -110,7 +120,7 @@ export function CentersFlow({
     return () => {
       active = false;
     };
-  }, [origin, filter, nameQuery]);
+  }, [origin, filter, nameQuery, profile]);
 
   function onQuery(value: string) {
     setQuery(value);
@@ -231,6 +241,7 @@ export function CentersFlow({
       <ListScreen
         origin={origin}
         filter={filter}
+        filters={filters}
         query={query}
         results={results}
         offline={offline}
@@ -249,6 +260,7 @@ export function CentersFlow({
     <MapScreen
       origin={origin}
       filter={filter}
+      filters={filters}
       query={query}
       results={results}
       offline={offline}
@@ -398,6 +410,7 @@ function OfflineNotice() {
 function MapScreen({
   origin,
   filter,
+  filters,
   query,
   results,
   offline,
@@ -408,6 +421,7 @@ function MapScreen({
 }: {
   origin: Origin;
   filter: CenterFilter;
+  filters: FilterOption[];
   query: string;
   results: CenterResult[];
   offline: boolean;
@@ -440,7 +454,7 @@ function MapScreen({
             <Text style={styles.link}>Ver lista</Text>
           </Pressable>
         </View>
-        <FilterRow value={filter} onChange={onFilter} />
+        <FilterRow options={filters} value={filter} onChange={onFilter} />
         <ScrollView style={styles.sheetList} showsVerticalScrollIndicator={false}>
           {results.slice(0, 4).map((center) => (
             <CenterRow key={center.id} center={center} onPress={() => onOpen(center.id)} />
@@ -454,6 +468,7 @@ function MapScreen({
 function ListScreen({
   origin,
   filter,
+  filters,
   query,
   results,
   offline,
@@ -464,6 +479,7 @@ function ListScreen({
 }: {
   origin: Origin;
   filter: CenterFilter;
+  filters: FilterOption[];
   query: string;
   results: CenterResult[];
   offline: boolean;
@@ -495,7 +511,7 @@ function ListScreen({
         />
       </View>
       {offline ? <OfflineNotice /> : null}
-      <FilterRow value={filter} onChange={onFilter} />
+      <FilterRow options={filters} value={filter} onChange={onFilter} />
       {results.length === 0 ? (
         <Text style={styles.empty}>Nenhuma unidade neste raio para o filtro escolhido.</Text>
       ) : (
@@ -602,10 +618,19 @@ function InfoRow({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: s
   );
 }
 
-function FilterRow({ value, onChange }: { value: CenterFilter; onChange: (value: CenterFilter) => void }) {
+function FilterRow({
+  options,
+  value,
+  onChange,
+}: {
+  options: FilterOption[];
+  value: CenterFilter;
+  onChange: (value: CenterFilter) => void;
+}) {
+  if (!options.length) return null;
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-      {FILTERS.map((item) => {
+      {options.map((item) => {
         const on = item.id === value;
         return (
           <Pressable

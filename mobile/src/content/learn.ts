@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import type { ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
@@ -23,6 +24,8 @@ export type Article = {
   link?: string;
   /** Publicada pela coleta, sem validação clínica da liga */
   automatic?: boolean;
+  /** Perfis do painel (Doador, Receptor, Leigo); nas novidades, decide quem vê a notícia */
+  audience?: string[];
   sections: { title: string; body: string }[];
 };
 
@@ -318,6 +321,7 @@ type ApiArticle = {
   title: string;
   summary: string;
   category: string;
+  audience: string[];
   minutes: number;
   list: Article['list'];
   featured: boolean;
@@ -369,6 +373,7 @@ export function loadCatalog(): Promise<boolean> {
             source: item.source,
             link: item.link || undefined,
             automatic: item.automatic || undefined,
+            audience: item.audience,
             sections: item.sections,
           },
         ];
@@ -395,8 +400,17 @@ export function articleById(id: string) {
   return ARTICLES.find((item) => item.id === id) ?? ARTICLES[1] ?? ARTICLES[0];
 }
 
-export function catalogArticles() {
-  return ARTICLES.filter((item) => item.list !== 'direct');
+const AUDIENCE: Record<ProfileType, string> = { doador: 'Doador', receptor: 'Receptor', leigo: 'Leigo' };
+
+/** Novidade vai só para o perfil do seu tema (doação ou tratamento); o restante do acervo vale para todos. */
+export function articlesFor(profile: ProfileType) {
+  return ARTICLES.filter(
+    (item) => item.category !== 'Novidades' || !item.audience || item.audience.includes(AUDIENCE[profile]),
+  );
+}
+
+export function catalogArticles(profile: ProfileType) {
+  return articlesFor(profile).filter((item) => item.list !== 'direct');
 }
 
 export function fold(value: string) {
@@ -406,9 +420,9 @@ export function fold(value: string) {
     .toLowerCase();
 }
 
-export function searchArticles(query: string) {
+export function searchArticles(query: string, profile: ProfileType) {
   const needle = fold(query.trim());
-  const source = catalogArticles();
+  const source = catalogArticles(profile);
   if (!needle) return source;
   return source.filter((article) => {
     const haystack = fold([article.title, article.category, article.keywords ?? ''].join(' '));
