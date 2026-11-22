@@ -117,7 +117,9 @@ def test_center_out_of_scope_is_unpublished_and_leaves_public_list(api, seeded):
     hemope = Center.objects.get(slug='hemope')
     assert hemope.status == PublishStatus.INATIVO
     assert 'Saiu do recorte' in hemope.motivo_revisao
-    assert api.get('/api/v1/centros/', recife).data['results'] == []
+    after = api.get('/api/v1/centros/', recife).data
+    assert 'hemope' not in [item['id'] for item in after['results']]
+    assert after['outsideRadius'] is True, 'sem hemocentro em Recife, o app mostra os mais próximos fora do raio'
 
 
 def test_uf_without_data_is_not_unpublished(api, seeded):

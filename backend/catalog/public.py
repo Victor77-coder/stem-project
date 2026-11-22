@@ -18,6 +18,8 @@ from .models import Attachment, Center, Content, EstimateRule, GlossaryTerm, Jou
 
 RADIUS_KM = 50
 MAX_RADIUS_KM = 300
+# Nada no raio (ex.: Alagoas não tem centro de transplante): mostra os mais próximos fora dele.
+NEAREST_OUTSIDE_RADIUS = 5
 ESTIMATE_DISCLAIMER = (
     'Estimativa exclusivamente preditiva, baseada em dados públicos. '
     'Não é confirmação de atendimento, procedimento, vaga ou prazo.'
@@ -201,7 +203,10 @@ def _float(value):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def centers(request):
-    """Contrato de GET /centros?lat=&lng=&q=&kind=&perfil=. Coordenadas do aparelho não são gravadas (RF008)."""
+    """Contrato de GET /centros?lat=&lng=&q=&kind=&perfil=. Coordenadas do aparelho não são gravadas (RF008).
+
+    Com coordenadas e nenhuma unidade no raio, devolve as mais próximas fora dele e ``outsideRadius: true``.
+    """
     params = request.query_params
     lat, lng = _float(params.get('lat')), _float(params.get('lng'))
     radius = min(_float(params.get('raio')) or RADIUS_KM, MAX_RADIUS_KM)
@@ -221,14 +226,14 @@ def centers(request):
                 Q(nome__icontains=q) | Q(endereco__icontains=q) | Q(cidade__icontains=q) | Q(cnes=q) | Q(nome_curto__icontains=q)
             )
         if lat is None or lng is None:
-            return {'results': [center(item) for item in query], 'lastUpdate': _last_update(query)}
-        near = []
-        for item in query.exclude(lat__isnull=True).exclude(lng__isnull=True):
-            km = haversine_km(lat, lng, item.lat, item.lng)
-            if km <= radius:
-                near.append((km, item))
-        near.sort(key=lambda pair: pair[0])
-        return {'results': [center(item, km) for km, item in near], 'lastUpdate': _last_update(query)}
+            return {'results': [center(item) for item in query], 'lastUpdate': _last_update(query), 'outsideRadius': False}
+        located = query.exclude(lat__isnull=True).exclude(lng__isnull=True)
+        by_distance = sorted(((haversine_km(lat, lng, item.lat, item.lng), item) for item in located), key=lambda pair: pair[0])
+        near = [(km, item) for km, item in by_distance if km <= radius]
+        outside = not near and bool(by_distance)
+        if outside:
+            near = by_distance[:NEAREST_OUTSIDE_RADIUS]
+        return {'results': [center(item, km) for km, item in near], 'lastUpdate': _last_update(query), 'outsideRadius': outside}
 
     return cached_response(request, build)
 

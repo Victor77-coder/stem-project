@@ -150,12 +150,15 @@ def test_centers_sorted_by_distance_within_radius(api, seeded):
     assert [item['id'] for item in recife] == ['hemope']
 
 
-def test_centers_follow_the_profile(api, seeded):
-    Center.objects.create(
-        slug='hupaa-tmo', nome='HUPAA · Transplante de medula', nome_curto='HUPAA', endereco='Av. Lourival Melo Mota, s/n',
-        cidade='Maceió', uf='AL', tipo='transplante', lat=-9.5539, lng=-35.7786, fonte='CNES/DataSUS',
-        fonte_data=date(2026, 10, 1), status='publicado',
+def transplant_center(slug, cidade, uf, lat, lng):
+    return Center.objects.create(
+        slug=slug, nome=f'{slug} · Transplante de medula', nome_curto=slug, endereco='Endereço', cidade=cidade, uf=uf,
+        tipo='transplante', lat=lat, lng=lng, fonte='CNES/DataSUS', fonte_data=date(2026, 10, 1), status='publicado',
     )
+
+
+def test_centers_follow_the_profile(api, seeded):
+    transplant_center('hupaa', 'Maceió', 'AL', -9.5539, -35.7786)
     maceio = {'lat': -9.6658, 'lng': -35.735}
 
     def kinds(**params):
@@ -165,6 +168,23 @@ def test_centers_follow_the_profile(api, seeded):
     assert kinds(perfil='receptor') == {'transplante'}, 'o receptor vê onde se trata'
     assert kinds(perfil='leigo') == kinds() == {'hemocentro', 'campanha', 'transplante'}
     assert kinds(perfil='doador', kind='transplante') == set()
+
+
+def test_nothing_in_radius_shows_the_nearest_outside_it(api, seeded):
+    # Como hoje em Alagoas: nenhum centro de transplante no raio de Maceió, os mais próximos em Recife e Aracaju.
+    transplant_center('imip', 'Recife', 'PE', -8.0476, -34.877)
+    transplant_center('sao-lucas', 'Aracaju', 'SE', -10.9472, -37.0731)
+    maceio = {'lat': -9.6658, 'lng': -35.735, 'raio': 50}
+
+    data = api.get('/api/v1/centros/', {**maceio, 'perfil': 'receptor'}).data
+    assert data['outsideRadius'] is True
+    assert [item['id'] for item in data['results']] == ['imip', 'sao-lucas'], 'do mais perto para o mais longe'
+    assert all(item['km'] > 50 for item in data['results'])
+
+    nearby = api.get('/api/v1/centros/', {**maceio, 'perfil': 'doador'}).data
+    assert nearby['outsideRadius'] is False and all(item['km'] <= 50 for item in nearby['results'])
+    nothing = api.get('/api/v1/centros/', {**maceio, 'perfil': 'receptor', 'q': 'inexistente'}).data
+    assert nothing == {'results': [], 'lastUpdate': '', 'outsideRadius': False}
 
 
 BRASILAPI_HIT = {
