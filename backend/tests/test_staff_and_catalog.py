@@ -1,10 +1,12 @@
+from datetime import date
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from rest_framework.test import APIClient
 
 from catalog import geo
-from catalog.models import Content
+from catalog.models import Center, Content
 
 from .conftest import DONOR, auth
 
@@ -148,6 +150,23 @@ def test_centers_sorted_by_distance_within_radius(api, seeded):
     assert [item['id'] for item in recife] == ['hemope']
 
 
+def test_centers_follow_the_profile(api, seeded):
+    Center.objects.create(
+        slug='hupaa-tmo', nome='HUPAA · Transplante de medula', nome_curto='HUPAA', endereco='Av. Lourival Melo Mota, s/n',
+        cidade='Maceió', uf='AL', tipo='transplante', lat=-9.5539, lng=-35.7786, fonte='CNES/DataSUS',
+        fonte_data=date(2026, 10, 1), status='publicado',
+    )
+    maceio = {'lat': -9.6658, 'lng': -35.735}
+
+    def kinds(**params):
+        return {item['kind'] for item in api.get('/api/v1/centros/', {**maceio, **params}).data['results']}
+
+    assert kinds(perfil='doador') == {'hemocentro', 'campanha'}, 'o doador vê onde se cadastrar'
+    assert kinds(perfil='receptor') == {'transplante'}, 'o receptor vê onde se trata'
+    assert kinds(perfil='leigo') == kinds() == {'hemocentro', 'campanha', 'transplante'}
+    assert kinds(perfil='doador', kind='transplante') == set()
+
+
 BRASILAPI_HIT = {
     'cep': '57035230',
     'state': 'AL',
@@ -216,6 +235,23 @@ def test_statistics_have_source_and_underreporting_notice(api, seeded):
     assert data['wait'] == '4,8 meses'
     assert api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'BR'}).data['headline']['donors'] == '5,4 mi'
     assert data['underreporting'] is True and data['source']
+
+
+def test_statistics_follow_the_profile(api, seeded):
+    def stats(uf, perfil=None):
+        return api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': uf, **({'perfil': perfil} if perfil else {})}).data
+
+    everyone = stats('BR')
+    assert everyone['headline']['donors'] == '5,4 mi' and everyone['headline']['transplants'] and everyone['regions']
+
+    donor = stats('BR', 'doador')
+    assert donor['headline'] == {'donors': '5,4 mi', 'transplants': ''}
+    assert donor['regions'] == [] and stats('PE', 'doador')['wait'] == ''
+
+    recipient = stats('BR', 'receptor')
+    assert recipient['headline'] == {'donors': '', 'transplants': everyone['headline']['transplants']}
+    assert recipient['regions'] == everyone['regions'] and stats('PE', 'receptor')['wait'] == '4,8 meses'
+    assert stats('BR', 'leigo')['headline'] == everyone['headline']
 
 
 def test_inbox_follows_preferences_and_region(donor):

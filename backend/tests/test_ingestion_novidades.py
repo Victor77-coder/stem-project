@@ -1,5 +1,8 @@
+import pytest
+
 from catalog.models import CatalogHistory, Content
 from ingestion.models import CollectionRun
+from ingestion.sources.novidades import audience
 
 URL = '/api/internal/ingest/'
 TOKEN = {'HTTP_AUTHORIZATION': 'Bearer test-ingest-token'}
@@ -52,7 +55,7 @@ def test_new_items_are_published_without_clinical_validation(api, seeded):
     content = news().get(link_original=REDOME_LINK)
     assert content.status == 'publicado' and content.validado_por is None
     assert content.fonte == 'REDOME/INCA · Publicado em 26/10/2026'
-    assert content.visibilidade == 'Público' and content.publico_alvo == ['Doador', 'Receptor', 'Leigo']
+    assert content.visibilidade == 'Público' and content.publico_alvo == ['Doador', 'Leigo'], 'cadastro no REDOME é tema de doador'
     history = CatalogHistory.objects.get(entidade='conteudo', objeto_id=str(content.pk))
     assert history.autor is None and history.autor_nome == 'Coleta automática' and history.acao == 'Publicou a partir de REDOME/INCA'
 
@@ -60,6 +63,43 @@ def test_new_items_are_published_without_clinical_validation(api, seeded):
     assert shown['category'] == 'Novidades' and shown['link'] == REDOME_LINK
     assert shown['automatic'] is True and shown['validated'] == '', 'o app não pode dizer que a liga validou'
     assert CollectionRun.objects.get().warnings == []
+
+
+@pytest.mark.parametrize(('titulo', 'resumo', 'publico'), [
+    ('Doadora conclui doação de medula após contato por e-mail', 'Resposta a e-mail do REDOME muda a vida de doadora e de receptor',
+     ['Doador', 'Leigo']),
+    ('Conitec abre consulta pública sobre TCTH alogênico de doador não aparentado para Linfoma de Hodgkin',
+     'Recomendação favorável à incorporação ao SUS.', ['Receptor', 'Leigo']),
+    ('Campanha de cadastro de doadores no hemocentro', '', ['Doador', 'Leigo']),
+    ('Pacientes com leucemia ganham novo tratamento', '', ['Receptor', 'Leigo']),
+    ('Medula saiu da Alemanha e chegou ao Brasil em menos de 24 horas', 'Confira a reportagem.', ['Doador', 'Receptor', 'Leigo']),
+])
+def test_news_go_to_the_profile_of_their_topic(titulo, resumo, publico):
+    assert audience(titulo, resumo) == publico
+
+
+def test_profile_filters_news_but_team_correction_survives(api, staff_login):
+    donor_news = item()
+    recipient_news = item(SBTMO_LINK, portal='sbtmo', fonte='SBTMO', titulo='Conitec abre consulta pública sobre TCTH para linfoma',
+                          resumo='Pacientes podem contribuir.')
+    post(api, canonical(donor_news, recipient_news))
+    by_link = {content.link_original: content for content in news()}
+
+    def shown(perfil):
+        listed = api.get('/api/v1/conteudos/', {'categoria': 'Novidades'}).data
+        return {entry['link'] for entry in listed if perfil in entry['audience']}
+
+    assert shown('Doador') == {REDOME_LINK}
+    assert shown('Receptor') == {SBTMO_LINK}
+    assert shown('Leigo') == {REDOME_LINK, SBTMO_LINK}
+
+    editor = staff_login('silva_js@email.com', 'senha123')
+    content = by_link[SBTMO_LINK]
+    fixed = editor.patch(f'/api/v1/staff/contents/{content.pk}/', {'publicoAlvo': ['Doador', 'Receptor', 'Leigo']}, format='json')
+    assert fixed.status_code == 200, fixed.data
+    post(api, canonical(donor_news, recipient_news))
+    content.refresh_from_db()
+    assert content.publico_alvo == ['Doador', 'Receptor', 'Leigo'], 'a coleta não desfaz a correção da equipe'
 
 
 def test_with_auto_publish_off_items_wait_for_the_team(api, staff_login, settings):

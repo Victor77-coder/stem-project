@@ -7,9 +7,13 @@ passou pela revisão da liga.
 
 A matéria é identificada pelo link original: a que já foi coletada não é recriada nem tem o texto alterado,
 e a que a liga removeu (inativo) continua removida.
+
+Cada matéria vai para o perfil do seu tema (``audience``): doação para o doador, tratamento para o receptor. O
+leigo vê todas. A equipe pode corrigir o público no painel, e a coleta seguinte não desfaz a correção.
 """
 
 import re
+import unicodedata
 from datetime import date
 
 from django.conf import settings
@@ -23,6 +27,30 @@ TITLE_LIMIT = Content._meta.get_field('titulo').max_length
 LINK_LIMIT = Content._meta.get_field('link_original').max_length
 SOURCE_LIMIT = Content._meta.get_field('fonte').max_length
 is_url = URLValidator(schemes=['https'])
+
+# Comparados sem acento e em minúsculas. "Transplante" e "medula" aparecem nas duas pontas e não decidem nada.
+DONOR_TERMS = re.compile(r'\b(doa(r|cao|coes|d[ao]s?)|doou|doe|doador(a|es|as)?|cadastr\w*|hemocentros?|voluntari\w*|campanhas?|mutirao)\b')
+RECIPIENT_TERMS = re.compile(
+    r'\b(pacientes?|receptor(a|es|as)?|tratamentos?|leucemias?|linfomas?|mielomas?|aplasia|aplastica|doencas?|diagnostic\w*'
+    r'|cancer|quimioterapia|conitec|incorporac\w*|transplantador\w*|acesso|sobrevida|terapias?)\b'
+)
+# "Doador não aparentado" e "haploidêntico" dizem de onde vêm as células do transplante; não falam com quem quer doar.
+TRANSPLANT_SOURCE = re.compile(r'\bdoador(a|es|as)? (nao[- ])?(aparentad|haploidentic)\w*')
+
+
+def _fold(text: str) -> str:
+    return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('ascii').lower()
+
+
+def audience(title: str, summary: str) -> list[str]:
+    """Público da notícia pelo tema que mais aparece. Empate, ou nenhum dos dois, vale para doador e receptor."""
+    text = TRANSPLANT_SOURCE.sub(' ', _fold(f'{title} {summary}'))
+    donor, recipient = len(DONOR_TERMS.findall(text)), len(RECIPIENT_TERMS.findall(text))
+    if donor > recipient:
+        return ['Doador', 'Leigo']
+    if recipient > donor:
+        return ['Receptor', 'Leigo']
+    return ['Doador', 'Receptor', 'Leigo']
 
 
 def _text(item: dict, key: str, required: bool = True) -> str:
@@ -57,7 +85,7 @@ def _news(item: dict) -> dict:
         # O painel exige descrição para salvar: sem resumo no portal, fica o título.
         'descricao': summary or title,
         'categoria': Content.Category.NOVIDADES,
-        'publico_alvo': list(Content.AUDIENCES),
+        'publico_alvo': audience(title, summary),
         'fonte': _cut(f'{portal} · Publicado em {published:%d/%m/%Y}', SOURCE_LIMIT),
         'visibilidade': Content.Visibility.PUBLICO,
         'minutos': 1,
