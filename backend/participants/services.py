@@ -44,10 +44,10 @@ def _check_unique(field: str, value: str | None, exclude: User | None) -> None:
 
 
 def _check_profile_rules(profile: str, state: dict) -> None:
-    """Minimização (RNF05): leigo nunca guarda dado clínico; doador e receptor precisam dos quatro campos."""
-    if profile == Profile.LEIGO:
+    """Minimização (RNF05): convidado nunca guarda dado clínico; doador e receptor precisam dos quatro campos."""
+    if profile == Profile.CONVIDADO:
         if any(state.get(field) for field in (*CLINICAL_FIELDS, 'cpf')):
-            _fail('profile', 'O perfil leigo não coleta CPF, peso, altura, sexo biológico nem comorbidades.')
+            _fail('profile', 'O perfil convidado não coleta CPF, peso, altura, sexo biológico nem comorbidades.')
         return
     missing = {
         'weight': 'Informe o peso.',
@@ -99,7 +99,7 @@ def register(data: dict) -> User:
     if not email and not phone:
         message = (
             'Informe um e-mail ou telefone para receber avisos. Sem contato, o conteúdo público continua disponível sem cadastro.'
-            if profile == Profile.LEIGO
+            if profile == Profile.CONVIDADO
             else 'Informe um e-mail ou telefone para acessar a conta.'
         )
         _fail('email', message)
@@ -205,7 +205,7 @@ def update(participant: Participant, data: dict, actor: User) -> None:
 
 @transaction.atomic
 def change_profile(participant: Participant, data: dict) -> None:
-    """Leigo vira doador/receptor (RF002 Obs2) ou doador e receptor trocam de jornada."""
+    """Convidado vira doador/receptor (RF002 Obs2) ou doador e receptor trocam de jornada."""
     user = participant.user
     new_profile = data.get('profile')
     if new_profile not in CLINICAL_PROFILES:

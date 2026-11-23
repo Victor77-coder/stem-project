@@ -8,7 +8,7 @@ import { StepHeader } from '@/components/StepHeader';
 import { useRegistration } from '@/context/RegistrationContext';
 
 export default function RegisterScreen() {
-  const { draft, update, isLeigo } = useRegistration();
+  const { draft, update, isConvidado } = useRegistration();
 
   function next() {
     router.push('/terms');
@@ -20,7 +20,7 @@ export default function RegisterScreen() {
         title="Crie sua conta"
         subtitle="Informe os dados para criar seu acesso."
         step={2}
-        total={isLeigo ? 3 : 5}
+        total={isConvidado ? 3 : 5}
         brand={<Logo size="sm" />}
       />
 
@@ -33,7 +33,7 @@ export default function RegisterScreen() {
           keyboardType="email-address"
           value={draft.email}
           onChangeText={(email) => update({ email })}
-          hint={isLeigo ? 'Opcional no perfil leigo.' : undefined}
+          hint={isConvidado ? 'Opcional no perfil convidado.' : undefined}
         />
         <Field
           label="Senha"
@@ -42,7 +42,7 @@ export default function RegisterScreen() {
           value={draft.password}
           onChangeText={(password) => update({ password })}
         />
-        {!isLeigo ? (
+        {!isConvidado ? (
           <Field
             label="CPF"
             placeholder="000.000.000-00"

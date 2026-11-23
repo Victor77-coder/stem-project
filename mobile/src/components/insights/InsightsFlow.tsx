@@ -197,7 +197,7 @@ function localStats(year: StatYear, uf: string) {
 const SUBTITLE: Record<ProfileType, string> = {
   doador: 'Dados públicos agregados sobre o cadastro de doadores de medula.',
   receptor: 'Dados públicos agregados sobre transplantes de medula.',
-  leigo: 'Dados públicos agregados sobre transplantes de células-tronco.',
+  convidado: 'Dados públicos agregados sobre transplantes de células-tronco.',
 };
 
 function StatsScreen({ profile, onBack }: { profile: ProfileType; onBack: () => void }) {

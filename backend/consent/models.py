@@ -8,7 +8,7 @@ from accounts.models import Channel
 class ConsentDocument(models.Model):
     class Kind(models.TextChoices):
         TCLE = 'tcle', 'TCLE (doador e receptor)'
-        TERMOS = 'termos', 'Termos de uso (público leigo)'
+        TERMOS = 'termos', 'Termos de uso (perfil convidado)'
 
     kind = models.CharField(max_length=10, choices=Kind.choices)
     version = models.CharField(max_length=10)

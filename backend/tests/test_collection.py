@@ -46,16 +46,16 @@ def test_invalid_cpf_is_refused(api, seeded):
     assert 'cpf' in response.data
 
 
-def test_leigo_never_stores_clinical_data(api, seeded):
+def test_convidado_never_stores_clinical_data(api, seeded):
     response = api.post(
         '/api/v1/auth/register/',
-        {'profile': 'leigo', 'email': 'curioso@example.com', 'weight': '70', 'tcleAccepted': True},
+        {'profile': 'convidado', 'email': 'curioso@example.com', 'weight': '70', 'tcleAccepted': True},
         format='json',
     )
     assert response.status_code == 400
     assert not participants().exists()
 
-    response = api.post('/api/v1/auth/register/', {'profile': 'leigo', 'email': 'curioso@example.com', 'tcleAccepted': True}, format='json')
+    response = api.post('/api/v1/auth/register/', {'profile': 'convidado', 'email': 'curioso@example.com', 'tcleAccepted': True}, format='json')
     assert response.status_code == 201
     participant = Participant.objects.get()
     assert participant.weight is None and participant.height is None and participant.comorbidities == []
@@ -63,14 +63,14 @@ def test_leigo_never_stores_clinical_data(api, seeded):
     assert response.data['me']['hasPassword'] is False
 
 
-def test_leigo_without_contact_has_nothing_to_store(api, seeded):
-    response = api.post('/api/v1/auth/register/', {'profile': 'leigo', 'tcleAccepted': True}, format='json')
+def test_convidado_without_contact_has_nothing_to_store(api, seeded):
+    response = api.post('/api/v1/auth/register/', {'profile': 'convidado', 'tcleAccepted': True}, format='json')
     assert response.status_code == 400
     assert not participants().exists()
 
 
-def test_leigo_upgrade_requires_tcle_and_clinical_data(api, seeded):
-    created = api.post('/api/v1/auth/register/', {'profile': 'leigo', 'email': 'ana@example.com', 'tcleAccepted': True}, format='json')
+def test_convidado_upgrade_requires_tcle_and_clinical_data(api, seeded):
+    created = api.post('/api/v1/auth/register/', {'profile': 'convidado', 'email': 'ana@example.com', 'tcleAccepted': True}, format='json')
     client = auth(APIClient(), created.data['access'])
 
     response = client.post('/api/v1/me/profile/', {'profile': 'doador'}, format='json')

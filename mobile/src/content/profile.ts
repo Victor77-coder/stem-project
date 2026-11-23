@@ -46,8 +46,8 @@ const DONOR_HISTORY: HistoryEvent[] = [
 ];
 
 export function seedHistory(profile: ProfileType): HistoryEvent[] {
-  if (profile === 'leigo') {
-    return [{ id: 'conta', icon: 'person', title: 'Conta criada', detail: 'Perfil Leigo', when: '17/10/2026 · 21:10' }];
+  if (profile === 'convidado') {
+    return [{ id: 'conta', icon: 'person', title: 'Conta criada', detail: 'Perfil Convidado', when: '17/10/2026 · 21:10' }];
   }
   if (profile === 'receptor') {
     return DONOR_HISTORY.map((event) =>

@@ -18,7 +18,7 @@ import {
 import { colors } from '@/theme';
 
 type Props = {
-  kind: JourneyKind | 'leigo';
+  kind: JourneyKind | 'convidado';
   current: number;
   onComplete: () => void;
   onChooseProfile: (profile: 'doador' | 'receptor') => void;
@@ -28,8 +28,8 @@ export function JourneyFlow({ kind, current, onComplete, onChooseProfile }: Prop
   const [region, setRegion] = useState<RegionId>('maceio');
   const [openId, setOpenId] = useState<string | null>(null);
 
-  if (kind === 'leigo') {
-    return <LeigoJourney onChooseProfile={onChooseProfile} />;
+  if (kind === 'convidado') {
+    return <ConvidadoJourney onChooseProfile={onChooseProfile} />;
   }
 
   const steps = kind === 'doador' ? DONOR_STEPS.map((step) => withRegionPlace(step, region)) : receptorSteps(region);
@@ -293,14 +293,14 @@ function EstimateCard({ region }: { region: RegionId }) {
   );
 }
 
-function LeigoJourney({ onChooseProfile }: { onChooseProfile: (profile: 'doador' | 'receptor') => void }) {
+function ConvidadoJourney({ onChooseProfile }: { onChooseProfile: (profile: 'doador' | 'receptor') => void }) {
   return (
-    <ScrollView style={styles.fill} contentContainerStyle={styles.leigoContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.leigoBadge}>
+    <ScrollView style={styles.fill} contentContainerStyle={styles.convidadoContent} showsVerticalScrollIndicator={false}>
+      <View style={styles.convidadoBadge}>
         <Ionicons name="git-branch-outline" size={32} color={colors.primary600} />
       </View>
-      <Text style={styles.leigoTitle}>Acompanhe uma jornada</Text>
-      <Text style={styles.leigoSubtitle}>
+      <Text style={styles.convidadoTitle}>Acompanhe uma jornada</Text>
+      <Text style={styles.convidadoSubtitle}>
         Escolha um perfil para ver as etapas oficiais de doação ou de tratamento, passo a passo.
       </Text>
 
@@ -321,7 +321,7 @@ function LeigoJourney({ onChooseProfile }: { onChooseProfile: (profile: 'doador'
         onPress={() => onChooseProfile('receptor')}
       />
 
-      <Text style={styles.leigoNote}>Para isso, pediremos alguns dados e o consentimento informado (TCLE).</Text>
+      <Text style={styles.convidadoNote}>Para isso, pediremos alguns dados e o consentimento informado (TCLE).</Text>
     </ScrollView>
   );
 }
@@ -507,8 +507,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   primaryText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: '#FFFFFF' },
-  leigoContent: { paddingHorizontal: 20, paddingTop: 36, paddingBottom: 28, alignItems: 'center' },
-  leigoBadge: {
+  convidadoContent: { paddingHorizontal: 20, paddingTop: 36, paddingBottom: 28, alignItems: 'center' },
+  convidadoBadge: {
     width: 88,
     height: 88,
     borderRadius: 44,
@@ -516,8 +516,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  leigoTitle: { marginTop: 20, fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.ink, textAlign: 'center' },
-  leigoSubtitle: { marginTop: 8, fontSize: 15, lineHeight: 22, color: colors.textSecondary, textAlign: 'center' },
+  convidadoTitle: { marginTop: 20, fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.ink, textAlign: 'center' },
+  convidadoSubtitle: { marginTop: 8, fontSize: 15, lineHeight: 22, color: colors.textSecondary, textAlign: 'center' },
   choice: {
     alignSelf: 'stretch',
     marginTop: 12,
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.borderSubtle,
   },
-  leigoNote: {
+  convidadoNote: {
     marginTop: 20,
     fontSize: 13,
     lineHeight: 18,

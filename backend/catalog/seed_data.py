@@ -2,7 +2,7 @@
 
 CONCEITO = 'O que é célula-tronco'
 BRASIL = 'O que o Brasil autoriza'
-TODOS = ['Doador', 'Receptor', 'Leigo']
+TODOS = ['Doador', 'Receptor', 'Convidado']
 INCA = 'INCA / REDOME · Atualizado em 09/2026'
 MS = 'Ministério da Saúde e INCA · Atualizado em 02/10/2026'
 
@@ -112,7 +112,7 @@ PANEL_CONTENTS = [
     {
         'slug': 'transplante-sus', 'titulo': 'Transplante de medula óssea pelo SUS', 'categoria': BRASIL,
         'descricao': 'O que o Brasil autoriza hoje no recorte hematológico e como funciona o acesso pela rede pública.',
-        'publico_alvo': ['Receptor', 'Leigo'], 'fonte': 'Liga Alamir', 'lista': 'catalog',
+        'publico_alvo': ['Receptor', 'Convidado'], 'fonte': 'Liga Alamir', 'lista': 'catalog',
     },
 ]
 

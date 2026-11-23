@@ -34,7 +34,7 @@ class Content(models.Model):
         CATALOG = 'catalog'
         DIRECT = 'direct'
 
-    AUDIENCES = ['Doador', 'Receptor', 'Leigo']
+    AUDIENCES = ['Doador', 'Receptor', 'Convidado']
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     slug = models.SlugField(max_length=80, unique=True, null=True, blank=True)

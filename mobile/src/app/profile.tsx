@@ -10,7 +10,7 @@ import { useRegistration, type ProfileType } from '@/context/RegistrationContext
 import { colors, type } from '@/theme';
 
 const options: {
-  id: Exclude<ProfileType, 'leigo'>;
+  id: Exclude<ProfileType, 'convidado'>;
   title: string;
   body: string;
   icon: keyof typeof Ionicons.glyphMap;

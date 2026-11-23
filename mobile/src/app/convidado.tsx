@@ -9,13 +9,13 @@ import { Screen } from '@/components/Screen';
 import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
-export default function LeigoScreen() {
+export default function ConvidadoScreen() {
   const { draft, update, signUp } = useRegistration();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   async function enter() {
-    update({ profile: 'leigo' });
+    update({ profile: 'convidado' });
     if (!draft.email.trim()) {
       router.push('/conclusion');
       return;
@@ -33,7 +33,7 @@ export default function LeigoScreen() {
   }
 
   useEffect(() => {
-    update({ profile: 'leigo' });
+    update({ profile: 'convidado' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,7 +63,7 @@ export default function LeigoScreen() {
           <Ionicons name="cube-outline" size={20} color={colors.primary} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.infoTitle}>Acesso como público leigo</Text>
+          <Text style={styles.infoTitle}>Acesso como convidado</Text>
           <Text style={styles.infoBody}>Sem dados físicos, jornada ou alertas.</Text>
         </View>
       </View>
@@ -74,14 +74,14 @@ export default function LeigoScreen() {
         autoCapitalize="none"
         keyboardType="email-address"
         value={draft.email}
-        onChangeText={(email) => update({ email, profile: 'leigo' })}
+        onChangeText={(email) => update({ email, profile: 'convidado' })}
       />
 
       <View style={styles.check}>
         <Pressable
           accessibilityRole="checkbox"
           accessibilityState={{ checked: draft.tcleAccepted }}
-          onPress={() => update({ profile: 'leigo', tcleAccepted: !draft.tcleAccepted })}
+          onPress={() => update({ profile: 'convidado', tcleAccepted: !draft.tcleAccepted })}
           hitSlop={8}
         >
           <Ionicons

@@ -19,11 +19,11 @@ function Row({ label, value }: { label: string; value: string }) {
 const profileLabel = {
   doador: 'Doador',
   receptor: 'Receptor',
-  leigo: 'Público leigo',
+  convidado: 'Convidado',
 } as const;
 
 export default function ReviewScreen() {
-  const { draft, isLeigo, signedIn, signUp, changeProfile } = useRegistration();
+  const { draft, isConvidado, signedIn, signUp, changeProfile } = useRegistration();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -59,16 +59,16 @@ export default function ReviewScreen() {
         <Row label="Perfil" value={draft.profile ? profileLabel[draft.profile] : ''} />
         <Row label="Nome" value={draft.name} />
         <Row label="E-mail" value={draft.email} />
-        {!isLeigo ? <Row label="CPF" value={draft.cpf} /> : null}
-        {!isLeigo ? <Row label="Peso" value={draft.weight ? `${draft.weight} kg` : ''} /> : null}
-        {!isLeigo ? <Row label="Altura" value={draft.height ? `${draft.height} m` : ''} /> : null}
-        {!isLeigo ? <Row label="Sexo" value={draft.sex} /> : null}
-        {!isLeigo ? (
+        {!isConvidado ? <Row label="CPF" value={draft.cpf} /> : null}
+        {!isConvidado ? <Row label="Peso" value={draft.weight ? `${draft.weight} kg` : ''} /> : null}
+        {!isConvidado ? <Row label="Altura" value={draft.height ? `${draft.height} m` : ''} /> : null}
+        {!isConvidado ? <Row label="Sexo" value={draft.sex} /> : null}
+        {!isConvidado ? (
           <Row label="Comorbidades" value={draft.comorbidities.length ? draft.comorbidities.join(', ') : ''} />
         ) : null}
-        {!isLeigo ? <Row label="CEP" value={draft.cep} /> : null}
-        {!isLeigo ? <Row label="Endereço" value={draft.address} /> : null}
-        {!isLeigo ? <Row label="Cidade" value={[draft.city, draft.uf].filter(Boolean).join(' / ')} /> : null}
+        {!isConvidado ? <Row label="CEP" value={draft.cep} /> : null}
+        {!isConvidado ? <Row label="Endereço" value={draft.address} /> : null}
+        {!isConvidado ? <Row label="Cidade" value={[draft.city, draft.uf].filter(Boolean).join(' / ')} /> : null}
         <Row label="TCLE" value={draft.tcleAccepted ? `Aceito · v${draft.tcleVersion}` : 'Pendente'} />
       </View>
     </Screen>

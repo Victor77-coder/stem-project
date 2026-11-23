@@ -99,8 +99,8 @@ export default function WelcomeScreen() {
           label="Quero apenas me informar"
           variant="secondary"
           onPress={() => {
-            update({ profile: 'leigo', tcleAccepted: false });
-            router.push('/leigo');
+            update({ profile: 'convidado', tcleAccepted: false });
+            router.push('/convidado');
           }}
         />
       </View>

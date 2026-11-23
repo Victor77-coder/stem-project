@@ -24,7 +24,7 @@ export type Article = {
   link?: string;
   /** Publicada pela coleta, sem validação clínica da liga */
   automatic?: boolean;
-  /** Perfis do painel (Doador, Receptor, Leigo); nas novidades, decide quem vê a notícia */
+  /** Perfis do painel (Doador, Receptor, Convidado); nas novidades, decide quem vê a notícia */
   audience?: string[];
   sections: { title: string; body: string }[];
 };
@@ -400,7 +400,7 @@ export function articleById(id: string) {
   return ARTICLES.find((item) => item.id === id) ?? ARTICLES[1] ?? ARTICLES[0];
 }
 
-const AUDIENCE: Record<ProfileType, string> = { doador: 'Doador', receptor: 'Receptor', leigo: 'Leigo' };
+const AUDIENCE: Record<ProfileType, string> = { doador: 'Doador', receptor: 'Receptor', convidado: 'Convidado' };
 
 /** Novidade vai só para o perfil do seu tema (doação ou tratamento); o restante do acervo vale para todos. */
 export function articlesFor(profile: ProfileType) {

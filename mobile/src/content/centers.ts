@@ -46,11 +46,11 @@ export const FILTERS: { id: CenterFilter; label: string }[] = [
   { id: 'campanha', label: 'Campanhas' },
 ];
 
-/** O doador vê onde se cadastrar; o receptor, onde se trata. O leigo vê tudo. Igual ao ?perfil= da API. */
+/** O doador vê onde se cadastrar; o receptor, onde se trata. O convidado vê tudo. Igual ao ?perfil= da API. */
 export const KINDS_FOR: Record<ProfileType, CenterKind[]> = {
   doador: ['hemocentro', 'campanha'],
   receptor: ['transplante'],
-  leigo: ['hemocentro', 'transplante', 'campanha'],
+  convidado: ['hemocentro', 'transplante', 'campanha'],
 };
 
 /** Filtros do perfil. Com um tipo só, não há o que filtrar. */
@@ -172,7 +172,7 @@ export function originFromQuery(value: string): Origin {
   return { ...ORIGINS.maceio, mode: 'cep' };
 }
 
-export function listCenters(origin: Origin, kind: CenterFilter, query = '', kinds = KINDS_FOR.leigo): CenterResult[] {
+export function listCenters(origin: Origin, kind: CenterFilter, query = '', kinds = KINDS_FOR.convidado): CenterResult[] {
   const needle = query.trim().toLowerCase();
   return CENTERS.filter((center) => {
     if (!kinds.includes(center.kind)) return false;

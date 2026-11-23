@@ -9,7 +9,7 @@ A matéria é identificada pelo link original: a que já foi coletada não é re
 e a que a liga removeu (inativo) continua removida.
 
 Cada matéria vai para o perfil do seu tema (``audience``): doação para o doador, tratamento para o receptor. O
-leigo vê todas. A equipe pode corrigir o público no painel, e a coleta seguinte não desfaz a correção.
+convidado vê todas. A equipe pode corrigir o público no painel, e a coleta seguinte não desfaz a correção.
 """
 
 import re
@@ -47,10 +47,10 @@ def audience(title: str, summary: str) -> list[str]:
     text = TRANSPLANT_SOURCE.sub(' ', _fold(f'{title} {summary}'))
     donor, recipient = len(DONOR_TERMS.findall(text)), len(RECIPIENT_TERMS.findall(text))
     if donor > recipient:
-        return ['Doador', 'Leigo']
+        return ['Doador', 'Convidado']
     if recipient > donor:
-        return ['Receptor', 'Leigo']
-    return ['Doador', 'Receptor', 'Leigo']
+        return ['Receptor', 'Convidado']
+    return ['Doador', 'Receptor', 'Convidado']
 
 
 def _text(item: dict, key: str, required: bool = True) -> str:

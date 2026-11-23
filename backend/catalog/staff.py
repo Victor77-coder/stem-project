@@ -362,7 +362,7 @@ def dashboard(request):
                 for entry in activity
             ],
             'porCategoria': [{'categoria': value, 'total': by_category.get(value, 0)} for value in Content.Category.values],
-            'participantesAtivos': {profile: participants.get(profile, 0) for profile in ('doador', 'receptor', 'leigo')},
+            'participantesAtivos': {profile: participants.get(profile, 0) for profile in ('doador', 'receptor', 'convidado')},
         }
     )
 

@@ -33,7 +33,7 @@ function firstName(name: string, fallback: string) {
 
 function resolveProfile(query: string | string[] | undefined, saved: ProfileType | null): ProfileType {
   const value = Array.isArray(query) ? query[0] : query;
-  if (value === 'doador' || value === 'receptor' || value === 'leigo') return value;
+  if (value === 'doador' || value === 'receptor' || value === 'convidado') return value;
   return saved ?? 'doador';
 }
 
@@ -277,7 +277,7 @@ function ReceptorHome({
   );
 }
 
-function LeigoHome({
+function ConvidadoHome({
   unread,
   open,
   onCenters,
@@ -294,7 +294,7 @@ function LeigoHome({
     <>
       <HomeHeader
         greeting="Olá!"
-        chip="Visitante"
+        chip="Convidado"
         chipBg={colors.surfaceMuted}
         chipFg={colors.textSecondary}
         subtitle="Explore conteúdos sobre células-tronco sem precisar de cadastro."
@@ -366,7 +366,7 @@ export default function HomeScreen() {
   const [journeyOn, setJourneyOn] = useState(false);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
-  const journeyKind = profile === 'leigo' ? 'leigo' : profile;
+  const journeyKind = profile === 'convidado' ? 'convidado' : profile;
   const currentStep = profile === 'receptor' ? progress.receptor : progress.doador;
 
   useEffect(() => {
@@ -381,7 +381,7 @@ export default function HomeScreen() {
     if (!signedIn) return;
     api<{ kind: ProfileType; current: number }>('/me/journey/')
       .then(({ kind, current }) => {
-        if (kind !== 'leigo') setProgress((value) => ({ ...value, [kind]: current }));
+        if (kind !== 'convidado') setProgress((value) => ({ ...value, [kind]: current }));
       })
       .catch(() => undefined);
     api<ApiNotice[]>('/me/inbox/')
@@ -390,7 +390,7 @@ export default function HomeScreen() {
   }, [signedIn]);
 
   function completeStep() {
-    if (profile === 'leigo') return;
+    if (profile === 'convidado') return;
     const next = Math.min(progress[profile] + 1, 7);
     setProgress((value) => ({ ...value, [profile]: next }));
     if (signedIn && draft.profile === profile) {
@@ -463,8 +463,8 @@ export default function HomeScreen() {
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
               />
-            ) : profile === 'leigo' ? (
-              <LeigoHome
+            ) : profile === 'convidado' ? (
+              <ConvidadoHome
                 unread={unread}
                 open={openLearn}
                 onCenters={openCenters}

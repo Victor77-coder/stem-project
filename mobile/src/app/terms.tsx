@@ -9,12 +9,12 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
 export default function TermsScreen() {
-  const { draft, update, isLeigo } = useRegistration();
+  const { draft, update, isConvidado } = useRegistration();
 
   function goNext() {
-    if (isLeigo) {
+    if (isConvidado) {
       if (router.canGoBack()) router.back();
-      else router.replace('/leigo');
+      else router.replace('/convidado');
       return;
     }
     router.push('/physical');
@@ -26,7 +26,7 @@ export default function TermsScreen() {
         <NavPair
           onLeft={() => {
             if (router.canGoBack()) router.back();
-            else router.replace(isLeigo ? '/leigo' : '/register');
+            else router.replace(isConvidado ? '/convidado' : '/register');
           }}
           onRight={goNext}
           rightDisabled={!draft.tcleAccepted}
@@ -34,10 +34,10 @@ export default function TermsScreen() {
       }
     >
       <StepHeader
-        title={isLeigo ? 'Termos de uso' : 'Consentimento'}
-        subtitle={isLeigo ? 'Leia e aceite o termo para continuar.' : 'Leia e aceite o termo para concluir.'}
-        step={isLeigo ? undefined : 3}
-        total={isLeigo ? undefined : 5}
+        title={isConvidado ? 'Termos de uso' : 'Consentimento'}
+        subtitle={isConvidado ? 'Leia e aceite o termo para continuar.' : 'Leia e aceite o termo para concluir.'}
+        step={isConvidado ? undefined : 3}
+        total={isConvidado ? undefined : 5}
         brand={<Logo />}
       />
 
@@ -47,7 +47,7 @@ export default function TermsScreen() {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.cardTitle}>
-            {isLeigo ? 'Termos de uso' : 'Termo de Consentimento Livre e Esclarecido (TCLE)'}
+            {isConvidado ? 'Termos de uso' : 'Termo de Consentimento Livre e Esclarecido (TCLE)'}
           </Text>
           <Text style={styles.cardMeta}>Versão {draft.tcleVersion} · leitura obrigatória antes dos seus dados</Text>
         </View>
@@ -65,7 +65,7 @@ export default function TermsScreen() {
           color={draft.tcleAccepted ? colors.primary : colors.muted}
         />
         <Text style={styles.checkText}>
-          {isLeigo
+          {isConvidado
             ? 'Li e aceito os termos de uso.'
             : 'Li e aceito o termo de consentimento Livre e Esclarecido (TCLE)'}
         </Text>

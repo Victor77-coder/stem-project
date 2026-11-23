@@ -5,7 +5,7 @@ from django.db import models
 class Profile(models.TextChoices):
     DOADOR = 'doador', 'Doador'
     RECEPTOR = 'receptor', 'Receptor'
-    LEIGO = 'leigo', 'Público leigo'
+    CONVIDADO = 'convidado', 'Convidado'
 
 
 CLINICAL_PROFILES = {Profile.DOADOR, Profile.RECEPTOR}

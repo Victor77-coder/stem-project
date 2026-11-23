@@ -228,7 +228,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           onBack={() => setScreen('privacy')}
         />
       ) : null}
-      {screen === 'history' ? <HistoryScreen events={history} onBack={() => setScreen(profile === 'leigo' ? 'hub' : 'physical')} /> : null}
+      {screen === 'history' ? <HistoryScreen events={history} onBack={() => setScreen(profile === 'convidado' ? 'hub' : 'physical')} /> : null}
       {screen === 'glossary' ? <GlossaryScreen onBack={() => setScreen('hub')} /> : null}
       {screen === 'help' ? <HelpScreen onBack={() => setScreen('hub')} onCenters={onCenters} /> : null}
       {screen === 'about' ? <AboutScreen onBack={() => setScreen('hub')} /> : null}
@@ -264,7 +264,7 @@ function Hub({
   onLogout: () => void;
   onChooseProfile: () => void;
 }) {
-  const leigo = profile === 'leigo';
+  const convidado = profile === 'convidado';
   return (
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.identity}>
@@ -273,12 +273,12 @@ function Hub({
         </View>
         <View style={styles.identityCopy}>
           <Text style={styles.identityName}>{shown.name}</Text>
-          {leigo ? null : <Text style={styles.identityEmail}>{shown.emailMasked}</Text>}
+          {convidado ? null : <Text style={styles.identityEmail}>{shown.emailMasked}</Text>}
           <Text style={styles.identityRole}>{shown.role}</Text>
         </View>
       </View>
 
-      {leigo ? (
+      {convidado ? (
         <View style={styles.upgrade}>
           <Text style={styles.upgradeKicker}>QUER IR ALÉM?</Text>
           <Text style={styles.upgradeTitle}>Torne-se Doador ou acompanhe seu tratamento</Text>
@@ -291,8 +291,8 @@ function Hub({
         </View>
       ) : null}
 
-      <Text style={styles.kicker}>{leigo ? 'CONTA' : 'MEUS DADOS'}</Text>
-      {leigo ? (
+      <Text style={styles.kicker}>{convidado ? 'CONTA' : 'MEUS DADOS'}</Text>
+      {convidado ? (
         <Row icon="mail-outline" title="Contato (opcional)" caption="Adicione um e-mail para receber novidades" onPress={() => onOpen('contact')} />
       ) : (
         <>
@@ -302,20 +302,20 @@ function Hub({
         </>
       )}
 
-      {leigo ? null : <Text style={styles.kicker}>PREFERÊNCIAS</Text>}
+      {convidado ? null : <Text style={styles.kicker}>PREFERÊNCIAS</Text>}
       <Row
         icon="notifications-outline"
         title="Notificações"
-        caption={leigo ? 'Campanhas e eventos' : 'Campanhas, eventos e comunicados'}
+        caption={convidado ? 'Campanhas e eventos' : 'Campanhas, eventos e comunicados'}
         onPress={onNotifications}
       />
-      {leigo ? (
+      {convidado ? (
         <Row icon="document-text-outline" title="Termos de uso" caption={shown.termsWhen} onPress={() => onOpen('terms')} />
       ) : (
         <Row icon="shield-checkmark-outline" title="Privacidade e consentimento" caption={shown.tcleHub} onPress={() => onOpen('privacy')} />
       )}
 
-      {leigo ? null : (
+      {convidado ? null : (
         <>
           <Text style={styles.kicker}>AJUDA</Text>
           <Row icon="book-outline" title="Glossário" caption="Termos como HLA, REDOME e TCTH" onPress={() => onOpen('glossary')} />
@@ -816,7 +816,7 @@ function TermsScreen({
           <Text style={styles.panelTitle}>Termos de uso</Text>
           <Text style={styles.rowCaption}>{accepted ? when : 'Aceite pendente'}</Text>
           <Text style={styles.body}>
-            O perfil leigo usa o STEM para aprender. Não coletamos dados clínicos. Um e-mail é opcional, só para novidades. O app não agenda atendimento e não confirma compatibilidade.
+            O perfil convidado usa o STEM para aprender. Não coletamos dados clínicos. Um e-mail é opcional, só para novidades. O app não agenda atendimento e não confirma compatibilidade.
           </Text>
         </View>
         {accepted ? null : (
@@ -1055,37 +1055,37 @@ function present(draft: RegistrationDraft, profile: ProfileType, acceptedAt: str
   const accepted = acceptedAt ? new Date(acceptedAt) : null;
   const acceptedDay = accepted ? accepted.toLocaleDateString('pt-BR') : '';
   const acceptedTime = accepted ? accepted.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
-  const leigo = profile === 'leigo';
-  const sex: Sexo = draft.sex || (demo && !leigo ? 'feminino' : '');
-  const name = leigo ? draft.name || 'Visitante' : draft.name || 'Maria Silva';
-  const email = draft.email || (demo && !leigo ? 'mn@gmail.com' : '');
-  const city = draft.city || (demo && !leigo ? 'Maceió' : '');
-  const uf = draft.uf || (demo && !leigo ? 'AL' : '');
-  const cep = draft.cep || (demo && !leigo ? '57035-230' : '');
+  const convidado = profile === 'convidado';
+  const sex: Sexo = draft.sex || (demo && !convidado ? 'feminino' : '');
+  const name = convidado ? draft.name || 'Convidado' : draft.name || 'Maria Silva';
+  const email = draft.email || (demo && !convidado ? 'mn@gmail.com' : '');
+  const city = draft.city || (demo && !convidado ? 'Maceió' : '');
+  const uf = draft.uf || (demo && !convidado ? 'AL' : '');
+  const cep = draft.cep || (demo && !convidado ? '57035-230' : '');
   const place = city && uf ? `${city}/${uf}` : city || uf;
   return {
     demo,
     name,
     email,
     emailMasked: email ? maskEmail(email) : '',
-    initials: leigo && !draft.name ? 'V' : initials(name),
+    initials: convidado && !draft.name ? 'C' : initials(name),
     role: roleLabel(profile, sex),
-    weight: draft.weight || (demo && !leigo ? '68' : ''),
-    height: draft.height || (demo && !leigo ? '1,65' : ''),
+    weight: draft.weight || (demo && !convidado ? '68' : ''),
+    height: draft.height || (demo && !convidado ? '1,65' : ''),
     sex,
-    comorbidities: draft.comorbidities.length ? draft.comorbidities : demo && !leigo ? ['Hipertensão'] : [],
+    comorbidities: draft.comorbidities.length ? draft.comorbidities : demo && !convidado ? ['Hipertensão'] : [],
     cep,
     city,
     uf,
     locationLine: cep || place ? `CEP ${formatCep(cep) || '—'} · ${place || '—'}` : 'Informe seu CEP',
     tcleHub: accepted
       ? `TCLE v${draft.tcleVersion} aceito em ${acceptedDay}`
-      : draft.tcleAccepted || (demo && !leigo)
+      : draft.tcleAccepted || (demo && !convidado)
         ? 'TCLE v1.0 aceito em 17/10/2026'
         : 'TCLE pendente',
     tcleDetail: accepted
       ? `Versão ${draft.tcleVersion} · aceito em ${acceptedDay} às ${acceptedTime}`
-      : draft.tcleAccepted || (demo && !leigo)
+      : draft.tcleAccepted || (demo && !convidado)
         ? 'Versão 1.0 · aceito em 01/10/2026 às 21:15'
         : 'Versão 1.0 · aceite pendente',
     termsWhen: accepted ? `Aceito em ${acceptedDay}` : draft.tcleAccepted || demo ? 'Aceito em 17/10/2026' : 'Aceite pendente',
@@ -1093,7 +1093,7 @@ function present(draft: RegistrationDraft, profile: ProfileType, acceptedAt: str
 }
 
 function roleLabel(profile: ProfileType, sex: Sexo) {
-  if (profile === 'leigo') return 'Público leigo';
+  if (profile === 'convidado') return 'Convidado';
   if (profile === 'receptor') return sex === 'masculino' ? 'Receptor' : 'Receptora';
   return sex === 'masculino' ? 'Doador' : 'Doadora';
 }

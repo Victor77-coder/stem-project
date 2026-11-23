@@ -25,7 +25,7 @@ ESTIMATE_DISCLAIMER = (
     'Não é confirmação de atendimento, procedimento, vaga ou prazo.'
 )
 UNDERREPORTING_NOTICE = 'Algumas unidades podem não reportar ao DataSUS. Os números podem estar abaixo do real.'
-# ?perfil= do app: o doador vê onde se cadastrar e o receptor, onde se trata. Sem perfil, ou leigo, tudo.
+# ?perfil= do app: o doador vê onde se cadastrar e o receptor, onde se trata. Sem perfil, ou convidado, tudo.
 CENTER_KINDS_BY_PROFILE = {
     'doador': [Center.Kind.HEMOCENTRO, Center.Kind.CAMPANHA],
     'receptor': [Center.Kind.TRANSPLANTE],

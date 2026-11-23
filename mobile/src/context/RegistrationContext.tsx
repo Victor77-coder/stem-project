@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { api, channel, tokenStore, type Tokens } from '@/lib/api';
 
-export type ProfileType = 'doador' | 'receptor' | 'leigo';
+export type ProfileType = 'doador' | 'receptor' | 'convidado';
 export type Sexo = 'feminino' | 'masculino' | 'outro' | '';
 
 export type RegistrationDraft = {
@@ -52,7 +52,7 @@ type Ctx = {
   draft: RegistrationDraft;
   update: (patch: Partial<RegistrationDraft>) => void;
   reset: () => void;
-  isLeigo: boolean;
+  isConvidado: boolean;
   signedIn: boolean;
   restoring: boolean;
   acceptedAt: string | null;
@@ -99,7 +99,7 @@ function registrationBody(draft: RegistrationDraft) {
     tcleVersion: draft.tcleVersion,
     channel,
   };
-  return draft.profile === 'leigo' ? base : { ...base, ...clinicalBody(draft) };
+  return draft.profile === 'convidado' ? base : { ...base, ...clinicalBody(draft) };
 }
 
 function patchBody(patch: Partial<RegistrationDraft>) {
@@ -175,7 +175,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
       draft,
       update: (patch) => setDraft((prev) => ({ ...prev, ...patch })),
       reset: () => setDraft(emptyDraft),
-      isLeigo: draft.profile === 'leigo',
+      isConvidado: draft.profile === 'convidado',
       signedIn,
       restoring,
       acceptedAt,

@@ -55,7 +55,7 @@ def journey(request):
     participant = request.user.participant
     progress = JourneyProgress.objects.get_or_create(participant=participant)[0]
     if request.method != 'GET':
-        if participant.profile == 'leigo':
+        if participant.profile == 'convidado':
             return Response({'detail': 'A jornada é acompanhada por doadores e receptores.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = JourneySerializer(progress, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

@@ -55,7 +55,7 @@ def test_new_items_are_published_without_clinical_validation(api, seeded):
     content = news().get(link_original=REDOME_LINK)
     assert content.status == 'publicado' and content.validado_por is None
     assert content.fonte == 'REDOME/INCA · Publicado em 26/10/2026'
-    assert content.visibilidade == 'Público' and content.publico_alvo == ['Doador', 'Leigo'], 'cadastro no REDOME é tema de doador'
+    assert content.visibilidade == 'Público' and content.publico_alvo == ['Doador', 'Convidado'], 'cadastro no REDOME é tema de doador'
     history = CatalogHistory.objects.get(entidade='conteudo', objeto_id=str(content.pk))
     assert history.autor is None and history.autor_nome == 'Coleta automática' and history.acao == 'Publicou a partir de REDOME/INCA'
 
@@ -67,12 +67,12 @@ def test_new_items_are_published_without_clinical_validation(api, seeded):
 
 @pytest.mark.parametrize(('titulo', 'resumo', 'publico'), [
     ('Doadora conclui doação de medula após contato por e-mail', 'Resposta a e-mail do REDOME muda a vida de doadora e de receptor',
-     ['Doador', 'Leigo']),
+     ['Doador', 'Convidado']),
     ('Conitec abre consulta pública sobre TCTH alogênico de doador não aparentado para Linfoma de Hodgkin',
-     'Recomendação favorável à incorporação ao SUS.', ['Receptor', 'Leigo']),
-    ('Campanha de cadastro de doadores no hemocentro', '', ['Doador', 'Leigo']),
-    ('Pacientes com leucemia ganham novo tratamento', '', ['Receptor', 'Leigo']),
-    ('Medula saiu da Alemanha e chegou ao Brasil em menos de 24 horas', 'Confira a reportagem.', ['Doador', 'Receptor', 'Leigo']),
+     'Recomendação favorável à incorporação ao SUS.', ['Receptor', 'Convidado']),
+    ('Campanha de cadastro de doadores no hemocentro', '', ['Doador', 'Convidado']),
+    ('Pacientes com leucemia ganham novo tratamento', '', ['Receptor', 'Convidado']),
+    ('Medula saiu da Alemanha e chegou ao Brasil em menos de 24 horas', 'Confira a reportagem.', ['Doador', 'Receptor', 'Convidado']),
 ])
 def test_news_go_to_the_profile_of_their_topic(titulo, resumo, publico):
     assert audience(titulo, resumo) == publico
@@ -91,15 +91,15 @@ def test_profile_filters_news_but_team_correction_survives(api, staff_login):
 
     assert shown('Doador') == {REDOME_LINK}
     assert shown('Receptor') == {SBTMO_LINK}
-    assert shown('Leigo') == {REDOME_LINK, SBTMO_LINK}
+    assert shown('Convidado') == {REDOME_LINK, SBTMO_LINK}
 
     editor = staff_login('silva_js@email.com', 'senha123')
     content = by_link[SBTMO_LINK]
-    fixed = editor.patch(f'/api/v1/staff/contents/{content.pk}/', {'publicoAlvo': ['Doador', 'Receptor', 'Leigo']}, format='json')
+    fixed = editor.patch(f'/api/v1/staff/contents/{content.pk}/', {'publicoAlvo': ['Doador', 'Receptor', 'Convidado']}, format='json')
     assert fixed.status_code == 200, fixed.data
     post(api, canonical(donor_news, recipient_news))
     content.refresh_from_db()
-    assert content.publico_alvo == ['Doador', 'Receptor', 'Leigo'], 'a coleta não desfaz a correção da equipe'
+    assert content.publico_alvo == ['Doador', 'Receptor', 'Convidado'], 'a coleta não desfaz a correção da equipe'
 
 
 def test_with_auto_publish_off_items_wait_for_the_team(api, staff_login, settings):

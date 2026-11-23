@@ -12,7 +12,7 @@ export default function RootLayout() {
         <Stack.Screen name="welcome" />
         <Stack.Screen name="login" />
         <Stack.Screen name="profile" />
-        <Stack.Screen name="leigo" />
+        <Stack.Screen name="convidado" />
         <Stack.Screen name="register" />
         <Stack.Screen name="physical" />
         <Stack.Screen name="location" />

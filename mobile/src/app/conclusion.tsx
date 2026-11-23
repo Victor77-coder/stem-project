@@ -13,13 +13,13 @@ function firstName(name: string) {
 }
 
 function profileNoun(profile: ProfileType | null, sex: Sexo) {
-  if (profile === 'leigo') return 'público leigo';
+  if (profile === 'convidado') return 'Convidado';
   if (profile === 'receptor') return sex === 'feminino' ? 'Receptora' : 'Receptor';
   return sex === 'feminino' ? 'Doadora' : 'Doador';
 }
 
 function nextSteps(profile: ProfileType | null): Step[] {
-  if (profile === 'leigo') {
+  if (profile === 'convidado') {
     return [
       { icon: 'book-outline', text: 'Explore os conteúdos educativos' },
       { icon: 'location-outline', text: 'Encontre centros perto de você' },
@@ -47,7 +47,7 @@ export default function ConclusionScreen() {
   const steps = nextSteps(draft.profile);
 
   const subtitle =
-    draft.profile === 'leigo'
+    draft.profile === 'convidado'
       ? 'Seu acesso educacional está pronto. Explore conteúdos, estatísticas e centros perto de você.'
       : `Seu perfil de ${noun} foi criado. Agora você pode acompanhar sua jornada e encontrar centros perto de você.`;
 

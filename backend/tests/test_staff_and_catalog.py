@@ -166,7 +166,7 @@ def test_centers_follow_the_profile(api, seeded):
 
     assert kinds(perfil='doador') == {'hemocentro', 'campanha'}, 'o doador vê onde se cadastrar'
     assert kinds(perfil='receptor') == {'transplante'}, 'o receptor vê onde se trata'
-    assert kinds(perfil='leigo') == kinds() == {'hemocentro', 'campanha', 'transplante'}
+    assert kinds(perfil='convidado') == kinds() == {'hemocentro', 'campanha', 'transplante'}
     assert kinds(perfil='doador', kind='transplante') == set()
 
 
@@ -271,7 +271,7 @@ def test_statistics_follow_the_profile(api, seeded):
     recipient = stats('BR', 'receptor')
     assert recipient['headline'] == {'donors': '', 'transplants': everyone['headline']['transplants']}
     assert recipient['regions'] == everyone['regions'] and stats('PE', 'receptor')['wait'] == '4,8 meses'
-    assert stats('BR', 'leigo')['headline'] == everyone['headline']
+    assert stats('BR', 'convidado')['headline'] == everyone['headline']
 
 
 def test_inbox_follows_preferences_and_region(donor):
