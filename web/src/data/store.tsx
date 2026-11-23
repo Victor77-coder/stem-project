@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { api, tokens } from '../lib/api'
-import type { Account, AccountStatus, Content } from './types'
+import type { Account, AccountStatus, Content, Journey } from './types'
 
 type ContentFields = Omit<Content, 'id' | 'anexos' | 'atualizadoEm' | 'historico' | 'validadoPor' | 'linkOriginal'>
 
@@ -8,16 +8,20 @@ interface Store {
   ready: boolean
   accounts: Account[]
   contents: Content[]
+  journeys: Journey[]
   currentUser: Account | null
   login: (email: string, senha: string) => Promise<void>
   logout: () => Promise<void>
   reloadAccounts: () => Promise<void>
   reloadContents: () => Promise<void>
+  reloadJourneys: () => Promise<void>
   saveAccount: (account: Account, isNew: boolean) => Promise<{ account: Account; senhaTemporaria?: string }>
   setAccountStatus: (id: string, status: AccountStatus, senha?: string) => Promise<Account>
   resetPassword: (id: string) => Promise<string>
   saveContent: (content: Content, isNew: boolean, files: File[], removed: string[]) => Promise<Content>
   unpublishContent: (id: string, senha: string) => Promise<void>
+  saveJourney: (journey: Journey, isNew: boolean) => Promise<Journey>
+  unpublishJourney: (id: number) => Promise<void>
   updateMe: (nome: string, email: string) => Promise<void>
   changePassword: (current: string, next: string) => Promise<void>
 }
@@ -42,15 +46,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<Account | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [contents, setContents] = useState<Content[]>([])
+  const [journeys, setJourneys] = useState<Journey[]>([])
 
   const reloadAccounts = useCallback(async () => setAccounts(await api<Account[]>('/staff/accounts/')), [])
   const reloadContents = useCallback(async () => setContents(await api<Content[]>('/staff/contents/')), [])
+  const reloadJourneys = useCallback(async () => setJourneys(await api<Journey[]>('/staff/journeys/')), [])
 
   const enter = useCallback(
     (user: Account) => {
       setCurrentUser(user)
       reloadAccounts().catch(() => setAccounts([]))
       reloadContents().catch(() => setContents([]))
+      reloadJourneys().catch(() => setJourneys([]))
     },
     [reloadAccounts, reloadContents],
   )
@@ -72,6 +79,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ready,
     accounts,
     contents,
+    journeys,
     currentUser,
     async login(email, senha) {
       const data = await api<{ access: string; refresh: string; conta: Account }>('/staff/auth/login/', {
@@ -88,10 +96,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setCurrentUser(null)
       setAccounts([])
       setContents([])
+      setJourneys([])
       if (refresh) await api('/auth/logout/', { method: 'POST', body: { refresh }, auth: false }).catch(() => undefined)
     },
     reloadAccounts,
     reloadContents,
+    reloadJourneys,
     async saveAccount(account, isNew) {
       const saved: Account & { senhaTemporaria?: string } = isNew
         ? await api('/staff/accounts/', { method: 'POST', body: accountFields(account) })
@@ -128,6 +138,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     async unpublishContent(id, senha) {
       await api(`/staff/contents/${id}/despublicar/`, { method: 'POST', body: { senha } })
       setContents((list) => list.filter((c) => c.id !== id))
+    },
+    async saveJourney(journey, isNew) {
+      const { id, atualizado_em, ...body } = journey
+      const saved = isNew
+        ? await api<Journey>('/staff/journeys/', { method: 'POST', body })
+        : await api<Journey>(`/staff/journeys/${id}/`, { method: 'PATCH', body })
+      setJourneys((list) => [...list.filter((j) => j.id !== saved.id), saved])
+      return saved
+    },
+    async unpublishJourney(id) {
+      await api(`/staff/journeys/${id}/`, { method: 'DELETE' })
+      setJourneys((list) => list.filter((j) => j.id !== id))
     },
     async updateMe(nome, email) {
       setCurrentUser(await api<Account>('/staff/me/', { method: 'PATCH', body: { nome, email } }))

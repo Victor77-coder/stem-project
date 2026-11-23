@@ -36,11 +36,37 @@ export const CATEGORIES = [
 ] as const
 export type Category = (typeof CATEGORIES)[number]
 
-export const AUDIENCES = ['Doador', 'Receptor', 'Leigo'] as const
+export const AUDIENCES = ['Doador', 'Receptor', 'Convidado'] as const
 export type Audience = (typeof AUDIENCES)[number]
 
 export type Visibility = 'Público' | 'Privado' | 'Restrito'
 export type PublishStatus = 'rascunho' | 'publicado' | 'inativo'
+
+export interface JourneyLocal {
+  name: string
+  address: string
+  distance: string
+}
+
+export interface Journey {
+  id: number
+  jornada: 'doador' | 'receptor'
+  slug: string
+  ordem: number
+  titulo: string
+  titulo_curto: string
+  resumo: string
+  resumo_home: string
+  resumo_por_regiao: Record<string, string>
+  corpo: string
+  o_que_stem_faz: string
+  o_que_sus_faz: string
+  checklist: string[]
+  local: JourneyLocal | null
+  fonte: string
+  status: PublishStatus
+  atualizado_em: string
+}
 
 export interface Attachment {
   id: string

@@ -14,7 +14,7 @@ from consent.models import ConsentDocument
 
 from .cache import cached_response
 from .geo import locate_cep, normalize_cep
-from .models import Attachment, Center, Content, EstimateRule, GlossaryTerm, JourneyStep, PublishStatus, Statistic
+from .models import AppSettings, Attachment, Center, Content, EstimateRule, GlossaryTerm, JourneyStep, PublishStatus, Statistic
 
 RADIUS_KM = 50
 MAX_RADIUS_KM = 300
@@ -379,3 +379,10 @@ def consent_document(request, kind):
         }
 
     return cached_response(request, build)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def app_config(request):
+    """O que o painel ligou ou desligou no aplicativo. Sem cache: a mudança vale na próxima abertura."""
+    return Response({'jornadaAtiva': AppSettings.load().jornada_ativa})

@@ -13,11 +13,11 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from accounts.models import Role, Status, User
-from accounts.permissions import IsTeamMember
+from accounts.permissions import IsTeamMember, TeamReadAdminWrite
 from engagement.models import Notification
 from participants.models import Participant
 
-from .models import Attachment, CatalogHistory, Center, Content, JourneyStep, PublishStatus, Statistic
+from .models import AppSettings, Attachment, CatalogHistory, Center, Content, JourneyStep, PublishStatus, Statistic
 
 SUBSTANTIVE = ('titulo', 'descricao', 'categoria', 'fonte', 'secoes')
 NO_SOURCE = 'Informe a fonte para publicar. Sem fonte o conteúdo permanece como rascunho.'
@@ -365,3 +365,23 @@ def dashboard(request):
             'participantesAtivos': {profile: participants.get(profile, 0) for profile in ('doador', 'receptor', 'leigo')},
         }
     )
+
+
+def app_settings_payload(config: AppSettings) -> dict:
+    return {'jornadaAtiva': config.jornada_ativa, 'atualizadoEm': config.atualizado_em.isoformat()}
+
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([TeamReadAdminWrite])
+def app_settings(request):
+    """Chaves do aplicativo. Toda a equipe consulta; só administradores alteram."""
+    config = AppSettings.load()
+    if request.method == 'PATCH':
+        value = request.data.get('jornadaAtiva')
+        if not isinstance(value, bool):
+            raise ValidationError({'jornadaAtiva': ['Informe verdadeiro ou falso.']})
+        if value != config.jornada_ativa:
+            config.jornada_ativa = value
+            config.save()
+            log('configuracao', config, request.user, 'Ativou a Jornada no app' if value else 'Desativou a Jornada no app')
+    return Response(app_settings_payload(config))

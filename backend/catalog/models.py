@@ -236,3 +236,21 @@ class EstimateRule(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['perfil', 'uf'], condition=Q(ativo=True), name='uma_regra_ativa_por_uf'),
         ]
+
+
+class AppSettings(models.Model):
+    """Chaves do aplicativo controladas pelo painel. Registro único (pk=1)."""
+
+    jornada_ativa = models.BooleanField(
+        default=False, help_text='Exibe a aba e os atalhos da Jornada no aplicativo.'
+    )
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'configuração do aplicativo'
+        verbose_name_plural = 'configurações do aplicativo'
+
+    @classmethod
+    def load(cls) -> 'AppSettings':
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

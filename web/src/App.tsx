@@ -4,6 +4,8 @@ import { StoreProvider } from './data/store'
 import Account from './pages/Account'
 import ContentForm from './pages/content/ContentForm'
 import ContentList from './pages/content/ContentList'
+import JourneyForm from './pages/journey/JourneyForm'
+import JourneyList from './pages/journey/JourneyList'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import UserProfile from './pages/users/UserProfile'
@@ -24,6 +26,9 @@ export default function App() {
             <Route path="/conteudo" element={<ContentList />} />
             <Route path="/conteudo/novo" element={<ContentForm />} />
             <Route path="/conteudo/:id/editar" element={<ContentForm />} />
+            <Route path="/jornada" element={<JourneyList />} />
+            <Route path="/jornada/nova" element={<JourneyForm />} />
+            <Route path="/jornada/:id/editar" element={<JourneyForm />} />
             <Route path="/configuracoes" element={<Account />} />
             {['/relatorios', '/cadastros', '/notificacoes', '/suporte'].map((p) => (
               <Route key={p} path={p} element={<ComingSoon />} />

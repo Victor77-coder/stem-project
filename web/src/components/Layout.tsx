@@ -11,6 +11,7 @@ import {
   UserRound,
   Users,
   BarChart3,
+  Route,
   type LucideIcon,
 } from 'lucide-react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
@@ -21,6 +22,7 @@ const NAV: { to: string; label: string; icon: LucideIcon }[] = [
   { to: '/usuarios', label: 'Usuários', icon: Users },
   { to: '/relatorios', label: 'Relatórios', icon: BarChart3 },
   { to: '/conteudo', label: 'Conteúdo', icon: FileText },
+  { to: '/jornada', label: 'Jornada', icon: Route },
   { to: '/cadastros', label: 'Cadastros', icon: ClipboardList },
   { to: '/notificacoes', label: 'Notificações', icon: Bell },
   { to: '/configuracoes', label: 'Configurações', icon: Settings },
@@ -31,6 +33,7 @@ const PAGES: { prefix: string; title: string; search?: string }[] = [
   { prefix: '/dashboard', title: 'Dashboard', search: 'Pesquisar' },
   { prefix: '/usuarios', title: 'Gerenciador de usuários', search: 'Pesquisar usuário' },
   { prefix: '/conteudo', title: 'Gerenciador de Conteúdo', search: 'Pesquisar conteúdo' },
+  { prefix: '/jornada', title: 'Gerenciador de Jornada', search: 'Pesquisar etapa' },
   { prefix: '/configuracoes', title: 'Minha Conta' },
   { prefix: '/relatorios', title: 'Relatórios' },
   { prefix: '/cadastros', title: 'Cadastros' },

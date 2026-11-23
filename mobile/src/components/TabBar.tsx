@@ -16,14 +16,16 @@ export type TabId = (typeof TABS)[number]['id'];
 type Props = {
   value: TabId;
   onChange: (id: TabId) => void;
+  /** Abas desligadas pelo painel administrativo (ex.: Jornada). */
+  hidden?: readonly TabId[];
 };
 
-export function TabBar({ value, onChange }: Props) {
+export function TabBar({ value, onChange, hidden = [] }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
-      {TABS.map((tab) => {
+      {TABS.filter((tab) => !hidden.includes(tab.id)).map((tab) => {
         const active = tab.id === value;
         const color = active ? colors.primary600 : colors.textTertiary;
         return (

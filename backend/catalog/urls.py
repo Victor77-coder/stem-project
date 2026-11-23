@@ -22,6 +22,8 @@ urlpatterns = [
     path('estimativa/', public.estimate),
     path('glossario/', public.glossary),
     path('termos/<str:kind>/', public.consent_document),
+    path('config/', public.app_config),
     path('staff/dashboard/', staff.dashboard),
+    path('staff/config/', staff.app_settings),
     *router.urls,
 ]

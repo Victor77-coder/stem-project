@@ -24,7 +24,7 @@ import {
   shell,
 } from '@/components/home/parts';
 import { useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
-import { api } from '@/lib/api';
+import { api, withFallback } from '@/lib/api';
 import { colors } from '@/theme';
 
 function firstName(name: string, fallback: string) {
@@ -71,7 +71,8 @@ function DonorHome({
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
-  onJourney: () => void;
+  /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
+  onJourney?: () => void;
   onQuestionnaire: () => void;
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
@@ -89,16 +90,18 @@ function DonorHome({
         unread={unread}
         onNotifications={onNotifications}
       />
-      <JourneyCard
-        background={colors.primary600}
-        accent={colors.primary600}
-        eyebrow="Sua jornada de doação"
-        title={card.title}
-        body={card.body}
-        progress={card.progress}
-        action="Ver minha jornada"
-        onAction={onJourney}
-      />
+      {onJourney && (
+        <JourneyCard
+          background={colors.primary600}
+          accent={colors.primary600}
+          eyebrow="Sua jornada de doação"
+          title={card.title}
+          body={card.body}
+          progress={card.progress}
+          action="Ver minha jornada"
+          onAction={onJourney}
+        />
+      )}
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
@@ -183,7 +186,8 @@ function ReceptorHome({
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
-  onJourney: () => void;
+  /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
+  onJourney?: () => void;
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
@@ -200,16 +204,18 @@ function ReceptorHome({
         unread={unread}
         onNotifications={onNotifications}
       />
-      <JourneyCard
-        background={colors.success}
-        accent={colors.success}
-        eyebrow="Sua jornada de tratamento"
-        title={card.title}
-        body={card.body}
-        progress={card.progress}
-        action="Ver minha jornada"
-        onAction={onJourney}
-      />
+      {onJourney && (
+        <JourneyCard
+          background={colors.success}
+          accent={colors.success}
+          eyebrow="Sua jornada de tratamento"
+          title={card.title}
+          body={card.body}
+          progress={card.progress}
+          action="Ver minha jornada"
+          onAction={onJourney}
+        />
+      )}
       <EstimateCard uf={uf} city={city} onStats={onStats} />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
@@ -356,10 +362,20 @@ export default function HomeScreen() {
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const [insight, setInsight] = useState<InsightScreen | null>(null);
   const [unread, setUnread] = useState(() => INBOX.filter((item) => !item.read).length);
+  // Começa oculta: só aparece quando o painel ativa (sem conexão, continua oculta).
+  const [journeyOn, setJourneyOn] = useState(false);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'leigo' ? 'leigo' : profile;
   const currentStep = profile === 'receptor' ? progress.receptor : progress.doador;
+
+  useEffect(() => {
+    withFallback('/config/', { jornadaAtiva: false }).then(({ jornadaAtiva }) => {
+      const on = jornadaAtiva === true;
+      setJourneyOn(on);
+      if (!on) setTab((current) => (current === 'jornada' ? 'inicio' : current));
+    });
+  }, []);
 
   useEffect(() => {
     if (!signedIn) return;
@@ -442,7 +458,7 @@ export default function HomeScreen() {
                 current={progress.receptor}
                 unread={unread}
                 open={openLearn}
-                onJourney={openJourney}
+                onJourney={journeyOn ? openJourney : undefined}
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
@@ -462,7 +478,7 @@ export default function HomeScreen() {
                 current={progress.doador}
                 unread={unread}
                 open={openLearn}
-                onJourney={openJourney}
+                onJourney={journeyOn ? openJourney : undefined}
                 onQuestionnaire={() => setOrientation(true)}
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
@@ -505,7 +521,7 @@ export default function HomeScreen() {
             onChooseProfile={() => router.push('/profile')}
           />
         )}
-        <TabBar value={tab} onChange={onTab} />
+        <TabBar value={tab} onChange={onTab} hidden={journeyOn ? [] : ['jornada']} />
       </SafeAreaView>
     </View>
   );
