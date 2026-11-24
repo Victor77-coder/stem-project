@@ -158,12 +158,10 @@ const RECEPTOR_BASE: Omit<JourneyStep, 'summary'>[] = [
   },
 ];
 
+// Sem estimativa de tempo de busca: não há fonte pública, e um número fixo pareceria prazo oficial.
 type RegionCopy = {
   encaminhamento: string;
   busca: string;
-  estimateLabel: string;
-  estimateValue: string;
-  estimateNote: string;
 };
 
 export const REGION_COPY: Record<RegionId, RegionCopy> = {
@@ -171,26 +169,14 @@ export const REGION_COPY: Record<RegionId, RegionCopy> = {
     encaminhamento:
       'Em Maceió, o encaminhamento é feito para centro transplantador de referência (ex.: Recife).',
     busca: 'Busca no REDOME/REREME. Familiares podem ser testados primeiro.',
-    estimateLabel: 'Estimativa · Busca de doador',
-    estimateValue: 'Média regional: 3 a 6 meses',
-    estimateNote:
-      'Aproximação estatística baseada em dados públicos. Não é garantia de atendimento, procedimento ou prazo.',
   },
   recife: {
     encaminhamento: 'Em Recife, o tratamento pode ocorrer em centro transplantador da própria região.',
     busca: 'Busca no REDOME/REREME, com centros de referência na própria região.',
-    estimateLabel: 'Estimativa · Busca de doador',
-    estimateValue: 'Média regional: 2 a 5 meses',
-    estimateNote:
-      'Aproximação estatística baseada em dados públicos. Não é garantia de atendimento, procedimento ou prazo.',
   },
   outra: {
     encaminhamento: 'O encaminhamento é feito pelo SUS para o centro transplantador de referência da sua região.',
     busca: 'Busca no REDOME/REREME. O tempo varia conforme o HLA e o centro.',
-    estimateLabel: 'Estimativa · Busca de doador',
-    estimateValue: 'Varia por região',
-    estimateNote:
-      'Aproximação estatística baseada em dados públicos. Não é garantia de atendimento, procedimento ou prazo.',
   },
 };
 

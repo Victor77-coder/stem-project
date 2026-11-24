@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Avisos por e-mail · STEM Project</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1c2433; background: #f6f8fb; }
+    main { max-width: 28rem; margin: 12vh auto; padding: 2rem; background: #fff; border-radius: 16px; border: 1px solid #e6eaf2; }
+    h1 { font-size: 1.25rem; margin: 0 0 .75rem; }
+    p { line-height: 1.5; color: #515b6c; }
+    button { margin-top: 1rem; border: 0; border-radius: 999px; padding: .75rem 1.5rem; font-size: 1rem; font-weight: 600; color: #fff; background: #3c72cc; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    {% if invalid %}
+      <h1>Link inválido</h1>
+      <p>Não encontramos a conta deste link. Você também pode desligar os avisos por e-mail em Preferências de aviso, no aplicativo.</p>
+    {% elif done %}
+      <h1>Pronto, você não recebe mais avisos por e-mail</h1>
+      <p>Os avisos continuam na caixa de entrada do aplicativo. Para voltar a receber por e-mail, ligue o canal em Preferências de aviso.</p>
+    {% else %}
+      <h1>Parar de receber avisos por e-mail?</h1>
+      <p>Você deixa de receber campanhas, eventos e comunicados por e-mail. Os avisos continuam na caixa de entrada do aplicativo.</p>
+      <form method="post">
+        <button type="submit">Parar de receber</button>
+      </form>
+    {% endif %}
+  </main>
+</body>
+</html>

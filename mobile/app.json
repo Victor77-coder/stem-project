@@ -33,6 +33,12 @@
       "expo-font",
       "expo-secure-store",
       [
+        "expo-notifications",
+        {
+          "color": "#3C72CC"
+        }
+      ],
+      [
         "expo-location",
         {
           "locationWhenInUsePermission": "Usamos sua localização apenas para mostrar hemocentros, centros transplantadores e campanhas próximas. Não guardamos histórico de rotas.",
@@ -40,6 +46,17 @@
           "isAndroidForegroundServiceEnabled": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "38f69176-3a41-4d63-bf0a-6d899f1071e5"
+      }
+    },
+    "owner": "victorcoderdev"
   }
 }

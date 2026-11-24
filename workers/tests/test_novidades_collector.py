@@ -46,6 +46,21 @@ def test_topic_matches_without_accents_and_as_whole_words():
     assert is_on_topic('Consulta pública sobre TCTH', '')
     assert not is_on_topic('Atmosfera e clima', 'agosto verde claro'), '"tmo" dentro de outra palavra não conta'
     assert not is_on_topic('Novas regras para doação de sangue', 'mudanças nos critérios para doar')
+    assert is_on_topic('Confira como foi o Lançamento do Manual de Terapia Celular', '')
+    assert is_on_topic('Pesquisa', 'avanços das terapias celulares no SUS')
+
+
+def test_sbtmo_posts_all_enter_like_redome():
+    post = {
+        'title': {'rendered': 'Confira como foi o Lançamento do Manual de Terapia Celular SBTMO'},
+        'date': '2026-10-16T10:00:00',
+        'link': 'https://sbtmo.org.br/manual-de-terapia-celular/',
+        'excerpt': {'rendered': '<p>Evento da sociedade.</p>'},
+    }
+    congress = {**post, 'title': {'rendered': 'Inscrições abertas para o congresso'}, 'link': 'https://sbtmo.org.br/congresso/'}
+    items, received = parse_posts(json.dumps([post, congress]).encode(), SBTMO, SINCE)
+    assert not SBTMO.filter_by_topic
+    assert received == 2 and [item['link'] for item in items] == [post['link'], congress['link']]
 
 
 def test_summary_is_plain_text_without_read_more_and_cut_on_a_word():

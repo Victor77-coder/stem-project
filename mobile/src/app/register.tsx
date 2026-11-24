@@ -8,7 +8,7 @@ import { StepHeader } from '@/components/StepHeader';
 import { useRegistration } from '@/context/RegistrationContext';
 
 export default function RegisterScreen() {
-  const { draft, update, isConvidado } = useRegistration();
+  const { draft, update, isConvidado, totalSteps } = useRegistration();
 
   function next() {
     router.push('/terms');
@@ -20,7 +20,7 @@ export default function RegisterScreen() {
         title="Crie sua conta"
         subtitle="Informe os dados para criar seu acesso."
         step={2}
-        total={isConvidado ? 3 : 5}
+        total={isConvidado ? 3 : totalSteps}
         brand={<Logo size="sm" />}
       />
 

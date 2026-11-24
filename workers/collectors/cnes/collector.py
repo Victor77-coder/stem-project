@@ -49,6 +49,15 @@ TP_HOSPITAL_ESPECIALIZADO = '07'
 SERVICO_HEMOTERAPIA = '128'
 CLASSE_COLETA_SANGUE = '001'  # Procedimentos destinados à obtenção do sangue para fins de assistência
 HAB_HEMATOLOGIA = '1710'  # UNACON exclusiva de hematologia
+# Tipo 69 sem coleta declarada: agência transfusional, laboratório ou unidade com cadastro de serviços incompleto.
+REGRA_69_PELO_NOME = 'tipo-69-pelo-nome'
+# Nome fantasia de unidade que coleta: hemocentro, hemonúcleo, posto/unidade de coleta e as marcas da hemorrede pública.
+COLLECTION_UNIT_NAME = re.compile(
+    r'\b(hemocentro|hemonucleo|posto de (coleta|doacao)|unidade de coleta|hemepar|f?hemeron'
+    r'|hemo(acre|al|am|ap|ba|ce|es|go|mar|minas|norte|pa|pe|pi|raima|rgs|rio|sc|se|sul|to))\b'
+)
+# Agência transfusional só guarda e transfunde sangue, mesmo a que fica dentro de hemocentro (há grafias erradas no CNES).
+TRANSFUSION_AGENCY_NAME = re.compile(r'\bagencia transfu\w*')
 
 TRANSPLANT_HABILITATIONS = {
     '2401': 'Transplante de medula autogênico',
@@ -128,8 +137,10 @@ def classify(
     """Regras de recorte (todas exigem vínculo SUS).
 
     Transplante: habilitação 2401, 2402 ou 2403 vigente na competência.
-    Hemocentro: tipo 69; ou SADT pública com coleta de sangue (serviço 128/001); ou hospital
-    especializado público com coleta de sangue e habilitação de hematologia (1710), caso do Hemope.
+    Hemocentro: tipo 69 com coleta de sangue (serviço 128/001); ou SADT pública com coleta de sangue; ou
+    hospital especializado público com coleta de sangue e habilitação de hematologia (1710), caso do Hemope.
+    Tipo 69 sem coleta declarada sai com a regra ``tipo-69-pelo-nome`` e só fica se o nome indicar unidade de
+    coleta (``collect``): o tipo 69 inclui agências transfusionais, que não recebem doador.
     Hospitais gerais e maternidades que coletam sangue para uso próprio ficam de fora.
     """
     yyyymm = to_yyyymm(competencia)
@@ -154,7 +165,7 @@ def classify(
         if habs & TRANSPLANT_HABILITATIONS.keys():
             tipo, regra = TIPO_TRANSPLANTE, 'habilitacao-tcth'
         elif tp_unid == TP_HEMOTERAPIA:
-            tipo, regra = TIPO_HEMOCENTRO, 'tipo-69'
+            tipo, regra = TIPO_HEMOCENTRO, 'tipo-69' if collects else REGRA_69_PELO_NOME
         elif tp_unid == TP_SADT and public and collects:
             tipo, regra = TIPO_HEMOCENTRO, 'sadt-publica-coleta'
         elif tp_unid == TP_HOSPITAL_ESPECIALIZADO and public and collects and HAB_HEMATOLOGIA in habs:
@@ -192,6 +203,20 @@ def pretty(text: str | None) -> str:
         else:
             out.append(word[:1].upper() + word[1:])
     return ' '.join(out).strip()
+
+
+def is_collection_unit(name: str) -> bool:
+    """Nome fantasia de unidade que recebe doador, para o tipo 69 que não declara coleta no CNES."""
+    folded = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode().lower()
+    return bool(COLLECTION_UNIT_NAME.search(folded)) and not TRANSFUSION_AGENCY_NAME.search(folded)
+
+
+def keeps(item: dict[str, Any]) -> bool:
+    """Tipo 69 sem coleta declarada fica só se o nome indicar unidade de coleta. Sem o cadastro do site do
+    CNES não há nome para conferir: fica, para uma falha passageira do site não despublicar hemocentro."""
+    if item['regra'] != REGRA_69_PELO_NOME or not item['detalhes_ok']:
+        return True
+    return is_collection_unit(item['nome'])
 
 
 def _ascii_key(text: str) -> str:
@@ -293,6 +318,7 @@ def collect(
                 municipalities = municipalities_fn(uf)
             except Exception as exc:  # noqa: BLE001
                 warnings.append(f'{uf}: nomes de municípios indisponíveis no IBGE ({exc})')
+        kept = 0
         for item in selected:
             details: dict[str, Any] = {}
             if enrich:
@@ -300,8 +326,14 @@ def collect(
                     details = details_fn(item.codufmun, item.cnes)
                 except Exception as exc:  # noqa: BLE001
                     warnings.append(f'{item.cnes}: cadastro indisponível no site do CNES ({exc})')
-            establishments.append(to_canonical(item, uf, details, municipalities))
-        logger.info('CNES %s %s: %s estabelecimentos no recorte', uf, competencia, len(selected))
+            canonical = to_canonical(item, uf, details, municipalities)
+            if keeps(canonical):
+                establishments.append(canonical)
+                kept += 1
+        logger.info(
+            'CNES %s %s: %s estabelecimentos no recorte (%s do tipo 69 sem coleta declarada ficaram de fora)',
+            uf, competencia, kept, len(selected) - kept,
+        )
 
     return {
         'source': 'cnes',

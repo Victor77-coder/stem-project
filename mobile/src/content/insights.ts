@@ -97,14 +97,6 @@ export type RegionName = 'Sudeste' | 'Sul' | 'Nordeste' | 'Centro-Oeste' | 'Nort
 
 const REGION_OF = Object.fromEntries(UFS.map(([uf, , region]) => [uf, region])) as Record<string, RegionName>;
 
-const WAIT: Record<RegionName, string> = {
-  Sudeste: '3,6 meses',
-  Sul: '4,1 meses',
-  Nordeste: '4,8 meses',
-  'Centro-Oeste': '5,2 meses',
-  Norte: '6,1 meses',
-};
-
 const YEAR_SCALE: Record<StatYear, number> = {
   '2025': 1,
   '2024': 0.9,
@@ -131,10 +123,6 @@ export function regionOf(uf: string): RegionName {
 
 export function headline(year: StatYear) {
   return HEADLINES[year];
-}
-
-export function waitFor(uf: string) {
-  return WAIT[regionOf(uf)];
 }
 
 export function regionBars(year: StatYear) {

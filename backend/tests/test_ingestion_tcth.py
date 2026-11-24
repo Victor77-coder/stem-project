@@ -96,7 +96,7 @@ def test_seed_examples_leave_collected_indicators_and_do_not_come_back(api, seed
     assert response.json()['stats']['exemplos_removidos'] > 0
     for indicator in ('transplantes', 'transplantes_regiao', 'doadores'):
         assert not Statistic.objects.filter(indicador=indicator, data_extracao=SEED_DATE).exists(), indicator
-    assert Statistic.objects.filter(indicador='espera', data_extracao=SEED_DATE).exists(), 'espera não tem fonte coletada'
+    assert not Statistic.objects.filter(indicador='espera', data_extracao=SEED_DATE).exists(), 'o seed não cria tempo de espera de exemplo'
 
     call_command('seed_mvp', verbosity=0)
     assert not Statistic.objects.filter(indicador='transplantes', data_extracao=SEED_DATE).exists()
@@ -108,7 +108,7 @@ def test_public_statistics_show_collected_numbers(api, seeded):
     assert data['years'] == ['2025', '2024']
     assert data['year'] == '2025'
     assert data['headline'] == {'donors': '5.651', 'transplants': '140'}, 'os dois cartões seguem a UF e o ano'
-    assert data['region'] == 'Nordeste' and data['wait']
+    assert data['region'] == 'Nordeste' and data['wait'] == '', 'tempo de espera não tem fonte coletada'
     assert {item['name']: item['value'] for item in data['regions']}['Sudeste'] == 909 + 406 + 167 + 45
     assert 'DataSUS/Tabnet (SIH/SUS, por residência)' in data['source'] and 'REDOME/INCA (painel de doadores)' in data['source']
     assert data['extractedAt'] == '10/11/2026'
