@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from rest_framework import serializers, status
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
@@ -20,6 +21,8 @@ from .models import JourneyProgress, Notification, NotificationReceipt, Preferen
 from .services import notices_for, send_email_code, unsubscribe_user
 
 INBOX_DAYS = 60
+# Quem não tem conta vê no máximo estes avisos nacionais.
+PUBLIC_INBOX_LIMIT = 20
 PREF_FIELDS = ('push', 'email', 'campaigns', 'events', 'official')
 EXPO_TOKEN = re.compile(r'^Expo(nent)?PushToken\[[^\]]+\]$')
 NEEDS_DEVICE = 'Permita as notificações no celular para ativar este canal.'
@@ -204,6 +207,20 @@ def _inbox_queryset(request):
     )
 
 
+def _notice_item(notice: Notification, read: bool) -> dict:
+    return {
+        'id': str(notice.pk),
+        'kind': notice.tipo,
+        'title': notice.titulo,
+        'body': notice.mensagem,
+        'origin': notice.origem,
+        'sentAt': notice.data_disparo.isoformat(),
+        'read': read,
+        'centerId': notice.centro.slug if notice.centro else None,
+        'contentId': (notice.conteudo.slug or str(notice.conteudo.pk)) if notice.conteudo else None,
+    }
+
+
 @api_view(['GET'])
 @permission_classes([IsParticipant])
 def inbox(request):
@@ -213,22 +230,21 @@ def inbox(request):
             'notification_id', flat=True
         )
     )
-    return Response(
-        [
-            {
-                'id': str(notice.pk),
-                'kind': notice.tipo,
-                'title': notice.titulo,
-                'body': notice.mensagem,
-                'origin': notice.origem,
-                'sentAt': notice.data_disparo.isoformat(),
-                'read': notice.pk in read,
-                'centerId': notice.centro.slug if notice.centro else None,
-                'contentId': (notice.conteudo.slug or str(notice.conteudo.pk)) if notice.conteudo else None,
-            }
-            for notice in notices
-        ]
+    return Response([_notice_item(notice, notice.pk in read) for notice in notices])
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def public_inbox(request):
+    """RS008: caixa de entrada de quem não tem conta (convidado sem e-mail): só avisos publicados para o Brasil todo."""
+    now = timezone.now()
+    notices = (
+        Notification.objects.filter(status=PublishStatus.PUBLICADO, uf='', data_disparo__lte=now)
+        .filter(data_disparo__gte=now - timedelta(days=INBOX_DAYS))
+        .select_related('centro', 'conteudo')
+        .order_by('-data_disparo')[:PUBLIC_INBOX_LIMIT]
     )
+    return Response([_notice_item(notice, False) for notice in notices])
 
 
 @api_view(['POST'])

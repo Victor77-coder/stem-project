@@ -10,7 +10,6 @@ import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { ProfileFlow } from '@/components/profile/ProfileFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import { type CenterFilter } from '@/content/centers';
-import { INBOX } from '@/content/insights';
 import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
@@ -374,7 +373,7 @@ export default function HomeScreen() {
   const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const [insight, setInsight] = useState<InsightScreen | null>(null);
-  const [unread, setUnread] = useState(() => INBOX.filter((item) => !item.read).length);
+  const [unread, setUnread] = useState(0);
   // Começa oculta: só aparece quando o painel ativa (sem conexão, continua oculta).
   const [journeyOn, setJourneyOn] = useState(false);
   const [channelsOff, setChannelsOff] = useState(false);
