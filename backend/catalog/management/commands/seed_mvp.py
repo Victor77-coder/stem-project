@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from accounts.models import Role, StaffProfile, User
 from catalog import seed_data as data
-from catalog.models import Center, Content, EstimateRule, GlossaryTerm, JourneyStep, PublishStatus, Statistic
+from catalog.models import Center, Content, GlossaryTerm, JourneyStep, PublishStatus, Statistic
 from consent.models import ConsentDocument
 from engagement.models import Notification
 
@@ -39,7 +39,6 @@ class Command(BaseCommand):
         self._centers()
         self._notices()
         self._statistics()
-        self._estimates()
         for order, (term, body) in enumerate(data.GLOSSARY):
             GlossaryTerm.objects.update_or_create(termo=term, defaults={'definicao': body, 'ordem': order})
 
@@ -174,12 +173,3 @@ class Command(BaseCommand):
             put('transplantes', 'BR', year, transplants, transplants_label)
             for region, value in data.REGION_BASE.items():
                 put('transplantes_regiao', region, year, round(value * data.YEAR_SCALE[year]), '')
-            for region, (months, label) in data.WAIT.items():
-                put('espera', region, year, months, label)
-
-    def _estimates(self):
-        for profile, uf, label, value in data.ESTIMATES:
-            EstimateRule.objects.update_or_create(
-                perfil=profile, uf=uf, ativo=True,
-                defaults={'rotulo': label, 'valor': value, 'nota': data.ESTIMATE_NOTE, 'fonte': data.STATS_SOURCE},
-            )
