@@ -116,56 +116,71 @@ PANEL_CONTENTS = [
     },
 ]
 
-JOURNEY_SOURCE = 'Ministério da Saúde · Protocolo vigente em 10/2026'
-HEMOAL = {'name': 'Hemoal · Maceió', 'address': 'Av. Jorge de Lima, 58', 'distance': '3,2 km'}
+# RS008: cada etapa traz a fonte oficial de onde o texto saiu e a data da consulta. Mesmo texto do app
+# (mobile/src/content/journey.ts).
+CONSULTED = 'consultado em 24/11/2026'
+JOURNEY_SOURCES = {
+    'cadastro': f'REDOME/INCA (redome.inca.gov.br/doadores), Hemominas e Hemoes · {CONSULTED}',
+    'doadores': f'REDOME/INCA (redome.inca.gov.br/doadores) · {CONSULTED}',
+    'doacao': f'REDOME/INCA (doadores e para pacientes), Hemope e Hemominas · {CONSULTED}',
+    'pos_doacao': f'REDOME/INCA (redome.inca.gov.br/doadores) e Hemope · {CONSULTED}',
+    'pacientes': f'REDOME/INCA (redome.inca.gov.br/para-pacientes), Hemope e Hemoes · {CONSULTED}',
+    'inca': f'INCA (gov.br/inca, transplante de medula óssea) e Hemominas · {CONSULTED}',
+    'centros': 'CNES/DataSUS, habilitações de transplante de medula 2401 a 2403 · competência 10/2026',
+}
+# Sem distância: o guia não sabe onde a pessoa está.
+HEMOAL = {'name': 'Hemoal · Maceió', 'address': 'Av. Jorge de Lima, 58'}
 STEM = 'Explica a etapa e indica a unidade mais próxima.'
 
 DONOR_STEPS = [
-    ('cadastro', 'Cadastro no hemocentro', 'Cadastro no hemocentro', 'Preencha a ficha e apresente documento com foto.', '',
-     'O cadastro de doador de medula é feito em hemocentro. Você preenche uma ficha, apresenta um documento oficial com foto e autoriza o uso dos dados no REDOME.',
-     ['Documento oficial com foto', 'Ter entre 18 e 35 anos no cadastro', 'Estar em boas condições de saúde'], HEMOAL,
-     'O cadastro oficial é feito no hemocentro. Declarar intenção no STEM não torna ninguém doador.'),
-    ('coleta', 'Coleta de amostra (HLA)', 'Coleta de amostra', 'Coleta de 5 ml no hemocentro para o teste de compatibilidade genética.',
-     'Leve um documento com foto ao hemocentro para coletar a amostra de sangue do cadastro.',
-     'Uma pequena amostra de sangue é usada para identificar suas características genéticas (HLA) e comparar com pacientes que aguardam transplante.',
-     ['Documento oficial com foto', 'Comprovante de endereço', 'Estar bem alimentado'], HEMOAL, 'A coleta e o exame HLA são do hemocentro.'),
-    ('redome', 'Inclusão no REDOME', 'Inclusão no REDOME', 'Seus dados entram no registro nacional. Mantenha o contato atualizado.', '',
-     'Depois da tipagem HLA, o hemocentro envia o resultado ao REDOME, o Registro Nacional de Doadores Voluntários de Medula Óssea. Manter telefone e endereço atualizados é o que permite o contato se houver compatibilidade.',
-     [], None, 'A inclusão no REDOME é feita pelo hemocentro.'),
-    ('contato', 'Contato por compatibilidade', 'Contato por compatibilidade', 'Se houver um paciente compatível, o hemocentro entra em contato.', '',
-     'Só uma minoria dos cadastrados é chamada. Se o sistema encontrar um paciente compatível, o hemocentro confirma se você ainda pode doar e agenda novos exames. Ninguém doa sem esse convite.',
-     [], None, 'A compatibilidade é avaliada por dois médicos do SUS, sem vínculo entre si.'),
-    ('doacao', 'Exames e doação', 'Exames e doação', 'Exames complementares e doação, por punção ou aférese.', '',
-     'Com a compatibilidade confirmada, você faz exames clínicos e, se estiver apto, a doação ocorre por punção no osso da bacia ou por aférese (coleta de sangue). A escolha é da equipe médica, com o seu consentimento.',
-     ['Exames clínicos e de sangue', 'Acompanhante no dia do procedimento', 'Seguir o jejum ou orientação do hemocentro'], HEMOAL,
-     'Exames e doação são feitos pela equipe médica do SUS.'),
-    ('pos-doacao', 'Acompanhamento', 'Acompanhamento', 'Retorno médico após a doação.', '',
-     'Após a doação, o hemocentro agenda retorno para avaliar sua recuperação. A medula se recompõe em poucas semanas. Qualquer sintoma fora do esperado deve ser informado à equipe que te acompanhou.',
-     [], None, 'O retorno é agendado pelo hemocentro.'),
+    ('cadastro', 'Cadastro no hemocentro', 'Cadastro no hemocentro', 'Cadastro e coleta de 5 ml de sangue, na mesma visita.', '',
+     'O cadastro pode começar pelo site ou pelo aplicativo do REDOME, mas é concluído no hemocentro. Lá você lê e assina o termo de consentimento e, na mesma visita, coleta uma amostra de cerca de 5 ml de sangue. Pode se cadastrar quem tem entre 18 e 35 anos e está em bom estado geral de saúde.',
+     ['Documento oficial de identidade com foto', 'Ter entre 18 e 35 anos', 'Estar em bom estado geral de saúde'], HEMOAL,
+     'O cadastro oficial é concluído no hemocentro. Declarar intenção no STEM não torna ninguém doador.',
+     JOURNEY_SOURCES['cadastro']),
+    ('coleta', 'Exame de compatibilidade (HLA)', 'Exame HLA', 'A amostra do cadastro identifica seus genes de compatibilidade.', '',
+     'A amostra coletada no cadastro é usada para identificar seus dados genéticos de compatibilidade, os genes HLA. São eles que o REDOME compara com os dos pacientes que precisam de transplante.',
+     [], None, 'O hemocentro coleta a amostra e a envia para o exame HLA.', JOURNEY_SOURCES['doadores']),
+    ('redome', 'Inclusão no REDOME', 'Inclusão no REDOME', 'Seu cadastro fica ativo até os 60 anos. Mantenha o contato atualizado.', '',
+     'Seus dados e o resultado do HLA entram no REDOME, o Registro Nacional de Doadores Voluntários de Medula Óssea, e ficam ativos até você completar 60 anos. O contato pode levar alguns anos ou nunca acontecer. Mantenha telefone, e-mail e endereço atualizados pelo site ou pelo aplicativo do REDOME: é assim que você é encontrado.',
+     ['Manter telefone, e-mail e endereço atualizados no REDOME'], None, 'O REDOME guarda o cadastro até os 60 anos.',
+     JOURNEY_SOURCES['doadores']),
+    ('contato', 'Contato do REDOME', 'Contato por compatibilidade', 'Se você for compatível com um paciente, o REDOME entra em contato.', '',
+     'Se houver um paciente compatível, o REDOME entra em contato por telefone, WhatsApp ou e-mail para saber se você ainda deseja e pode doar. Pode ser preciso coletar uma nova amostra de sangue para exames confirmatórios. Se não houver um novo contato em até 180 dias, você não foi o doador compatível.',
+     [], None, 'A compatibilidade é avaliada por dois médicos do SUS, sem vínculo entre si.', JOURNEY_SOURCES['doadores']),
+    ('doacao', 'Avaliação e doação', 'Avaliação e doação', 'Exames de saúde e doação por punção ou aférese, em hospital autorizado.', '',
+     'Antes de doar, você passa por avaliação clínica e exames de sangue: a doação só acontece se a sua saúde estiver bem. A forma de coleta é decidida pela equipe médica junto com você. Na punção, as células são retiradas do osso da bacia, em centro cirúrgico e sob anestesia. Na aférese, você recebe antes uma medicação que estimula a produção de células-tronco, que depois são separadas do sangue por uma máquina, sem internação nem anestesia. A doação é feita em hospital especializado e autorizado pelo Ministério da Saúde, que pode ficar em outra cidade: o SUS paga transporte, hospedagem e alimentação para você e um acompanhante.',
+     ['Avaliação clínica e exames de sangue', 'Acompanhante no dia da doação', 'Seguir as orientações da equipe que fará a coleta'], None,
+     'A doação é feita em hospital autorizado pelo Ministério da Saúde, com custos pagos pelo SUS.', JOURNEY_SOURCES['doacao']),
+    ('pos-doacao', 'Depois da doação', 'Depois da doação', 'Recuperação em poucas semanas e, se quiser, notícias do paciente.', '',
+     'A medula doada se recompõe em poucas semanas, e quem doa por punção costuma voltar às atividades em cerca de uma semana. Sintomas fora do esperado devem ser informados à equipe que fez a coleta. Seis meses após o transplante, você pode pedir notícias do paciente ao REDOME; depois de um ano, enviar uma mensagem anônima; e, depois de 18 meses, solicitar um encontro.',
+     [], None, 'O REDOME intermedeia, de forma anônima, o contato com o paciente.', JOURNEY_SOURCES['pos_doacao']),
 ]
 
+# Jornada do transplante alogênico (com doador). No autólogo, as células são do próprio paciente e não há busca.
 RECEPTOR_STEPS = [
-    ('indicacao', 'Indicação médica', 'Indicação médica', 'O hematologista indica o transplante e solicita o tratamento no SUS.', '', {},
-     'O transplante de células-tronco (TCTH) só começa com indicação de um hematologista. O médico avalia o diagnóstico, tenta tratamentos prévios e solicita o transplante pelo SUS quando for o caso.'),
-    ('encaminhamento', 'Encaminhamento', 'Encaminhamento', 'O encaminhamento é feito pelo SUS para o centro transplantador de referência da sua região.', '',
+    ('indicacao', 'Indicação médica', 'Indicação médica', 'O médico indica o transplante e o tipo: autólogo ou com doador.', '', {},
+     'O transplante de células-tronco hematopoéticas (TCTH) só começa com a indicação do médico responsável pelo tratamento, em geral um hematologista. É ele quem define o tipo: autólogo, com as células do próprio paciente, ou alogênico, com as células de um doador. As etapas de busca de doador valem só para o transplante alogênico.',
+     JOURNEY_SOURCES['inca']),
+    ('encaminhamento', 'Encaminhamento', 'Encaminhamento', 'O SUS encaminha para o centro transplantador habilitado de referência da sua região.', '',
      {
-         'maceio': 'Em Maceió, o encaminhamento é feito para centro transplantador de referência (ex.: Recife).',
-         'recife': 'Em Recife, o tratamento pode ocorrer em centro transplantador da própria região.',
+         'maceio': 'Alagoas não tem centro habilitado para transplante de medula no CNES. O SUS encaminha para outro estado, como Pernambuco.',
+         'recife': 'Recife tem centros habilitados para transplante de medula no CNES, como o IMIP e o Hospital Português.',
      },
-     'Com a indicação, o paciente é encaminhado a um centro transplantador habilitado. A regulação é feita pelo SUS. O app não agenda, não altera fila e não substitui a equipe assistente.'),
-    ('busca', 'Busca de doador', 'Busca de doador compatível', 'Busca no REDOME/REREME. O tempo varia conforme o HLA e o centro.',
-     'Seu cadastro foi enviado pela equipe médica. A busca é feita pelo SUS no REDOME.',
-     {
-         'maceio': 'Busca no REDOME/REREME. Familiares podem ser testados primeiro.',
-         'recife': 'Busca no REDOME/REREME, com centros de referência na própria região.',
-     },
-     'A busca começa pelos familiares. Se não houver compatibilidade, o centro consulta o REDOME e, se preciso, registros internacionais (REREME). O tempo depende do HLA e da disponibilidade — não de uma fila única.'),
+     'Com a indicação, o paciente é encaminhado pelo SUS a um centro transplantador habilitado. A regulação é feita pelo SUS. O app não agenda, não altera fila e não substitui a equipe que acompanha o paciente.',
+     JOURNEY_SOURCES['centros']),
+    ('busca', 'Busca de doador', 'Busca de doador compatível', 'Primeiro na família; depois no REDOME e em registros de mais de 50 países.', '', {},
+     'A busca começa pelos irmãos e parentes próximos: um irmão tem cerca de 25% de chance de ser compatível. Sem doador na família, o médico inscreve o paciente no REREME, o Registro Nacional de Receptores de Medula Óssea, e o sistema cruza os dados dele com o REDOME e com registros de mais de 50 países. O médico deve atualizar os dados do paciente pelo menos a cada 3 meses. O paciente e a família não pagam pela busca. No transplante autólogo, não há busca de doador.',
+     JOURNEY_SOURCES['pacientes']),
     ('preparacao', 'Preparação', 'Preparação', 'Exames e condicionamento antes do transplante.', '', {},
-     'Antes do transplante há exames, avaliações odontológicas e o condicionamento (quimioterapia e, em alguns casos, radioterapia). Essa fase acontece no centro transplantador, com a equipe que vai realizar o procedimento.'),
-    ('transplante', 'Transplante', 'Transplante', 'Internação no centro transplantador.', '', {},
-     'O transplante é a infusão das células-tronco do doador ou do próprio paciente. A internação dura semanas. Só a equipe do centro transplantador define datas, protocolos e alta.'),
-    ('pos-tcth', 'Acompanhamento', 'Acompanhamento', 'Consultas periódicas após o transplante.', '', {},
-     'Depois da alta, há consultas frequentes para prevenir infecções e a doença do enxerto contra o hospedeiro. O calendário é da equipe médica. O app só descreve a etapa.'),
+     'No centro transplantador, o paciente faz exames e o condicionamento: quimioterapia e, em alguns casos, radioterapia, que destroem a medula doente para que as novas células possam se instalar. Essa fase é conduzida pela equipe que vai realizar o transplante.',
+     JOURNEY_SOURCES['inca']),
+    ('transplante', 'Transplante', 'Transplante', 'Infusão das células e internação no centro transplantador.', '', {},
+     'As células-tronco são aplicadas na veia, como uma transfusão de sangue. Em cerca de duas semanas, a nova medula começa a produzir células: é a chamada "pega". O paciente fica internado, com cuidados para evitar infecções. Só a equipe do centro transplantador define datas, protocolos e alta.',
+     JOURNEY_SOURCES['inca']),
+    ('pos-tcth', 'Acompanhamento', 'Acompanhamento', 'Consultas frequentes depois da alta.', '', {},
+     'Depois da alta, há consultas frequentes para prevenir infecções e tratar a doença do enxerto contra o hospedeiro (DECH), uma reação das células transplantadas contra o organismo do paciente, relativamente comum e controlável com medicamentos. Em geral, depois de um ano é possível voltar às atividades normais. O calendário é da equipe médica.',
+     JOURNEY_SOURCES['inca']),
 ]
 
 CNES = 'CNES/DataSUS'
