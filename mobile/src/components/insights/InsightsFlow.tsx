@@ -9,7 +9,6 @@ import {
   headline,
   regionBars,
   regionOf,
-  waitFor,
   type Notice,
   type NoticeKind,
   type StatYear,
@@ -171,7 +170,6 @@ type ApiStats = {
   years: string[];
   headline: { donors: string; transplants: string };
   regions: { name: string; value: number }[];
-  wait: string;
   source: string;
   extractedAt: string;
 };
@@ -188,7 +186,6 @@ function localStats(year: StatYear, uf: string) {
     // Os dados locais só têm totais nacionais.
     cards: national ? cards : { donors: '', transplants: '' },
     bars: regionBars(year) as { name: string; value: number }[],
-    wait: national ? '' : waitFor(uf),
     source: 'Fonte: DataSUS/Tabnet e REDOME · Atualizado em 08/2026',
   };
 }
@@ -220,7 +217,6 @@ function StatsScreen({ profile, onBack }: { profile: ProfileType; onBack: () => 
         years: remote.years,
         cards: remote.headline,
         bars: remote.regions,
-        wait: remote.wait,
         source: `Fonte: ${remote.source} · Extraído em ${remote.extractedAt}`,
       }
     : fallback;
@@ -292,13 +288,6 @@ function StatsScreen({ profile, onBack }: { profile: ProfileType; onBack: () => 
           </View>
         ) : null}
 
-        {forRecipient && stats.wait ? (
-          <View style={styles.waitCard}>
-            <Text style={styles.waitLabel}>Tempo médio de espera por doador não aparentado</Text>
-            <Text style={styles.waitValue}>{stats.wait}</Text>
-            <Text style={styles.waitHint}>Recorte aproximado para {ufName}. Não é prazo de atendimento.</Text>
-          </View>
-        ) : null}
 
         <View style={styles.warn}>
           <Ionicons name="warning-outline" size={16} color={colors.danger600} />
@@ -598,10 +587,6 @@ const styles = StyleSheet.create({
   barTrack: { flex: 1, height: 8, borderRadius: 4, backgroundColor: colors.surfaceMuted, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 4 },
   barValue: { width: 42, textAlign: 'right', fontSize: 12, lineHeight: 16, fontWeight: '600', color: colors.ink },
-  waitCard: { marginTop: 16, backgroundColor: colors.surfaceMuted, borderRadius: 16, padding: 14, gap: 4 },
-  waitLabel: { fontSize: 14, lineHeight: 20, color: colors.textSecondary },
-  waitValue: { fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.ink },
-  waitHint: { fontSize: 12, lineHeight: 16, color: colors.textTertiary },
   warn: { marginTop: 16, flexDirection: 'row', gap: 8, backgroundColor: colors.danger100, borderRadius: 12, padding: 12 },
   warnText: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.danger600 },
   source: { marginTop: 12, flexDirection: 'row', gap: 8, alignItems: 'center', backgroundColor: colors.surfaceMuted, borderRadius: 12, padding: 12 },

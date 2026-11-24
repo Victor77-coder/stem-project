@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   DONOR_STEPS,
   REGIONS,
-  REGION_COPY,
   progressLabel,
   progressPercent,
   receptorSteps,
@@ -117,10 +116,6 @@ export function JourneyFlow({ kind, current, onComplete, onChooseProfile }: Prop
           );
         })}
       </View>
-
-      {kind === 'receptor' && current <= 6 ? (
-        <EstimateCard region={region} />
-      ) : null}
 
       <Text style={styles.hint}>Marcar uma etapa só aparece para a sua etapa atual.</Text>
     </ScrollView>
@@ -279,20 +274,6 @@ function StepDetail({
   );
 }
 
-function EstimateCard({ region }: { region: RegionId }) {
-  const copy = REGION_COPY[region];
-  return (
-    <View style={styles.estimate}>
-      <View style={styles.estimateHead}>
-        <Ionicons name="sparkles" size={16} color={colors.warning700} />
-        <Text style={styles.estimateTitle}>{copy.estimateLabel}</Text>
-      </View>
-      <Text style={styles.estimateValue}>{copy.estimateValue}</Text>
-      <Text style={styles.estimateNote}>{copy.estimateNote}</Text>
-    </View>
-  );
-}
-
 function ConvidadoJourney({ onChooseProfile }: { onChooseProfile: (profile: 'doador' | 'receptor') => void }) {
   return (
     <ScrollView style={styles.fill} contentContainerStyle={styles.convidadoContent} showsVerticalScrollIndicator={false}>
@@ -444,17 +425,6 @@ const styles = StyleSheet.create({
   stepStatus: { fontSize: 12, lineHeight: 16, fontWeight: '600' },
   stepSummary: { marginTop: 4, fontSize: 14, lineHeight: 20, color: colors.textSecondary },
   hint: { marginTop: 8, fontSize: 13, lineHeight: 18, color: colors.textTertiary },
-  estimate: {
-    marginTop: 8,
-    backgroundColor: colors.warning100,
-    borderRadius: 16,
-    padding: 14,
-    gap: 6,
-  },
-  estimateHead: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  estimateTitle: { fontSize: 14, lineHeight: 20, fontWeight: '600', color: colors.warning700 },
-  estimateValue: { fontSize: 16, lineHeight: 22, fontWeight: '700', color: colors.warning700 },
-  estimateNote: { fontSize: 14, lineHeight: 20, color: colors.warning700 },
   topBar: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
   topTitle: { flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 22, fontWeight: '600', color: colors.ink },
   iconBtn: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },

@@ -15,7 +15,6 @@ import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@
 import {
   ArticleList,
   CampaignCard,
-  EstimateCard,
   HomeHeader,
   JourneyCard,
   ProfileInvite,
@@ -169,8 +168,6 @@ function DonorHome({
 function ReceptorHome({
   name,
   sex,
-  uf,
-  city,
   current,
   unread,
   open,
@@ -181,8 +178,6 @@ function ReceptorHome({
 }: {
   name: string;
   sex: Sexo;
-  uf: string;
-  city: string;
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
@@ -216,7 +211,6 @@ function ReceptorHome({
           onAction={onJourney}
         />
       )}
-      <EstimateCard uf={uf} city={city} onStats={onStats} />
       <SectionTitle>Acesso rápido</SectionTitle>
       <QuickGrid
         items={[
@@ -247,6 +241,14 @@ function ReceptorHome({
             iconColor: colors.warning700,
             well: colors.warning100,
             onPress: () => open({ name: 'faq' }),
+          },
+          // Sem o cartão de estimativa (RF12 desejável), o atalho para Estatísticas vem para o acesso rápido.
+          {
+            title: 'Estatísticas do\nBrasil',
+            icon: 'bar-chart-outline',
+            iconColor: colors.textSecondary,
+            well: colors.surfaceMuted,
+            onPress: onStats,
           },
         ]}
       />
@@ -453,8 +455,6 @@ export default function HomeScreen() {
               <ReceptorHome
                 name={draft.name}
                 sex={draft.sex}
-                uf={draft.uf}
-                city={draft.city}
                 current={progress.receptor}
                 unread={unread}
                 open={openLearn}
