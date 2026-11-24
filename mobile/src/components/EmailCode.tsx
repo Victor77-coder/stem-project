@@ -6,13 +6,30 @@ import { colors, type } from '@/theme';
 
 type Props = {
   email: string;
-  /** Chamado com as preferências que o servidor devolve depois de confirmar. */
-  onConfirmed: (prefs: Record<string, unknown>) => void;
+  /** Chamado com o que o servidor devolve depois de confirmar. */
+  onConfirmed: (data: Record<string, unknown>) => void;
   onLater?: () => void;
+  /** Outro uso do código (ex.: volta do convidado). Sem eles, confirma o e-mail dos avisos. */
+  verify?: (code: string) => Promise<Record<string, unknown>>;
+  resend?: () => Promise<unknown>;
+  title?: string;
+  body?: string;
+  confirmLabel?: string;
+  laterLabel?: string;
 };
 
-/** Confirmação do e-mail por código de 6 dígitos: só depois disso o canal e-mail passa a valer. */
-export function EmailCode({ email, onConfirmed, onLater }: Props) {
+/** Código de 6 dígitos enviado por e-mail. Por padrão, confirma o endereço para os avisos por e-mail. */
+export function EmailCode({
+  email,
+  onConfirmed,
+  onLater,
+  verify,
+  resend: resendCode,
+  title = 'Confirme seu e-mail',
+  body,
+  confirmLabel = 'Confirmar e-mail',
+  laterLabel = 'Confirmar depois',
+}: Props) {
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -22,7 +39,9 @@ export function EmailCode({ email, onConfirmed, onLater }: Props) {
     setBusy(true);
     setError('');
     try {
-      onConfirmed(await api<Record<string, unknown>>('/me/email/confirmar/', { method: 'POST', body: { code } }));
+      onConfirmed(
+        await (verify ? verify(code) : api<Record<string, unknown>>('/me/email/confirmar/', { method: 'POST', body: { code } })),
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Código inválido ou expirado.');
     } finally {
@@ -33,7 +52,7 @@ export function EmailCode({ email, onConfirmed, onLater }: Props) {
   async function resend() {
     setError('');
     try {
-      await api('/me/email/codigo/', { method: 'POST' });
+      await (resendCode ? resendCode() : api('/me/email/codigo/', { method: 'POST' }));
       setMessage('Enviamos um novo código.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível reenviar agora.');
@@ -42,8 +61,10 @@ export function EmailCode({ email, onConfirmed, onLater }: Props) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Confirme seu e-mail</Text>
-      <Text style={styles.body}>Digite o código de 6 dígitos que enviamos para {email}. Os avisos por e-mail começam depois disso.</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.body}>
+        {body ?? `Digite o código de 6 dígitos que enviamos para ${email}. Os avisos por e-mail começam depois disso.`}
+      </Text>
       <TextInput
         accessibilityLabel="Código de 6 dígitos"
         placeholder="000000"
@@ -57,14 +78,14 @@ export function EmailCode({ email, onConfirmed, onLater }: Props) {
         style={styles.input}
       />
       {error ? <Text style={styles.error}>{error}</Text> : message ? <Text style={styles.hint}>{message}</Text> : null}
-      <Button label={busy ? 'Confirmando…' : 'Confirmar e-mail'} disabled={busy || code.length !== 6} onPress={confirm} />
+      <Button label={busy ? 'Confirmando…' : confirmLabel} disabled={busy || code.length !== 6} onPress={confirm} />
       <View style={styles.links}>
         <Pressable accessibilityRole="button" onPress={resend} hitSlop={8}>
           <Text style={styles.link}>Reenviar código</Text>
         </Pressable>
         {onLater ? (
           <Pressable accessibilityRole="button" onPress={onLater} hitSlop={8}>
-            <Text style={styles.link}>Confirmar depois</Text>
+            <Text style={styles.link}>{laterLabel}</Text>
           </Pressable>
         ) : null}
       </View>
