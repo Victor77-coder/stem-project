@@ -19,7 +19,6 @@ import {
   GLOSSARY,
   PROFILE_COMORBIDITIES,
   TEAM,
-  seedHistory,
   type HistoryEvent,
   type HistoryIcon,
 } from '@/content/profile';
@@ -83,7 +82,8 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
   // Convidado apagando o e-mail: o registro é inativado na hora (RF02).
   const [removingEmail, setRemovingEmail] = useState(false);
   const [exportNote, setExportNote] = useState('');
-  const [history, setHistory] = useState<HistoryEvent[]>(() => (signedIn ? [] : seedHistory(profile)));
+  // RS008: sem conta, o histórico começa vazio (nada de exemplo) e só mostra o que a pessoa fez nesta sessão.
+  const [history, setHistory] = useState<HistoryEvent[]>([]);
   const [physicalDraft, setPhysicalDraft] = useState<PhysicalForm | null>(null);
   const shown = present(draft, profile, acceptedAt);
 
@@ -258,7 +258,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       {screen === 'about' ? <AboutScreen onBack={() => setScreen('hub')} /> : null}
       {screen === 'terms' ? (
         <TermsScreen
-          accepted={draft.tcleAccepted || shown.demo}
+          accepted={draft.tcleAccepted}
           when={shown.termsWhen}
           onBack={() => setScreen('hub')}
           onAccept={() => {
@@ -379,8 +379,8 @@ function AccountScreen({
   onCancel: () => void;
   onSave: (patch: Partial<RegistrationDraft>, events: HistoryEvent[], currentPassword: string) => void;
 }) {
-  const [name, setName] = useState(draft.name || (shown.demo ? shown.name : ''));
-  const [email, setEmail] = useState(draft.email || (shown.demo ? 'mn@gmail.com' : ''));
+  const [name, setName] = useState(draft.name);
+  const [email, setEmail] = useState(draft.email);
   const [cpf, setCpf] = useState(draft.cpf);
   const [currentPassword, setCurrentPassword] = useState('');
   const [nextPassword, setNextPassword] = useState('');
@@ -613,9 +613,9 @@ function LocationScreen({
   onCancel: () => void;
   onSave: (patch: Partial<RegistrationDraft>, events: HistoryEvent[]) => void;
 }) {
-  const [cep, setCep] = useState(draft.cep || (shown.demo ? shown.cep : ''));
-  const [city, setCity] = useState(draft.city || (shown.demo ? shown.city : ''));
-  const [uf, setUf] = useState(draft.uf || (shown.demo ? shown.uf : ''));
+  const [cep, setCep] = useState(draft.cep);
+  const [city, setCity] = useState(draft.city);
+  const [uf, setUf] = useState(draft.uf);
   const [address, setAddress] = useState(draft.address);
   const [allow, setAllow] = useState(draft.allowLocation);
   const [hint, setHint] = useState('');
@@ -1147,7 +1147,6 @@ function OptionSheet({
 }
 
 type Shown = {
-  demo: boolean;
   name: string;
   email: string;
   emailMasked: string;
@@ -1166,52 +1165,48 @@ type Shown = {
   termsWhen: string;
 };
 
+/** RS008: só o que está no cadastro. Nada de dado de exemplo quando falta algum campo. */
 function present(draft: RegistrationDraft, profile: ProfileType, acceptedAt: string | null): Shown {
-  const demo = !acceptedAt && !draft.name && !draft.email && !draft.weight && !draft.cep && !draft.cpf;
   const accepted = acceptedAt ? new Date(acceptedAt) : null;
   const acceptedDay = accepted ? accepted.toLocaleDateString('pt-BR') : '';
   const acceptedTime = accepted ? accepted.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
   const convidado = profile === 'convidado';
-  const sex: Sexo = draft.sex || (demo && !convidado ? 'feminino' : '');
-  const name = convidado ? draft.name || 'Convidado' : draft.name || 'Maria Silva';
-  const email = draft.email || (demo && !convidado ? 'mn@gmail.com' : '');
-  const city = draft.city || (demo && !convidado ? 'Maceió' : '');
-  const uf = draft.uf || (demo && !convidado ? 'AL' : '');
-  const cep = draft.cep || (demo && !convidado ? '57035-230' : '');
+  const sex: Sexo = draft.sex;
+  const name = draft.name || (convidado ? 'Convidado' : 'Seu perfil');
+  const { email, city, uf, cep } = draft;
   const place = city && uf ? `${city}/${uf}` : city || uf;
   return {
-    demo,
     name,
     email,
     emailMasked: email ? maskEmail(email) : '',
-    initials: convidado && !draft.name ? 'C' : initials(name),
+    initials: draft.name ? initials(draft.name) : convidado ? 'C' : '?',
     role: roleLabel(profile, sex),
-    weight: draft.weight || (demo && !convidado ? '68' : ''),
-    height: draft.height || (demo && !convidado ? '1,65' : ''),
+    weight: draft.weight,
+    height: draft.height,
     sex,
-    comorbidities: draft.comorbidities.length ? draft.comorbidities : demo && !convidado ? ['Hipertensão'] : [],
+    comorbidities: draft.comorbidities,
     cep,
     city,
     uf,
     locationLine: cep || place ? `CEP ${formatCep(cep) || '—'} · ${place || '—'}` : 'Informe seu CEP',
     tcleHub: accepted
       ? `TCLE v${draft.tcleVersion} aceito em ${acceptedDay}`
-      : draft.tcleAccepted || (demo && !convidado)
-        ? 'TCLE v1.0 aceito em 17/10/2026'
+      : draft.tcleAccepted
+        ? `TCLE v${draft.tcleVersion} aceito`
         : 'TCLE pendente',
     tcleDetail: accepted
       ? `Versão ${draft.tcleVersion} · aceito em ${acceptedDay} às ${acceptedTime}`
-      : draft.tcleAccepted || (demo && !convidado)
-        ? 'Versão 1.0 · aceito em 01/10/2026 às 21:15'
-        : 'Versão 1.0 · aceite pendente',
-    termsWhen: accepted ? `Aceito em ${acceptedDay}` : draft.tcleAccepted || demo ? 'Aceito em 17/10/2026' : 'Aceite pendente',
+      : draft.tcleAccepted
+        ? `Versão ${draft.tcleVersion} · aceito ao entrar`
+        : `Versão ${draft.tcleVersion} · aceite pendente`,
+    termsWhen: accepted ? `Aceito em ${acceptedDay}` : draft.tcleAccepted ? 'Aceito ao entrar' : 'Aceite pendente',
   };
 }
 
 function roleLabel(profile: ProfileType, sex: Sexo) {
   if (profile === 'convidado') return 'Convidado';
-  if (profile === 'receptor') return sex === 'masculino' ? 'Receptor' : 'Receptora';
-  return sex === 'masculino' ? 'Doador' : 'Doadora';
+  if (profile === 'receptor') return sex === 'feminino' ? 'Receptora' : 'Receptor';
+  return sex === 'feminino' ? 'Doadora' : 'Doador';
 }
 
 function sexLabel(sex: Sexo) {

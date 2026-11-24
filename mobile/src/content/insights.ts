@@ -17,49 +17,6 @@ export const KIND_LABEL: Record<NoticeKind, string> = {
   comunicado: 'Comunicado',
 };
 
-export const INBOX: Notice[] = [
-  {
-    id: 'mutirao',
-    kind: 'campanha',
-    title: 'Mutirão de cadastro de medula',
-    body: 'Sábado, 25/10, no Hemoal Maceió. Leve documento com foto.',
-    origin: 'Hemoal',
-    when: '09:12',
-    group: 'hoje',
-    read: false,
-  },
-  {
-    id: 'semana',
-    kind: 'evento',
-    title: 'Semana Nacional de Doação',
-    body: 'Palestras abertas sobre células-tronco no Cesmac.',
-    origin: 'Ministério da Saúde',
-    when: '08:30',
-    group: 'hoje',
-    read: false,
-  },
-  {
-    id: 'redome',
-    kind: 'comunicado',
-    title: 'Novo protocolo do REDOME',
-    body: 'Atualização nas regras de permanência no cadastro.',
-    origin: 'INCA',
-    when: '14/10',
-    group: 'semana',
-    read: true,
-  },
-  {
-    id: 'inverno',
-    kind: 'campanha',
-    title: 'Campanha de inverno',
-    body: 'Estoques de sangue baixos em Alagoas.',
-    origin: 'Hemoal',
-    when: '13/10',
-    group: 'semana',
-    read: true,
-  },
-];
-
 export const YEARS = ['2025', '2024', '2023'] as const;
 export type StatYear = (typeof YEARS)[number];
 

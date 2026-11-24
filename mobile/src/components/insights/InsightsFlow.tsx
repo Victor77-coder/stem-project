@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  INBOX,
   KIND_LABEL,
   UFS,
   YEARS,
@@ -43,7 +42,9 @@ const DEFAULT_PREFS: Prefs = {
 
 const errorText = (err: unknown) => (err instanceof Error ? err.message : 'Não foi possível salvar agora. Tente novamente.');
 
-let sessionInbox: Notice[] = INBOX;
+// Sem conta (convidado sem e-mail): avisos nacionais reais, lidos uma vez por sessão; lido e limpo ficam só no aparelho.
+let sessionInbox: Notice[] = [];
+let sessionLoaded = false;
 let sessionPrefs: Prefs = DEFAULT_PREFS;
 
 const FILTERS: { id: InboxFilter; label: string }[] = [
@@ -91,7 +92,16 @@ export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }
   const [askingCode, setAskingCode] = useState(false);
 
   useEffect(() => {
-    if (!signedIn) return;
+    if (!signedIn) {
+      if (sessionLoaded) return;
+      api<ApiNotice[]>('/avisos/', { auth: false })
+        .then((items) => {
+          sessionLoaded = true;
+          setNotices(items.map(toNotice));
+        })
+        .catch(() => undefined);
+      return;
+    }
     api<ApiNotice[]>('/me/inbox/')
       .then((items) => setNotices(items.map(toNotice)))
       .catch(() => undefined);

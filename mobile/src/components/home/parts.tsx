@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 type Ion = keyof typeof Ionicons.glyphMap;
@@ -108,28 +110,79 @@ export function QuickGrid({
   );
 }
 
-export function CampaignCard({ onPress }: { onPress?: () => void }) {
+type ApiCampaign = {
+  id: string;
+  name: string;
+  shortName: string;
+  city: string;
+  uf: string;
+  eventWhen: string | null;
+  source: string;
+  sourceDate: string;
+};
+
+type CampaignList = { results: ApiCampaign[] };
+
+/**
+ * RS008: campanha publicada pela equipe (unidade do tipo "campanha", com fonte e data), da UF do cadastro quando houver.
+ * Sem campanha publicada, a seção inteira some: o app não mostra exemplo.
+ */
+export function CampaignSection({ uf = '', onOpen }: { uf?: string; onOpen: () => void }) {
+  const [campaign, setCampaign] = useState<ApiCampaign | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const all = () => api<CampaignList>('/centros/?kind=campanha', { auth: false });
+    (uf ? api<CampaignList>(`/centros/?kind=campanha&uf=${encodeURIComponent(uf)}`, { auth: false }) : all())
+      .then((data) => (data.results.length || !uf ? data : all()))
+      .then((data) => {
+        if (alive) setCampaign(data.results[0] ?? null);
+      })
+      .catch(() => {
+        if (alive) setCampaign(null);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [uf]);
+
+  if (!campaign) return null;
+  const near = Boolean(uf) && campaign.uf === uf.toUpperCase();
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={styles.card}>
-      <View style={styles.row}>
-        <View style={[styles.well, { backgroundColor: colors.teal100 }]}>
-          <Ionicons name="megaphone-outline" size={20} color={colors.teal600} />
+    <>
+      <SectionTitle link="Ver todas" onLink={onOpen}>
+        {near ? 'Campanhas perto de você' : 'Campanhas'}
+      </SectionTitle>
+      <Pressable accessibilityRole="button" onPress={onOpen} style={styles.card}>
+        <View style={styles.row}>
+          <View style={[styles.well, { backgroundColor: colors.teal100 }]}>
+            <Ionicons name="megaphone-outline" size={20} color={colors.teal600} />
+          </View>
+          <View style={styles.copy}>
+            <Text style={styles.cardTitle}>{campaign.name}</Text>
+            <Text style={styles.cardMeta}>
+              {[campaign.shortName !== campaign.name ? campaign.shortName : '', `${campaign.city}/${campaign.uf}`]
+                .filter(Boolean)
+                .join(' · ')}
+            </Text>
+          </View>
         </View>
-        <View style={styles.copy}>
-          <Text style={styles.cardTitle}>Mutirão de cadastro de doadores de medula</Text>
-          <Text style={styles.cardMeta}>Hemoal · Maceió/AL · a 3,2 km</Text>
+        <View style={styles.chips}>
+          {campaign.eventWhen ? (
+            <View style={[styles.chip, { backgroundColor: colors.teal100 }]}>
+              <Text style={[styles.chipText, { color: colors.teal600 }]}>{campaign.eventWhen}</Text>
+            </View>
+          ) : null}
+          <View style={[styles.chip, { backgroundColor: colors.surfaceMuted }]}>
+            <Text style={[styles.chipText, { color: colors.textSecondary }]}>Campanha</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.chips}>
-        <View style={[styles.chip, { backgroundColor: colors.teal100 }]}>
-          <Text style={[styles.chipText, { color: colors.teal600 }]}>25 out · 8h–16h</Text>
-        </View>
-        <View style={[styles.chip, { backgroundColor: colors.surfaceMuted }]}>
-          <Text style={[styles.chipText, { color: colors.textSecondary }]}>Campanha</Text>
-        </View>
-      </View>
-      <Text style={styles.source}>Fonte: Ministério da Saúde · Publicado em 12/10/2026</Text>
-    </Pressable>
+        <Text style={styles.source}>
+          Fonte: {campaign.source}
+          {campaign.sourceDate ? ` · ${campaign.sourceDate}` : ''}
+        </Text>
+      </Pressable>
+    </>
   );
 }
 

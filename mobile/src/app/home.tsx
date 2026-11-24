@@ -10,11 +10,10 @@ import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { ProfileFlow } from '@/components/profile/ProfileFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import { type CenterFilter } from '@/content/centers';
-import { INBOX } from '@/content/insights';
 import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
-  CampaignCard,
+  CampaignSection,
   HomeHeader,
   JourneyCard,
   NoticeInvite,
@@ -28,8 +27,10 @@ import { api, withFallback } from '@/lib/api';
 import { onNoticeOpened } from '@/lib/push';
 import { colors } from '@/theme';
 
-function firstName(name: string, fallback: string) {
-  return name.trim().split(/\s+/)[0] || fallback;
+/** Sem nome no cadastro, a saudação fica neutra (RS008: nada de nome de exemplo). */
+function greeting(name: string) {
+  const first = name.trim().split(/\s+/)[0];
+  return first ? `Olá, ${first}` : 'Olá!';
 }
 
 function resolveProfile(query: string | string[] | undefined, saved: ProfileType | null): ProfileType {
@@ -58,6 +59,7 @@ function homeCard(kind: JourneyKind, current: number) {
 function DonorHome({
   name,
   sex,
+  uf,
   current,
   unread,
   open,
@@ -70,6 +72,7 @@ function DonorHome({
 }: {
   name: string;
   sex: Sexo;
+  uf: string;
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
@@ -85,8 +88,8 @@ function DonorHome({
   return (
     <>
       <HomeHeader
-        greeting={`Olá, ${firstName(name, 'Maria')}`}
-        chip={sex === 'masculino' ? 'Doador' : 'Doadora'}
+        greeting={greeting(name)}
+        chip={sex === 'feminino' ? 'Doadora' : 'Doador'}
         chipBg={colors.primary100}
         chipFg={colors.primary600}
         subtitle="Que bom ter você por aqui. Veja seus próximos passos."
@@ -139,10 +142,7 @@ function DonorHome({
           },
         ]}
       />
-      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
-        Campanhas perto de você
-      </SectionTitle>
-      <CampaignCard onPress={() => onCenters('campanha')} />
+      <CampaignSection uf={uf} onOpen={() => onCenters('campanha')} />
       <SectionTitle link="Ver mais" onLink={() => open({ name: 'library' })}>
         Recomendado para você
       </SectionTitle>
@@ -200,7 +200,7 @@ function ReceptorHome({
   return (
     <>
       <HomeHeader
-        greeting={`Olá, ${firstName(name, 'João')}`}
+        greeting={greeting(name)}
         chip={sex === 'feminino' ? 'Receptora' : 'Receptor'}
         chipBg={colors.teal100}
         chipFg={colors.teal600}
@@ -375,10 +375,7 @@ function ConvidadoHome({
         ]}
       />
       <ProfileInvite onPress={() => router.push('/profile')} />
-      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
-        Campanhas perto de você
-      </SectionTitle>
-      <CampaignCard onPress={() => onCenters('campanha')} />
+      <CampaignSection onOpen={() => onCenters('campanha')} />
     </>
   );
 }
@@ -392,7 +389,7 @@ export default function HomeScreen() {
   const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const [insight, setInsight] = useState<InsightScreen | null>(null);
-  const [unread, setUnread] = useState(() => INBOX.filter((item) => !item.read).length);
+  const [unread, setUnread] = useState(0);
   // Começa oculta: só aparece quando o painel ativa (sem conexão, continua oculta).
   const [journeyOn, setJourneyOn] = useState(false);
   const [channelsOff, setChannelsOff] = useState(false);
@@ -536,6 +533,7 @@ export default function HomeScreen() {
               <DonorHome
                 name={draft.name}
                 sex={draft.sex}
+                uf={draft.uf}
                 current={progress.doador}
                 unread={unread}
                 open={openLearn}
