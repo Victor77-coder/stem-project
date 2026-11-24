@@ -1,10 +1,11 @@
 """Novidades sobre medula óssea e células-tronco nos portais que publicam pela API pública do WordPress.
 
 Cada matéria vira só título, resumo, data e link para o original: o texto inteiro não é copiado. No STEM ela
-entra como rascunho da categoria Novidades e só aparece no app depois que a liga valida e publica (RS008).
+entra na categoria Novidades, publicada ou como rascunho conforme NOVIDADES_AUTO_PUBLISH (backend).
 
-O REDOME só publica sobre medula, então tudo entra. Ameo, SBTMO e Abrale também falam de doação de sangue,
-política de saúde e outros cânceres: dali só entra matéria que cita medula, células-tronco ou transplante.
+REDOME e SBTMO só publicam sobre medula e transplante, então tudo entra. Ameo e Abrale também falam de doação
+de sangue, política de saúde e outros cânceres: dali só entra matéria que cita medula, células-tronco,
+transplante ou terapia celular.
 """
 
 from __future__ import annotations
@@ -37,7 +38,8 @@ class Portal:
 PORTALS = (
     Portal('redome', 'REDOME/INCA', 'https://redome.inca.gov.br', filter_by_topic=False),
     Portal('ameo', 'Ameo', 'https://ameo.org.br', filter_by_topic=True),
-    Portal('sbtmo', 'SBTMO', 'https://sbtmo.org.br', filter_by_topic=True),
+    # Sociedade de transplante de medula: o filtro de tema perdia matérias como a do manual de terapia celular.
+    Portal('sbtmo', 'SBTMO', 'https://sbtmo.org.br', filter_by_topic=False),
     Portal('abrale', 'Abrale', 'https://abrale.org.br', filter_by_topic=True),
 )
 SOURCE_LABEL = 'Portais REDOME/INCA, Ameo, SBTMO e Abrale (API pública do WordPress)'
@@ -52,7 +54,7 @@ SUMMARY_LIMIT = 600
 USER_AGENT = 'STEM-coletor/0.1 (novidades publicas: titulo, resumo e link)'
 
 # Comparado sem acento e em minúsculas.
-TOPIC = re.compile(r'\b(medula|celulas?[- ]tronco|tmo|tcth|transplantes?|redome|hematopoi?et\w*|cordao umbilical)\b')
+TOPIC = re.compile(r'\b(medula|celulas?[- ]tronco|tmo|tcth|transplantes?|redome|hematopoi?et\w*|cordao umbilical|terapias? celular(es)?)\b')
 # "[…]", "Leia mais" e o "…" que alguns temas põem depois do ponto final.
 READ_MORE = re.compile(r'\s*(\[(…|\.\.\.)\]|(leia|continue lendo|saiba) mais\.?|(?<=[.!?])…)\s*$', re.I)
 
