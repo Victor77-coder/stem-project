@@ -13,10 +13,9 @@ import Login from './pages/Login'
 import NotificationForm from './pages/notifications/NotificationForm'
 import NotificationList from './pages/notifications/NotificationList'
 import Reports from './pages/reports/Reports'
+import Support from './pages/support/Support'
 import UserProfile from './pages/users/UserProfile'
 import UsersList from './pages/users/UsersList'
-
-const ComingSoon = () => <p className="p-10 text-center text-sm text-ink/60">Módulo em construção.</p>
 
 export default function App() {
   return (
@@ -42,9 +41,7 @@ export default function App() {
             <Route path="/cadastros/novo" element={<CenterForm />} />
             <Route path="/cadastros/:id/editar" element={<CenterForm />} />
             <Route path="/relatorios" element={<Reports />} />
-            {['/suporte'].map((p) => (
-              <Route key={p} path={p} element={<ComingSoon />} />
-            ))}
+            <Route path="/suporte" element={<Support />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

@@ -205,3 +205,28 @@ export interface Reports {
   desde: string
 }
 
+export interface LogEntry {
+  id: number
+  quando: string
+  tipo: string
+  tipoLabel: string
+  objeto: string
+  pessoa: string
+  acao: string
+}
+
+export interface ActionLog {
+  itens: LogEntry[]
+  tipos: { id: string; label: string }[]
+  limite: number
+}
+
+export interface AccessRequest {
+  id: number
+  email: string
+  criadoEm: string
+  situacao: 'pendente' | 'atendido' | 'recusado'
+  atendidoPor: string
+  atendidoEm: string | null
+  jaTemConta: boolean
+}
