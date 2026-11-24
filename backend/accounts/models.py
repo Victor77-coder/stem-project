@@ -173,10 +173,18 @@ class StaffProfile(models.Model):
 
 
 class AccessRequest(models.Model):
-    """Pedido de acesso ao painel feito na tela de login."""
+    """Pedido de acesso ao painel feito na tela de login. Um administrador atende (criando a conta) ou recusa (RF13)."""
+
+    class State(models.TextChoices):
+        PENDENTE = 'pendente', 'Pendente'
+        ATENDIDO = 'atendido', 'Atendido'
+        RECUSADO = 'recusado', 'Recusado'
 
     email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
+    situacao = models.CharField(max_length=10, choices=State.choices, default=State.PENDENTE)
+    atendido_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+    atendido_em = models.DateTimeField(null=True, blank=True)
 
 
 def _hash_code(code: str) -> str:
