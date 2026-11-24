@@ -25,7 +25,8 @@ export default function TermsScreen() {
       else router.replace('/convidado');
       return;
     }
-    router.push('/physical');
+    // RNF05/RS001: o TCLE vem antes de qualquer formulário; os dados da conta só depois do aceite.
+    router.push('/register');
   }
 
   return (
@@ -34,7 +35,7 @@ export default function TermsScreen() {
         <NavPair
           onLeft={() => {
             if (router.canGoBack()) router.back();
-            else router.replace(isConvidado ? '/convidado' : '/register');
+            else router.replace(isConvidado ? '/convidado' : '/profile');
           }}
           onRight={goNext}
           rightDisabled={!draft.tcleAccepted}
@@ -43,8 +44,8 @@ export default function TermsScreen() {
     >
       <StepHeader
         title={isConvidado ? 'Termos de uso' : 'Consentimento'}
-        subtitle={isConvidado ? 'Leia e aceite o termo para continuar.' : 'Leia e aceite o termo para concluir.'}
-        step={isConvidado ? undefined : 3}
+        subtitle={isConvidado ? 'Leia e aceite o termo para continuar.' : 'Leia e aceite o termo antes de informar seus dados.'}
+        step={isConvidado ? undefined : 2}
         total={isConvidado ? undefined : totalSteps}
         brand={<Logo />}
       />
@@ -83,7 +84,7 @@ export default function TermsScreen() {
         <Text style={styles.link}>Ler o documento na íntegra</Text>
       </Pressable>
 
-      <Text style={styles.caption}>O aceite é obrigatório para concluir o cadastro.</Text>
+      <Text style={styles.caption}>O aceite vem antes de qualquer dado. Sem ele, nada é pedido nem gravado.</Text>
     </Screen>
   );
 }
