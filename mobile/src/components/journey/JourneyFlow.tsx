@@ -374,7 +374,8 @@ const styles = StyleSheet.create({
   pageSubtitle: { marginTop: 4, fontSize: 14, lineHeight: 21, color: colors.textSecondary },
   regionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
   regionChip: { height: 32, borderRadius: 999, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
-  regionOn: { backgroundColor: colors.primary900 },
+  // O filtro de região só aparece na jornada do receptor: usa o verde do cartão "Sua jornada de tratamento".
+  regionOn: { backgroundColor: colors.success },
   regionOff: { backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.borderSubtle },
   regionText: { fontSize: 13, lineHeight: 18, fontWeight: '600' },
   regionTextOn: { color: '#FFFFFF' },
