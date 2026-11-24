@@ -1,8 +1,20 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { api, channel, tokenStore, type Tokens } from '@/lib/api';
+import { forgetDevice, registerDevice } from '@/lib/push';
 
 export type ProfileType = 'doador' | 'receptor' | 'convidado';
 export type Sexo = 'feminino' | 'masculino' | 'outro' | '';
+
+/** Etapa "Quer receber avisos?" (RF10). Tudo começa desligado. */
+export type NoticeChoices = {
+  push: boolean;
+  email: boolean;
+  campaigns: boolean;
+  events: boolean;
+  official: boolean;
+};
+
+export const NO_NOTICES: NoticeChoices = { push: false, email: false, campaigns: false, events: false, official: false };
 
 export type RegistrationDraft = {
   profile: ProfileType | null;
@@ -21,12 +33,14 @@ export type RegistrationDraft = {
   allowLocation: boolean;
   tcleAccepted: boolean;
   tcleVersion: string;
+  notices: NoticeChoices;
 };
 
-type Me = Omit<RegistrationDraft, 'password'> & {
+type Me = Omit<RegistrationDraft, 'password' | 'notices'> & {
   phone: string;
   hasPassword: boolean;
   tcleAcceptedAt: string | null;
+  emailConfirmed: boolean;
 };
 
 const emptyDraft: RegistrationDraft = {
@@ -46,6 +60,7 @@ const emptyDraft: RegistrationDraft = {
   allowLocation: false,
   tcleAccepted: false,
   tcleVersion: '1.0',
+  notices: NO_NOTICES,
 };
 
 type Ctx = {
@@ -56,6 +71,10 @@ type Ctx = {
   signedIn: boolean;
   restoring: boolean;
   acceptedAt: string | null;
+  emailConfirmed: boolean;
+  setEmailConfirmed: (value: boolean) => void;
+  /** Quem já tem conta pula a etapa de avisos ao trocar de perfil: as preferências ficam no Perfil. */
+  totalSteps: number;
   signIn: (identifier: string, password: string) => Promise<void>;
   signUp: () => Promise<void>;
   changeProfile: () => Promise<void>;
@@ -72,6 +91,13 @@ function contact(email: string) {
   const value = email.trim();
   if (!value) return {};
   return value.includes('@') ? { email: value } : { phone: value };
+}
+
+export const hasEmailContact = (value: string) => value.trim().includes('@');
+
+function noticesBody(draft: RegistrationDraft) {
+  const { email, campaigns, events, official } = draft.notices;
+  return { email: email && hasEmailContact(draft.email), campaigns, events, official };
 }
 
 function clinicalBody(draft: RegistrationDraft) {
@@ -97,6 +123,7 @@ function registrationBody(draft: RegistrationDraft) {
     allowLocation: draft.allowLocation,
     tcleAccepted: draft.tcleAccepted,
     tcleVersion: draft.tcleVersion,
+    notices: noticesBody(draft),
     channel,
   };
   return draft.profile === 'convidado' ? base : { ...base, ...clinicalBody(draft) };
@@ -108,6 +135,7 @@ function patchBody(patch: Partial<RegistrationDraft>) {
   delete body.profile;
   delete body.tcleAccepted;
   delete body.tcleVersion;
+  delete body.notices;
   if (patch.weight !== undefined) body.weight = decimal(patch.weight);
   if (patch.height !== undefined) body.height = decimal(patch.height);
   if (patch.email !== undefined) Object.assign(body, { email: '', ...contact(patch.email) });
@@ -132,6 +160,7 @@ function fromMe(me: Me): RegistrationDraft {
     allowLocation: me.allowLocation,
     tcleAccepted: me.tcleAccepted,
     tcleVersion: me.tcleVersion || '1.0',
+    notices: NO_NOTICES,
   };
 }
 
@@ -140,12 +169,23 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
   const [restoring, setRestoring] = useState(true);
   const [acceptedAt, setAcceptedAt] = useState<string | null>(null);
+  const [emailConfirmed, setEmailConfirmed] = useState(false);
 
   const hydrate = useCallback((me: Me) => {
-    setDraft(fromMe(me));
+    // Mantém a escolha de avisos do cadastro: a conclusão ainda usa para pedir o código do e-mail.
+    setDraft((prev) => ({ ...fromMe(me), notices: prev.notices }));
     setAcceptedAt(me.tcleAcceptedAt);
+    setEmailConfirmed(me.emailConfirmed);
     setSignedIn(true);
   }, []);
+
+  useEffect(() => {
+    if (!signedIn) return;
+    // Aparelho novo ou token renovado: quem já ligou o push continua recebendo, sem pedir permissão de novo.
+    api<{ push: boolean }>('/me/preferences/')
+      .then((prefs) => (prefs.push ? registerDevice(false) : undefined))
+      .catch(() => undefined);
+  }, [signedIn]);
 
   const startSession = useCallback(
     async (data: Tokens & { me: Me }) => {
@@ -159,6 +199,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
     await tokenStore.save(null);
     setSignedIn(false);
     setAcceptedAt(null);
+    setEmailConfirmed(false);
     setDraft(emptyDraft);
   }, []);
 
@@ -179,6 +220,9 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
       signedIn,
       restoring,
       acceptedAt,
+      emailConfirmed,
+      setEmailConfirmed,
+      totalSteps: signedIn ? 5 : 6,
       async signIn(identifier, password) {
         const data = await api<Tokens & { me: Me }>('/auth/login/', {
           method: 'POST',
@@ -218,6 +262,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
         if (Object.keys(body).length) hydrate(await api<Me>('/me/', { method: 'PATCH', body }));
       },
       async signOut() {
+        await forgetDevice();
         const refresh = tokenStore.get()?.refresh;
         if (refresh) await api('/auth/logout/', { method: 'POST', body: { refresh }, auth: false }).catch(() => undefined);
         await clear();
@@ -227,7 +272,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
         await clear();
       },
     }),
-    [draft, signedIn, restoring, acceptedAt, startSession, hydrate, clear],
+    [draft, signedIn, restoring, acceptedAt, emailConfirmed, startSession, hydrate, clear],
   );
 
   return <RegistrationContext.Provider value={value}>{children}</RegistrationContext.Provider>;

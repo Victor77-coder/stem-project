@@ -9,7 +9,7 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
 export default function TermsScreen() {
-  const { draft, update, isConvidado } = useRegistration();
+  const { draft, update, isConvidado, totalSteps } = useRegistration();
 
   function goNext() {
     if (isConvidado) {
@@ -37,7 +37,7 @@ export default function TermsScreen() {
         title={isConvidado ? 'Termos de uso' : 'Consentimento'}
         subtitle={isConvidado ? 'Leia e aceite o termo para continuar.' : 'Leia e aceite o termo para concluir.'}
         step={isConvidado ? undefined : 3}
-        total={isConvidado ? undefined : 5}
+        total={isConvidado ? undefined : totalSteps}
         brand={<Logo />}
       />
 
