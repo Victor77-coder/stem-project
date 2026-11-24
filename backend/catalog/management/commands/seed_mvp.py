@@ -113,21 +113,21 @@ class Command(BaseCommand):
         return len(rows)
 
     def _journeys(self):
-        for order, (slug, title, short, summary, home, body, checklist, place, sus) in enumerate(data.DONOR_STEPS, 1):
+        for order, (slug, title, short, summary, home, body, checklist, place, sus, source) in enumerate(data.DONOR_STEPS, 1):
             JourneyStep.objects.update_or_create(
                 jornada='doador', slug=slug,
                 defaults={
                     'ordem': order, 'titulo': title, 'titulo_curto': short, 'resumo': summary, 'resumo_home': home,
-                    'corpo': body, 'checklist': checklist, 'local': place, 'fonte': data.JOURNEY_SOURCE,
+                    'corpo': body, 'checklist': checklist, 'local': place, 'fonte': source,
                     'o_que_stem_faz': data.STEM, 'o_que_sus_faz': sus, 'status': PublishStatus.PUBLICADO,
                 },
             )
-        for order, (slug, title, short, summary, home, by_region, body) in enumerate(data.RECEPTOR_STEPS, 1):
+        for order, (slug, title, short, summary, home, by_region, body, source) in enumerate(data.RECEPTOR_STEPS, 1):
             JourneyStep.objects.update_or_create(
                 jornada='receptor', slug=slug,
                 defaults={
                     'ordem': order, 'titulo': title, 'titulo_curto': short, 'resumo': summary, 'resumo_home': home,
-                    'resumo_por_regiao': by_region, 'corpo': body, 'fonte': data.JOURNEY_SOURCE,
+                    'resumo_por_regiao': by_region, 'corpo': body, 'fonte': source,
                     'o_que_stem_faz': 'Explica o que esperar. Não agenda, não altera fila e não promete prazo.',
                     'o_que_sus_faz': 'Indicação, regulação, busca de doador e o transplante.',
                     'status': PublishStatus.PUBLICADO,

@@ -313,13 +313,6 @@ def test_inbox_follows_preferences_and_region(donor):
     assert notice['id'] not in {item['id'] for item in client.get('/api/v1/me/inbox/').data}
 
 
-def test_journey_progress_is_saved(donor):
-    client = auth(APIClient(), donor['access'])
-    assert client.get('/api/v1/me/journey/').data == {'kind': 'doador', 'current': 1, 'region': 'maceio'}
-    assert client.patch('/api/v1/me/journey/', {'current': 3}, format='json').data['current'] == 3
-    assert client.patch('/api/v1/me/journey/', {'current': 9}, format='json').status_code == 400
-
-
 @override_settings(
     CACHES={
         'default': {

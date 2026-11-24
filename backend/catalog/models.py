@@ -251,8 +251,9 @@ class EstimateRule(models.Model):
 class AppSettings(models.Model):
     """Chaves do aplicativo controladas pelo painel. Registro único (pk=1)."""
 
+    # A Jornada é um guia pessoal (RF05/RF06): fica visível, e a liga ainda pode ocultá-la pelo painel.
     jornada_ativa = models.BooleanField(
-        default=False, help_text='Exibe a aba e os atalhos da Jornada no aplicativo.'
+        default=True, help_text='Exibe a aba e os atalhos da Jornada no aplicativo.'
     )
     atualizado_em = models.DateTimeField(auto_now=True)
 

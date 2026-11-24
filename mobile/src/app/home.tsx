@@ -10,7 +10,16 @@ import { OrientationFlow } from '@/components/orientation/OrientationFlow';
 import { ProfileFlow } from '@/components/profile/ProfileFlow';
 import { TabBar, type TabId } from '@/components/TabBar';
 import { type CenterFilter } from '@/content/centers';
-import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
+import {
+  NO_MARKS,
+  doneCount,
+  progressPercent,
+  stepStates,
+  stepsFor,
+  type JourneyKind,
+  type JourneyMarks,
+  type RegionId,
+} from '@/content/journey';
 import {
   ArticleList,
   CampaignSection,
@@ -39,20 +48,22 @@ function resolveProfile(query: string | string[] | undefined, saved: ProfileType
   return saved ?? 'doador';
 }
 
-function homeCard(kind: JourneyKind, current: number) {
-  const steps = kind === 'doador' ? DONOR_STEPS : receptorSteps('maceio');
-  if (current > steps.length) {
+/** Cartão do guia pessoal: mostra a primeira etapa que o usuário ainda não marcou. */
+function homeCard(kind: JourneyKind, marks: JourneyMarks, region: RegionId) {
+  const steps = stepsFor(kind, region);
+  const next = stepStates(steps, marks.done).indexOf('next');
+  if (next < 0) {
     return {
-      title: 'Todas as etapas concluídas',
-      body: 'Você percorreu o guia. Siga as orientações do hemocentro ou da equipe médica.',
+      title: 'Todas as etapas marcadas',
+      body: 'Você marcou todas as etapas do guia. Siga as orientações do hemocentro ou da equipe médica.',
       progress: '100%' as const,
     };
   }
-  const step = steps[current - 1];
+  const step = steps[next];
   return {
-    title: `Etapa ${current} de ${steps.length} · ${step.shortTitle}`,
+    title: `Etapa ${next + 1} de ${steps.length} · ${step.shortTitle}`,
     body: step.homeBody ?? step.summary,
-    progress: progressPercent(current),
+    progress: progressPercent(doneCount(steps, marks.done), steps.length),
   };
 }
 
@@ -60,7 +71,8 @@ function DonorHome({
   name,
   sex,
   uf,
-  current,
+  marks,
+  region,
   unread,
   open,
   onJourney,
@@ -73,7 +85,8 @@ function DonorHome({
   name: string;
   sex: Sexo;
   uf: string;
-  current: number;
+  marks: JourneyMarks;
+  region: RegionId;
   unread: number;
   open: (route: LearnRoute) => void;
   /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
@@ -84,7 +97,7 @@ function DonorHome({
   onNotifications: () => void;
   onNoticeInvite?: () => void;
 }) {
-  const card = homeCard('doador', current);
+  const card = homeCard('doador', marks, region);
   return (
     <>
       <HomeHeader
@@ -173,7 +186,8 @@ function DonorHome({
 function ReceptorHome({
   name,
   sex,
-  current,
+  marks,
+  region,
   unread,
   open,
   onJourney,
@@ -185,7 +199,8 @@ function ReceptorHome({
 }: {
   name: string;
   sex: Sexo;
-  current: number;
+  marks: JourneyMarks;
+  region: RegionId;
   unread: number;
   open: (route: LearnRoute) => void;
   /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
@@ -196,7 +211,7 @@ function ReceptorHome({
   onNotifications: () => void;
   onNoticeInvite?: () => void;
 }) {
-  const card = homeCard('receptor', current);
+  const card = homeCard('receptor', marks, region);
   return (
     <>
       <HomeHeader
@@ -386,20 +401,27 @@ export default function HomeScreen() {
   const [tab, setTab] = useState<TabId>('inicio');
   const [orientation, setOrientation] = useState(false);
   const [learnStack, setLearnStack] = useState<LearnRoute[]>([{ name: 'library' }]);
-  const [progress, setProgress] = useState({ doador: 2, receptor: 3 });
+  // Guia pessoal (RF05/RF06): as marcas são do perfil salvo na conta e começam vazias.
+  const [journey, setJourney] = useState<JourneyMarks & { kind: ProfileType | null; region: RegionId }>({
+    kind: null,
+    region: 'maceio',
+    ...NO_MARKS,
+  });
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const [insight, setInsight] = useState<InsightScreen | null>(null);
   const [unread, setUnread] = useState(0);
-  // Começa oculta: só aparece quando o painel ativa (sem conexão, continua oculta).
-  const [journeyOn, setJourneyOn] = useState(false);
+  // A Jornada aparece por padrão; o painel ainda pode ocultá-la. Sem conexão, continua visível (RNF08).
+  const [journeyOn, setJourneyOn] = useState(true);
   const [channelsOff, setChannelsOff] = useState(false);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'convidado' ? 'convidado' : profile;
-  const currentStep = profile === 'receptor' ? progress.receptor : progress.doador;
+  // Com ?perfil= de outro perfil (pré-visualização), o guia aparece vazio e nada é gravado.
+  const ownJourney = signedIn && journey.kind === profile;
+  const marks: JourneyMarks = ownJourney ? journey : NO_MARKS;
 
   useEffect(() => {
-    withFallback('/config/', { jornadaAtiva: false }).then(({ jornadaAtiva }) => {
+    withFallback('/config/', { jornadaAtiva: true }).then(({ jornadaAtiva }) => {
       const on = jornadaAtiva === true;
       setJourneyOn(on);
       if (!on) setTab((current) => (current === 'jornada' ? 'inicio' : current));
@@ -407,12 +429,15 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
+    // Recarrega também na troca de perfil: o guia do novo perfil começa sem marcas.
     if (!signedIn) return;
-    api<{ kind: ProfileType; current: number }>('/me/journey/')
-      .then(({ kind, current }) => {
-        if (kind !== 'convidado') setProgress((value) => ({ ...value, [kind]: current }));
-      })
+    api<JourneyMarks & { kind: ProfileType; region: RegionId }>('/me/journey/')
+      .then(({ kind, region, done, checklist }) => setJourney({ kind, region, done, checklist }))
       .catch(() => undefined);
+  }, [signedIn, draft.profile]);
+
+  useEffect(() => {
+    if (!signedIn) return;
     api<ApiNotice[]>('/me/inbox/')
       .then((items) => setUnread(items.filter((item) => !item.read).length))
       .catch(() => undefined);
@@ -436,13 +461,20 @@ export default function HomeScreen() {
     [],
   );
 
-  function completeStep() {
-    if (profile === 'convidado') return;
-    const next = Math.min(progress[profile] + 1, 7);
-    setProgress((value) => ({ ...value, [profile]: next }));
-    if (signedIn && draft.profile === profile) {
-      api('/me/journey/', { method: 'PATCH', body: { current: next } }).catch(() => undefined);
-    }
+  function saveJourney(patch: Partial<JourneyMarks & { region: RegionId }>) {
+    setJourney((value) => ({ ...value, ...patch }));
+    if (ownJourney) api('/me/journey/', { method: 'PATCH', body: patch }).catch(() => undefined);
+  }
+
+  function toggleStep(stepId: string) {
+    const done = marks.done.includes(stepId) ? marks.done.filter((id) => id !== stepId) : [...marks.done, stepId];
+    saveJourney({ done });
+  }
+
+  function toggleItem(stepId: string, label: string) {
+    const items = marks.checklist[stepId] ?? [];
+    const next = items.includes(label) ? items.filter((item) => item !== label) : [...items, label];
+    saveJourney({ checklist: { ...marks.checklist, [stepId]: next } });
   }
 
   function openLearn(route: LearnRoute) {
@@ -509,7 +541,8 @@ export default function HomeScreen() {
               <ReceptorHome
                 name={draft.name}
                 sex={draft.sex}
-                current={progress.receptor}
+                marks={marks}
+                region={journey.region}
                 unread={unread}
                 open={openLearn}
                 onJourney={journeyOn ? openJourney : undefined}
@@ -534,7 +567,8 @@ export default function HomeScreen() {
                 name={draft.name}
                 sex={draft.sex}
                 uf={draft.uf}
-                current={progress.doador}
+                marks={marks}
+                region={journey.region}
                 unread={unread}
                 open={openLearn}
                 onJourney={journeyOn ? openJourney : undefined}
@@ -556,8 +590,11 @@ export default function HomeScreen() {
         ) : tab === 'jornada' ? (
           <JourneyFlow
             kind={journeyKind}
-            current={currentStep}
-            onComplete={completeStep}
+            marks={marks}
+            region={journey.region}
+            onRegion={(region) => saveJourney({ region })}
+            onToggleStep={toggleStep}
+            onToggleItem={toggleItem}
             onChooseProfile={(next) => {
               update({ profile: next });
               router.push('/profile');

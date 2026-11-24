@@ -66,14 +66,32 @@ class CodeSerializer(serializers.Serializer):
 
 
 class JourneySerializer(serializers.ModelSerializer):
+    """Marcas do guia pessoal. Só aceita as etapas do perfil do titular (`kind` no contexto)."""
+
+    done = serializers.ListField(child=serializers.CharField(max_length=40), max_length=10, required=False)
+    checklist = serializers.DictField(
+        child=serializers.ListField(child=serializers.CharField(max_length=120), max_length=10), required=False
+    )
+
     class Meta:
         model = JourneyProgress
-        fields = ('current', 'region')
+        fields = ('done', 'checklist', 'region')
 
-    def validate_current(self, value):
-        if not 1 <= value <= 7:
-            raise serializers.ValidationError('Etapa inválida.')
-        return value
+    def _steps(self) -> tuple[str, ...]:
+        return JourneyProgress.STEPS[self.context['kind']]
+
+    def _check_steps(self, ids) -> None:
+        unknown = sorted(set(ids) - set(self._steps()))
+        if unknown:
+            raise serializers.ValidationError(f'Etapa inválida: {", ".join(unknown)}.')
+
+    def validate_done(self, value):
+        self._check_steps(value)
+        return [step for step in self._steps() if step in value]
+
+    def validate_checklist(self, value):
+        self._check_steps(value)
+        return {step: list(dict.fromkeys(items)) for step, items in value.items() if items}
 
 
 def _preferences(participant) -> Preferences:
@@ -166,10 +184,10 @@ def journey(request):
     if request.method != 'GET':
         if participant.profile == 'convidado':
             return Response({'detail': 'A jornada é acompanhada por doadores e receptores.'}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = JourneySerializer(progress, data=request.data, partial=True)
+        serializer = JourneySerializer(progress, data=request.data, partial=True, context={'kind': participant.profile})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-    return Response({'kind': participant.profile, **JourneySerializer(progress).data})
+    return Response({'kind': participant.profile, 'done': progress.done, 'checklist': progress.checklist, 'region': progress.region})
 
 
 @api_view(['GET'])

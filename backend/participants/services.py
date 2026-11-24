@@ -342,7 +342,8 @@ def change_profile(participant: Participant, data: dict) -> None:
     participant.save(update_fields=['profile'])
     if old_label != participant.get_profile_display():
         ChangeEvent.objects.create(participant=participant, icon='person', title='Perfil alterado', detail=f'{old_label} → {participant.get_profile_display()}', actor=user)
-        JourneyProgress.objects.update_or_create(participant=participant, defaults={'current': 1})
+        # As marcas eram da jornada do perfil anterior: o guia novo começa sem etapas feitas.
+        JourneyProgress.objects.update_or_create(participant=participant, defaults={'done': [], 'checklist': {}})
     if not _has_current_consent(user, new_profile):
         _accept(user, new_profile, data, data.get('channel') or Channel.WEB)
 
@@ -374,6 +375,8 @@ def anonymize(participant: Participant) -> None:
     participant.history.update(detail='')
     ChangeEvent.objects.create(participant=participant, icon='person', title='Conta inativada', actor=None)
     SavedContent.objects.filter(participant=participant).delete()
+    # As etapas marcadas no guia dizem respeito à saúde do titular (doação ou tratamento).
+    JourneyProgress.objects.filter(participant=participant).update(done=[], checklist={})
     Preferences.objects.filter(participant=participant).update(push=False, email=False, campaigns=False, events=False, official=False)
 
 
@@ -423,6 +426,9 @@ def export(participant: Participant) -> dict:
     data['history'] = [
         {'title': item.title, 'detail': item.detail, 'when': item.created_at.isoformat()} for item in participant.history.all()
     ]
+    journey = JourneyProgress.objects.filter(participant=participant).first()
+    if journey is not None:
+        data['journey'] = {'region': journey.region, 'done': journey.done, 'checklist': journey.checklist}
     data['logins'] = [
         {'channel': item.channel, 'when': item.created_at.isoformat()} for item in participant.user.logins.all()[:50]
     ]
