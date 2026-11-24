@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import NotificationForm from './pages/notifications/NotificationForm'
 import NotificationList from './pages/notifications/NotificationList'
+import Reports from './pages/reports/Reports'
 import UserProfile from './pages/users/UserProfile'
 import UsersList from './pages/users/UsersList'
 
@@ -40,7 +41,8 @@ export default function App() {
             <Route path="/cadastros" element={<CenterList />} />
             <Route path="/cadastros/novo" element={<CenterForm />} />
             <Route path="/cadastros/:id/editar" element={<CenterForm />} />
-            {['/relatorios', '/suporte'].map((p) => (
+            <Route path="/relatorios" element={<Reports />} />
+            {['/suporte'].map((p) => (
               <Route key={p} path={p} element={<ComingSoon />} />
             ))}
           </Route>

@@ -189,3 +189,19 @@ export interface Center {
   atualizado_em: string
 }
 
+type ProfileCounts = Record<'doador' | 'receptor' | 'convidado', number | null>
+
+/** Relatórios do painel (GET /staff/relatorios/). null = recorte de 1 a 4 pessoas, mostrado como "menos de 5". */
+export interface Reports {
+  participantes: {
+    ativos: ProfileCounts
+    inativos: number
+    porUf: ({ uf: string } & ProfileCounts)[]
+  }
+  meses: { mes: string; novos: ProfileCounts; inativacoes: number }[]
+  avisos: { publicados: number; envios: Record<'push' | 'email', Record<'enviado' | 'falhou' | 'ignorado', number>> }
+  conteudos: Record<string, number>
+  recorteMinimo: number
+  desde: string
+}
+
