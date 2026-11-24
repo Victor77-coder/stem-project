@@ -216,6 +216,26 @@ export function ProfileInvite({ onPress }: { onPress: () => void }) {
   );
 }
 
+/** Contas sem push nem e-mail ligados (o opt-in começa desligado). Some quando algum canal é ativado. */
+export function NoticeInvite({ onPress }: { onPress: () => void }) {
+  return (
+    <View style={styles.invite}>
+      <View style={styles.row}>
+        <View style={[styles.well, styles.inviteWell]}>
+          <Ionicons name="notifications-outline" size={20} color={colors.primary600} />
+        </View>
+        <View style={styles.copy}>
+          <Text style={styles.cardTitle}>Ative avisos de campanhas perto de você</Text>
+          <Text style={styles.cardMeta}>Receba no celular ou por e-mail só o que escolher. Pode desligar quando quiser.</Text>
+        </View>
+      </View>
+      <Pressable accessibilityRole="button" onPress={onPress} style={styles.inviteButton}>
+        <Text style={styles.inviteButtonText}>Escolher avisos</Text>
+      </Pressable>
+    </View>
+  );
+}
+
 export function Soon({ title }: { title: string }) {
   return (
     <View style={styles.soon}>

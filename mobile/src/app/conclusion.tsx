@@ -1,12 +1,24 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
+import { EmailCode } from '@/components/EmailCode';
 import { Screen } from '@/components/Screen';
-import { useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
+import { hasEmailContact, useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
+import { api } from '@/lib/api';
 import { colors, type } from '@/theme';
 
 type Step = { icon: keyof typeof Ionicons.glyphMap; text: string };
+type Channels = { push: boolean; email: boolean };
+
+/** O passo dos avisos segue o que ficou ligado de fato: o push depende da permissão do sistema e o e-mail, do código. */
+function noticeStep(channels: Channels, emailPending: boolean): Step {
+  const on = [channels.push && 'celular', channels.email && 'e-mail'].filter((item): item is string => Boolean(item));
+  if (on.length) return { icon: 'notifications', text: `Avisos ativados: ${on.join(' e ')}` };
+  if (emailPending) return { icon: 'mail-unread-outline', text: 'Confirme seu e-mail em Perfil › Notificações para receber avisos' };
+  return { icon: 'notifications-outline', text: 'Ative avisos de campanhas em Perfil › Notificações' };
+}
 
 function firstName(name: string) {
   return name.trim().split(/\s+/)[0] ?? '';
@@ -30,21 +42,32 @@ function nextSteps(profile: ProfileType | null): Step[] {
     return [
       { icon: 'git-branch-outline', text: 'Conheça as etapas do transplante' },
       { icon: 'location-outline', text: 'Encontre o centro mais próximo' },
-      { icon: 'notifications-outline', text: 'Ative avisos de campanhas' },
     ];
   }
   return [
     { icon: 'git-branch-outline', text: 'Conheça as 6 etapas da doação' },
     { icon: 'location-outline', text: 'Encontre o hemocentro mais próximo' },
-    { icon: 'notifications-outline', text: 'Ative avisos de campanhas' },
   ];
 }
 
 export default function ConclusionScreen() {
-  const { draft } = useRegistration();
+  const { draft, signedIn, emailConfirmed, setEmailConfirmed } = useRegistration();
+  const [later, setLater] = useState(false);
+  const [channels, setChannels] = useState<Channels | null>(null);
   const name = firstName(draft.name);
   const noun = profileNoun(draft.profile, draft.sex);
-  const steps = nextSteps(draft.profile);
+  const emailPending = draft.notices.email && hasEmailContact(draft.email) && !emailConfirmed;
+  const askCode = signedIn && emailPending && !later;
+
+  // Convidado sem contato não cria conta: sem canais, sem passo de avisos.
+  useEffect(() => {
+    if (!signedIn) return;
+    api<Channels>('/me/preferences/')
+      .then(({ push, email }) => setChannels({ push, email }))
+      .catch(() => setChannels(null));
+  }, [signedIn, emailConfirmed]);
+
+  const steps = channels ? [...nextSteps(draft.profile), noticeStep(channels, emailPending)] : nextSteps(draft.profile);
 
   const subtitle =
     draft.profile === 'convidado'
@@ -53,7 +76,7 @@ export default function ConclusionScreen() {
 
   return (
     <Screen
-      scroll={false}
+      scroll={askCode}
       footer={
         <Button
           label="Ir para o início"
@@ -68,15 +91,19 @@ export default function ConclusionScreen() {
         <Text style={styles.title}>{name ? `Tudo pronto, ${name}!` : 'Tudo pronto!'}</Text>
         <Text style={styles.body}>{subtitle}</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Próximos passos</Text>
-          {steps.map((step) => (
-            <View key={step.text} style={styles.stepRow}>
-              <Ionicons name={step.icon} size={18} color={colors.primary} />
-              <Text style={styles.stepText}>{step.text}</Text>
-            </View>
-          ))}
-        </View>
+        {askCode ? (
+          <EmailCode email={draft.email.trim()} onConfirmed={() => setEmailConfirmed(true)} onLater={() => setLater(true)} />
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Próximos passos</Text>
+            {steps.map((step) => (
+              <View key={step.text} style={styles.stepRow}>
+                <Ionicons name={step.icon} size={18} color={colors.primary} />
+                <Text style={styles.stepText}>{step.text}</Text>
+              </View>
+            ))}
+          </View>
+        )}
       </View>
     </Screen>
   );

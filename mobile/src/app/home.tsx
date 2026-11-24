@@ -18,6 +18,7 @@ import {
   EstimateCard,
   HomeHeader,
   JourneyCard,
+  NoticeInvite,
   ProfileInvite,
   QuickGrid,
   SectionTitle,
@@ -25,6 +26,7 @@ import {
 } from '@/components/home/parts';
 import { useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
 import { api, withFallback } from '@/lib/api';
+import { onNoticeOpened } from '@/lib/push';
 import { colors } from '@/theme';
 
 function firstName(name: string, fallback: string) {
@@ -65,6 +67,7 @@ function DonorHome({
   onCenters,
   onStats,
   onNotifications,
+  onNoticeInvite,
 }: {
   name: string;
   sex: Sexo;
@@ -77,6 +80,7 @@ function DonorHome({
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
+  onNoticeInvite?: () => void;
 }) {
   const card = homeCard('doador', current);
   return (
@@ -90,6 +94,7 @@ function DonorHome({
         unread={unread}
         onNotifications={onNotifications}
       />
+      {onNoticeInvite ? <NoticeInvite onPress={onNoticeInvite} /> : null}
       {onJourney && (
         <JourneyCard
           background={colors.primary600}
@@ -178,6 +183,7 @@ function ReceptorHome({
   onCenters,
   onStats,
   onNotifications,
+  onNoticeInvite,
 }: {
   name: string;
   sex: Sexo;
@@ -191,6 +197,7 @@ function ReceptorHome({
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
+  onNoticeInvite?: () => void;
 }) {
   const card = homeCard('receptor', current);
   return (
@@ -204,6 +211,7 @@ function ReceptorHome({
         unread={unread}
         onNotifications={onNotifications}
       />
+      {onNoticeInvite ? <NoticeInvite onPress={onNoticeInvite} /> : null}
       {onJourney && (
         <JourneyCard
           background={colors.success}
@@ -283,12 +291,14 @@ function ConvidadoHome({
   onCenters,
   onStats,
   onNotifications,
+  onNoticeInvite,
 }: {
   unread: number;
   open: (route: LearnRoute) => void;
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
+  onNoticeInvite?: () => void;
 }) {
   return (
     <>
@@ -301,6 +311,7 @@ function ConvidadoHome({
         unread={unread}
         onNotifications={onNotifications}
       />
+      {onNoticeInvite ? <NoticeInvite onPress={onNoticeInvite} /> : null}
       <JourneyCard
         background={colors.primary900}
         accent={colors.primary900}
@@ -364,6 +375,7 @@ export default function HomeScreen() {
   const [unread, setUnread] = useState(() => INBOX.filter((item) => !item.read).length);
   // Começa oculta: só aparece quando o painel ativa (sem conexão, continua oculta).
   const [journeyOn, setJourneyOn] = useState(false);
+  const [channelsOff, setChannelsOff] = useState(false);
   const profile = resolveProfile(perfil, draft.profile);
   const learn = learnStack[learnStack.length - 1];
   const journeyKind = profile === 'convidado' ? 'convidado' : profile;
@@ -388,6 +400,24 @@ export default function HomeScreen() {
       .then((items) => setUnread(items.filter((item) => !item.read).length))
       .catch(() => undefined);
   }, [signedIn]);
+
+  useEffect(() => {
+    // Recarrega ao voltar das Preferências: o convite some assim que um canal é ligado.
+    if (!signedIn || insight) return;
+    api<{ push: boolean; email: boolean }>('/me/preferences/')
+      .then((prefs) => setChannelsOff(!prefs.push && !prefs.email))
+      .catch(() => undefined);
+  }, [signedIn, insight]);
+
+  useEffect(
+    () =>
+      onNoticeOpened(() => {
+        setOrientation(false);
+        setTab('inicio');
+        setInsight('inbox');
+      }),
+    [],
+  );
 
   function completeStep() {
     if (profile === 'convidado') return;
@@ -462,6 +492,7 @@ export default function HomeScreen() {
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
+                onNoticeInvite={signedIn && channelsOff ? () => openInsight('prefs') : undefined}
               />
             ) : profile === 'convidado' ? (
               <ConvidadoHome
@@ -470,6 +501,7 @@ export default function HomeScreen() {
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
+                onNoticeInvite={signedIn && channelsOff ? () => openInsight('prefs') : undefined}
               />
             ) : (
               <DonorHome
@@ -483,6 +515,7 @@ export default function HomeScreen() {
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
+                onNoticeInvite={signedIn && channelsOff ? () => openInsight('prefs') : undefined}
               />
             )}
           </ScrollView>
