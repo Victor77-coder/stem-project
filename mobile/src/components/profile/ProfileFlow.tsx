@@ -23,8 +23,10 @@ import {
   type HistoryEvent,
   type HistoryIcon,
 } from '@/content/profile';
-import { useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
+import { EmailCode } from '@/components/EmailCode';
+import { hasEmailContact, useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
+import { useConsentDoc } from '@/lib/consent';
 import { requestLocationPermission } from '@/lib/location';
 import { colors } from '@/theme';
 
@@ -75,9 +77,11 @@ function fromApi(item: ApiHistory): HistoryEvent {
 }
 
 export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfile }: Props) {
-  const { draft, update, signedIn, acceptedAt, save, signOut, deactivate } = useRegistration();
+  const { draft, update, signedIn, acceptedAt, save, signOut, deactivate, enterAsGuest, confirmGuestCode } = useRegistration();
   const [screen, setScreen] = useState<Screen>('hub');
   const [confirm, setConfirm] = useState(false);
+  // Convidado apagando o e-mail: o registro é inativado na hora (RF02).
+  const [removingEmail, setRemovingEmail] = useState(false);
   const [exportNote, setExportNote] = useState('');
   const [history, setHistory] = useState<HistoryEvent[]>(() => (signedIn ? [] : seedHistory(profile)));
   const [physicalDraft, setPhysicalDraft] = useState<PhysicalForm | null>(null);
@@ -126,6 +130,17 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
     router.replace('/welcome');
   }
 
+  async function removeGuestEmail() {
+    try {
+      await deactivate('');
+    } catch (err) {
+      Alert.alert('Não foi possível apagar', err instanceof Error ? err.message : 'Tente novamente.');
+      return;
+    }
+    setRemovingEmail(false);
+    router.replace('/welcome');
+  }
+
   async function exportData() {
     if (!signedIn || !shown.email) {
       setExportNote('Adicione um e-mail em Dados da conta para receber a cópia.');
@@ -156,6 +171,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       {screen === 'hub' ? (
         <Hub
           profile={profile}
+          signedIn={signedIn}
           shown={shown}
           onOpen={setScreen}
           onNotifications={onNotifications}
@@ -172,7 +188,15 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
         />
       ) : null}
       {screen === 'contact' ? (
-        <ContactScreen draft={draft} onCancel={() => setScreen('hub')} onSave={(patch) => void persist(patch, [])} />
+        <ContactScreen
+          draft={draft}
+          signedIn={signedIn}
+          onCancel={() => setScreen('hub')}
+          onSave={(email) => void persist({ email }, [])}
+          onRemove={() => setRemovingEmail(true)}
+          onEnter={(email) => enterAsGuest({ email })}
+          onConfirmCode={(code, email) => confirmGuestCode(code, { email })}
+        />
       ) : null}
       {screen === 'physical' ? (
         <PhysicalScreen
@@ -245,6 +269,15 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       ) : null}
 
       <ConfirmSheet visible={confirm} onCancel={() => setConfirm(false)} onConfirm={(password) => void inactivate(password)} />
+      <ConfirmSheet
+        visible={removingEmail}
+        askPassword={false}
+        title="Apagar o e-mail?"
+        body="Seu acesso de convidado é encerrado e o e-mail é apagado na hora. Você continua podendo usar o app sem cadastro."
+        confirmLabel="Sim, apagar e-mail"
+        onCancel={() => setRemovingEmail(false)}
+        onConfirm={() => void removeGuestEmail()}
+      />
     </View>
   );
 }
@@ -256,6 +289,7 @@ function Hub({
   onNotifications,
   onLogout,
   onChooseProfile,
+  signedIn,
 }: {
   profile: ProfileType;
   shown: Shown;
@@ -263,6 +297,7 @@ function Hub({
   onNotifications: () => void;
   onLogout: () => void;
   onChooseProfile: () => void;
+  signedIn: boolean;
 }) {
   const convidado = profile === 'convidado';
   return (
@@ -293,7 +328,12 @@ function Hub({
 
       <Text style={styles.kicker}>{convidado ? 'CONTA' : 'MEUS DADOS'}</Text>
       {convidado ? (
-        <Row icon="mail-outline" title="Contato (opcional)" caption="Adicione um e-mail para receber novidades" onPress={() => onOpen('contact')} />
+        <Row
+          icon="mail-outline"
+          title="Contato (opcional)"
+          caption={shown.emailMasked || 'Adicione um e-mail para receber avisos'}
+          onPress={() => onOpen('contact')}
+        />
       ) : (
         <>
           <Row icon="person-outline" title="Dados da conta" caption="E-mail, senha e contato" onPress={() => onOpen('account')} />
@@ -315,18 +355,15 @@ function Hub({
         <Row icon="shield-checkmark-outline" title="Privacidade e consentimento" caption={shown.tcleHub} onPress={() => onOpen('privacy')} />
       )}
 
-      {convidado ? null : (
-        <>
-          <Text style={styles.kicker}>AJUDA</Text>
-          <Row icon="book-outline" title="Glossário" caption="Termos como HLA, REDOME e TCTH" onPress={() => onOpen('glossary')} />
-          <Row icon="help-circle-outline" title="Ajuda e suporte" onPress={() => onOpen('help')} />
-          <Row icon="information-circle-outline" title="Sobre nós" onPress={() => onOpen('about')} />
-          <Pressable accessibilityRole="button" onPress={onLogout} style={styles.logout}>
-            <Ionicons name="log-out-outline" size={16} color={colors.danger600} />
-            <Text style={styles.logoutText}>Sair da conta</Text>
-          </Pressable>
-        </>
-      )}
+      <Text style={styles.kicker}>AJUDA</Text>
+      <Row icon="book-outline" title="Glossário" caption="Termos como HLA, REDOME e TCTH" onPress={() => onOpen('glossary')} />
+      <Row icon="help-circle-outline" title="Ajuda e suporte" onPress={() => onOpen('help')} />
+      <Row icon="information-circle-outline" title="Sobre nós" onPress={() => onOpen('about')} />
+      {/* Convidado sem e-mail não tem conta: "Sair" só volta para a tela inicial. */}
+      <Pressable accessibilityRole="button" onPress={onLogout} style={styles.logout}>
+        <Ionicons name="log-out-outline" size={16} color={colors.danger600} />
+        <Text style={styles.logoutText}>{signedIn ? 'Sair da conta' : 'Sair'}</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -388,27 +425,96 @@ function AccountScreen({
   );
 }
 
+/** Contato do convidado (RF02): só e-mail. Apagar encerra o registro; sem conta, informar o e-mail cria uma. */
 function ContactScreen({
   draft,
+  signedIn,
   onCancel,
   onSave,
+  onRemove,
+  onEnter,
+  onConfirmCode,
 }: {
   draft: RegistrationDraft;
+  signedIn: boolean;
   onCancel: () => void;
-  onSave: (patch: Partial<RegistrationDraft>) => void;
+  onSave: (email: string) => void;
+  onRemove: () => void;
+  onEnter: (email: string) => Promise<'session' | 'code'>;
+  onConfirmCode: (code: string, email: string) => Promise<void>;
 }) {
-  const [name, setName] = useState(draft.name);
   const [email, setEmail] = useState(draft.email);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [askCode, setAskCode] = useState(false);
+  const value = email.trim();
+
+  async function submit() {
+    setError('');
+    if (!value) {
+      if (signedIn && draft.email) onRemove();
+      else onCancel();
+      return;
+    }
+    if (!hasEmailContact(value)) {
+      setError('Informe um e-mail válido. No perfil convidado, o contato é só por e-mail.');
+      return;
+    }
+    if (signedIn) {
+      onSave(value);
+      return;
+    }
+    setBusy(true);
+    try {
+      if ((await onEnter(value)) === 'code') setAskCode(true);
+      else onCancel();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível salvar o e-mail.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (askCode) {
+    return (
+      <View style={styles.fill}>
+        <TopBar title="Contato" onBack={() => setAskCode(false)} />
+        <ScrollView contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
+          <EmailCode
+            email={value}
+            title="Você já usou este e-mail"
+            body={`Digite o código de 6 dígitos que enviamos para ${value} para voltar ao seu acesso de convidado.`}
+            confirmLabel="Entrar"
+            laterLabel="Usar outro e-mail"
+            verify={async (code) => {
+              await onConfirmCode(code, value);
+              return {};
+            }}
+            resend={() => onEnter(value)}
+            onConfirmed={onCancel}
+            onLater={() => setAskCode(false)}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
-    <FormScreen
-      title="Contato"
-      onCancel={onCancel}
-      onSave={() => onSave({ name: name.trim(), email: email.trim() })}
-    >
-      <Text style={styles.pageSubtitle}>Opcional. Serve só para receber novidades. Este perfil não pede dados clínicos.</Text>
-      <Field label="Nome" value={name} onChangeText={setName} autoCapitalize="words" placeholder="Como devemos te chamar" />
-      <Field label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="voce@email.com" />
+    <FormScreen title="Contato" onCancel={onCancel} onSave={() => void submit()} saveLabel={busy ? 'Salvando…' : undefined}>
+      <Text style={styles.pageSubtitle}>
+        Opcional. Serve só para receber avisos e fica guardado por 12 meses desde o seu último acesso. Para apagar, deixe o
+        campo em branco e salve.
+      </Text>
+      <Field
+        label="E-mail"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        autoComplete="email"
+        keyboardType="email-address"
+        placeholder="voce@email.com"
+      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </FormScreen>
   );
 }
@@ -808,16 +914,20 @@ function TermsScreen({
   onBack: () => void;
   onAccept: () => void;
 }) {
+  const doc = useConsentDoc('termos');
   return (
     <View style={styles.fill}>
       <TopBar title="Termos de uso" onBack={onBack} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Termos de uso</Text>
+          <Text style={styles.panelTitle}>Termos de uso · versão {doc.version}</Text>
           <Text style={styles.rowCaption}>{accepted ? when : 'Aceite pendente'}</Text>
-          <Text style={styles.body}>
-            O perfil convidado usa o STEM para aprender. Não coletamos dados clínicos. Um e-mail é opcional, só para novidades. O app não agenda atendimento e não confirma compatibilidade.
-          </Text>
+          {doc.sections.map((section) => (
+            <Text key={section.title} style={styles.body}>
+              <Text style={styles.bodyStrong}>{section.title}. </Text>
+              {section.body}
+            </Text>
+          ))}
         </View>
         {accepted ? null : (
           <Pressable accessibilityRole="button" onPress={onAccept} style={[styles.primaryBtn, styles.blockBtn]}>
@@ -833,10 +943,18 @@ function ConfirmSheet({
   visible,
   onCancel,
   onConfirm,
+  askPassword = true,
+  title = 'Inativar sua conta?',
+  body = 'Seu perfil ficará inativo e seus dados pessoais serão anonimizados. Registros anonimizados são mantidos apenas para histórico, conforme a LGPD.',
+  confirmLabel = 'Sim, inativar conta',
 }: {
   visible: boolean;
   onCancel: () => void;
   onConfirm: (password: string) => void;
+  askPassword?: boolean;
+  title?: string;
+  body?: string;
+  confirmLabel?: string;
 }) {
   const [password, setPassword] = useState('');
   return (
@@ -847,13 +965,11 @@ function ConfirmSheet({
           <View style={styles.warnBadge}>
             <Ionicons name="warning-outline" size={22} color={colors.danger600} />
           </View>
-          <Text style={styles.sheetTitle}>Inativar sua conta?</Text>
-          <Text style={styles.sheetBody}>
-            Seu perfil ficará inativo e seus dados pessoais serão anonimizados. Registros anonimizados são mantidos apenas para histórico, conforme a LGPD.
-          </Text>
-          <Field label="Confirme com sua senha" value={password} onChangeText={setPassword} secureTextEntry />
+          <Text style={styles.sheetTitle}>{title}</Text>
+          <Text style={styles.sheetBody}>{body}</Text>
+          {askPassword ? <Field label="Confirme com sua senha" value={password} onChangeText={setPassword} secureTextEntry /> : null}
           <Pressable accessibilityRole="button" onPress={() => onConfirm(password)} style={styles.dangerBtn}>
-            <Text style={styles.primaryBtnText}>Sim, inativar conta</Text>
+            <Text style={styles.primaryBtnText}>{confirmLabel}</Text>
           </Pressable>
           <Pressable accessibilityRole="button" onPress={onCancel} style={styles.outlineBtn}>
             <Text style={styles.outlineBtnText}>Cancelar</Text>
@@ -1209,6 +1325,7 @@ const styles = StyleSheet.create({
   panel: { marginTop: 12, borderWidth: 1, borderColor: colors.borderSubtle, borderRadius: 16, padding: 14, gap: 10 },
   panelTitle: { fontSize: 15, lineHeight: 20, fontWeight: '700', color: colors.ink },
   body: { fontSize: 14, lineHeight: 21, color: colors.textSecondary },
+  bodyStrong: { fontWeight: '700', color: colors.ink },
   termRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   checkLine: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   checkText: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.ink },

@@ -15,7 +15,7 @@ from accounts.services import issue_tokens, record_login
 from accounts.throttling import scoped
 
 from . import services
-from .serializers import LoginSerializer, ParticipantInputSerializer, PasswordConfirmSerializer
+from .serializers import GuestCodeSerializer, LoginSerializer, ParticipantInputSerializer, PasswordConfirmSerializer
 
 INVALID_LOGIN = 'E-mail, telefone/CPF ou senha inválidos.'
 
@@ -39,8 +39,25 @@ def session_response(user: User, code=status.HTTP_200_OK) -> Response:
 def register(request):
     serializer = ParticipantInputSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = services.register(serializer.validated_data)
+    try:
+        user = services.register(serializer.validated_data)
+    except services.ReturningGuest as returning:
+        services.send_guest_code(returning.user)
+        return Response(
+            {'codeSent': True, 'detail': 'Este e-mail já foi usado como convidado. Enviamos um código de 6 dígitos para ele.'},
+            status=status.HTTP_202_ACCEPTED,
+        )
     return session_response(user, status.HTTP_201_CREATED)
+
+
+@scoped('password')
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def guest_code(request):
+    """RF02: o convidado volta ao mesmo registro digitando o código enviado ao e-mail."""
+    serializer = GuestCodeSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return session_response(services.enter_returning_guest(serializer.validated_data))
 
 
 @scoped('login')
@@ -57,6 +74,7 @@ def login(request):
     if user is None or not user.is_active:
         raise ValidationError({'detail': INVALID_LOGIN})
     record_login(user, data['channel'])
+    services.touch(user.participant)
     return session_response(user)
 
 
@@ -69,6 +87,8 @@ def me(request):
         serializer.is_valid(raise_exception=True)
         services.update(participant, serializer.validated_data, request.user)
         participant.refresh_from_db()
+    else:
+        services.touch(participant)  # abrir o app com a sessão salva também conta como acesso
     return Response(services.payload(participant))
 
 

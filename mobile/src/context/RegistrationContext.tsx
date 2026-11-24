@@ -77,6 +77,9 @@ type Ctx = {
   totalSteps: number;
   signIn: (identifier: string, password: string) => Promise<void>;
   signUp: () => Promise<void>;
+  /** Entrada do convidado com e-mail (RF02). 'code' quando o e-mail já é de um convidado e a volta pede o código. */
+  enterAsGuest: (patch?: Partial<RegistrationDraft>) => Promise<'session' | 'code'>;
+  confirmGuestCode: (code: string, patch?: Partial<RegistrationDraft>) => Promise<void>;
   changeProfile: () => Promise<void>;
   save: (patch: Partial<RegistrationDraft>, currentPassword?: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -235,6 +238,33 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
         const data = await api<Tokens & { me: Me }>('/auth/register/', {
           method: 'POST',
           body: registrationBody(draft),
+          auth: false,
+        });
+        await startSession(data);
+      },
+      async enterAsGuest(patch) {
+        const next = { ...draft, ...patch, profile: 'convidado' as const };
+        const data = await api<(Tokens & { me: Me }) | { codeSent: true }>('/auth/register/', {
+          method: 'POST',
+          body: registrationBody(next),
+          auth: false,
+        });
+        if ('codeSent' in data) return 'code';
+        await startSession(data);
+        return 'session';
+      },
+      async confirmGuestCode(code, patch) {
+        const next = { ...draft, ...patch };
+        const data = await api<Tokens & { me: Me }>('/auth/convidado/codigo/', {
+          method: 'POST',
+          body: {
+            email: next.email.trim(),
+            code,
+            tcleAccepted: next.tcleAccepted,
+            tcleVersion: next.tcleVersion,
+            notices: noticesBody(next),
+            channel,
+          },
           auth: false,
         });
         await startSession(data);

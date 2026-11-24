@@ -37,6 +37,9 @@ class Participant(models.Model):
     complement = models.CharField(max_length=100, blank=True)
     allow_location = models.BooleanField(default=False)
     anonymized_at = models.DateTimeField(null=True, blank=True)
+    # Último uso do app (entrada, login ou abertura com sessão salva). Convidado sem acesso por
+    # GUEST_RETENTION_DAYS é inativado e anonimizado (RF02).
+    ultimo_acesso = models.DateTimeField(null=True, blank=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,10 +1,15 @@
+from datetime import datetime, timedelta
+
+from django.conf import settings
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.mail import send_mail
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
 
-from accounts.models import Channel, Role, Status, User
+from accounts.models import Channel, PasswordResetCode, Role, Status, User
 from accounts.services import record_login, set_status
 from consent.models import ConsentAcceptance, ConsentDocument
 from engagement.models import JourneyProgress, Preferences, PushToken, SavedContent
@@ -16,6 +21,20 @@ from .validators import format_decimal, valid_cpf
 CLINICAL_FIELDS = ('weight', 'height', 'sex', 'comorbidities')
 LOCATION_FIELDS = ('cep', 'address', 'number', 'district', 'city', 'uf', 'complement')
 SEX_LABEL = {'feminino': 'Feminino', 'masculino': 'Masculino', 'outro': 'Outro'}
+# RF02: o convidado só informa e-mail. Telefone e WhatsApp são desejáveis (Fase 2): não há canal que os use.
+GUEST_EMAIL_ONLY = 'No perfil convidado, o contato é só por e-mail. Telefone e WhatsApp ainda não recebem avisos.'
+GUEST_NEEDS_EMAIL = 'Informe um e-mail para receber avisos. Sem e-mail, o conteúdo público continua disponível sem cadastro.'
+OWNED_BY_ACCOUNT = 'Este e-mail já tem conta de doador ou receptor. Entre com a sua senha.'
+# Abrir o app com a sessão salva conta como acesso, no máximo uma gravação por hora.
+TOUCH_EVERY = timedelta(hours=1)
+
+
+class ReturningGuest(Exception):
+    """O e-mail já é de um convidado (outro aparelho ou app reinstalado): a volta exige o código enviado ao e-mail."""
+
+    def __init__(self, user: User):
+        super().__init__(user.pk)
+        self.user = user
 
 
 def consent_kind(profile: str) -> str:
@@ -97,12 +116,10 @@ def register(data: dict) -> User:
     email, phone = data.get('email') or None, data.get('phone') or None
     password = data.get('password') or ''
 
+    if profile == Profile.CONVIDADO and phone:
+        _fail('phone', GUEST_EMAIL_ONLY)
     if not email and not phone:
-        message = (
-            'Informe um e-mail ou telefone para receber avisos. Sem contato, o conteúdo público continua disponível sem cadastro.'
-            if profile == Profile.CONVIDADO
-            else 'Informe um e-mail ou telefone para acessar a conta.'
-        )
+        message = GUEST_NEEDS_EMAIL if profile == Profile.CONVIDADO else 'Informe um e-mail ou telefone para acessar a conta.'
         _fail('email', message)
     if profile in CLINICAL_PROFILES:
         if not data.get('name', '').strip():
@@ -112,6 +129,8 @@ def register(data: dict) -> User:
     _check_profile_rules(profile, data)
     if password:
         _check_password(password)
+    if profile == Profile.CONVIDADO:
+        _check_returning_guest(email)
     for field, value in (('email', email), ('phone', phone), ('cpf', data.get('cpf'))):
         _check_unique(field, value, None)
 
@@ -122,6 +141,7 @@ def register(data: dict) -> User:
         user=user,
         profile=profile,
         allow_location=data.get('allowLocation', False),
+        ultimo_acesso=timezone.now(),
         **{field: data[field] for field in CLINICAL_FIELDS if data.get(field)},
         **{field: data.get(field, '') for field in LOCATION_FIELDS},
     )
@@ -135,6 +155,93 @@ def register(data: dict) -> User:
     JourneyProgress.objects.create(participant=participant, region=_region_for(participant.uf))
     record_login(user, channel)
     return user
+
+
+def _check_returning_guest(email: str) -> None:
+    owner = User.objects.filter(role=Role.PARTICIPANT, email__iexact=email).select_related('participant').first()
+    if owner is None:
+        return
+    if owner.participant.profile == Profile.CONVIDADO and owner.is_active and not owner.has_usable_password():
+        raise ReturningGuest(owner)
+    _fail('email', OWNED_BY_ACCOUNT)
+
+
+def send_guest_code(user: User) -> None:
+    code = PasswordResetCode.issue(user, PasswordResetCode.Purpose.ACESSO)
+    send_mail(
+        'Seu código de acesso · STEM Project',
+        f'Seu código é {code}. Ele vale por {settings.PASSWORD_RESET_CODE_MINUTES} minutos.\n'
+        'Digite o código no aplicativo para voltar ao seu acesso de convidado. Se você não pediu, ignore este e-mail.',
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=True,
+    )
+
+
+def enter_returning_guest(data: dict) -> User:
+    """Volta do convidado com o código do e-mail: reaproveita o registro e as preferências (RF02).
+
+    Os avisos marcados agora só ligam: o que estava ligado continua, para a etapa de entrada (tudo desmarcado) não
+    desligar escolhas antigas. O aceite dos termos só é gravado de novo se a versão vigente mudou.
+    """
+    user = (
+        User.objects.filter(role=Role.PARTICIPANT, email__iexact=data['email'].strip(), participant__profile=Profile.CONVIDADO)
+        .select_related('participant')
+        .first()
+    )
+    entry = PasswordResetCode.verify(user, data['code'], PasswordResetCode.Purpose.ACESSO) if user and user.is_active else None
+    if entry is None:  # fora da transação: a tentativa errada fica contada mesmo com o erro
+        _fail('code', 'Código inválido ou expirado.')
+    with transaction.atomic():
+        return _reenter(user, entry, data)
+
+
+def _reenter(user: User, entry: PasswordResetCode, data: dict) -> User:
+    now = timezone.now()
+    entry.used_at = now
+    entry.save(update_fields=['used_at'])
+    channel = data.get('channel') or Channel.WEB
+    if not _has_current_consent(user, Profile.CONVIDADO):
+        _accept(user, Profile.CONVIDADO, data, channel)
+    # O código chegou nesse endereço: ele está confirmado para os avisos por e-mail.
+    if user.email_confirmado_em is None:
+        user.email_confirmado_em = now
+        user.save(update_fields=['email_confirmado_em'])
+    prefs, _ = Preferences.objects.get_or_create(participant=user.participant)
+    notices = data.get('notices') or {}
+    turned_on = [key for key in ('email', 'campaigns', 'events', 'official') if notices.get(key)]
+    for key in turned_on:
+        setattr(prefs, key, True)
+    if turned_on:
+        prefs.save(update_fields=turned_on)
+    record_login(user, channel)
+    touch(user.participant, now)
+    return user
+
+
+def touch(participant: Participant, now: datetime | None = None) -> None:
+    """Registra o último acesso; é dele que conta o prazo do convidado."""
+    now = now or timezone.now()
+    if participant.ultimo_acesso and now - participant.ultimo_acesso < TOUCH_EVERY:
+        return
+    Participant.objects.filter(pk=participant.pk).update(ultimo_acesso=now)
+    participant.ultimo_acesso = now
+
+
+def expire_guests(now: datetime) -> int:
+    """Inativa e anonimiza o convidado sem acesso há GUEST_RETENTION_DAYS (RF02). Devolve quantos saíram."""
+    limit = now - timedelta(days=settings.GUEST_RETENTION_DAYS)
+    stale = Participant.objects.filter(
+        Q(ultimo_acesso__lt=limit) | Q(ultimo_acesso__isnull=True, created_at__lt=limit),
+        profile=Profile.CONVIDADO,
+        anonymized_at__isnull=True,
+        user__status=Status.ATIVO,
+    ).select_related('user')
+    count = 0
+    for participant in stale:
+        anonymize(participant)
+        count += 1
+    return count
 
 
 def _region_for(uf: str) -> str:
@@ -207,6 +314,8 @@ def _state(participant: Participant, data: dict) -> dict:
 @transaction.atomic
 def update(participant: Participant, data: dict, actor: User) -> None:
     data = {key: value for key, value in data.items() if key not in ('profile', 'password', 'tcleAccepted', 'tcleVersion', 'channel', 'notices')}
+    if participant.profile == Profile.CONVIDADO and data.get('phone'):
+        _fail('phone', GUEST_EMAIL_ONLY)
     _check_profile_rules(participant.profile, _state(participant, data))
     _apply(participant, data, actor)
 

@@ -227,10 +227,13 @@ TCLE = [
     {'title': '4. Seus direitos', 'body': 'Você pode consultar, corrigir e solicitar a inativação dos seus dados a qualquer momento em Perfil › Privacidade.'},
 ]
 
+# Versão 1.1 (RF02), a mesma que a migração consent.0003 publica.
+TERMOS_VERSION = '1.1'
 TERMOS = [
-    {'title': '1. Finalidade', 'body': 'Guardamos seu contato apenas para enviar campanhas, eventos e comunicados oficiais da sua região, se você quiser recebê-los.'},
-    {'title': '2. Dados coletados', 'body': 'E-mail ou telefone e, se você informar, o CEP de interesse. Não pedimos CPF, peso, altura, sexo biológico nem comorbidades.'},
-    {'title': '3. Seus direitos', 'body': 'Você pode alterar as preferências de aviso ou remover seu contato a qualquer momento em Perfil.'},
+    {'title': '1. Finalidade', 'body': 'Guardamos seu e-mail apenas para enviar campanhas, eventos e comunicados oficiais da sua região, se você quiser recebê-los. Sem e-mail, nada é guardado.'},
+    {'title': '2. Dados coletados', 'body': 'Somente o e-mail, se você informar. Não pedimos CPF, telefone, peso, altura, sexo biológico nem comorbidades.'},
+    {'title': '3. Por quanto tempo', 'body': 'Seu e-mail fica guardado por 12 meses desde o último acesso ao aplicativo. Depois disso, ele é apagado e o seu acesso de convidado é encerrado.'},
+    {'title': '4. Seus direitos', 'body': 'Você pode alterar as preferências de aviso ou apagar o e-mail a qualquer momento em Perfil › Contato. Apagar o e-mail encerra o seu acesso na hora.'},
 ]
 
 DEV_STAFF = [

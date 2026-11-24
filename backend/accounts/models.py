@@ -184,14 +184,16 @@ def _hash_code(code: str) -> str:
 
 
 class PasswordResetCode(models.Model):
-    """Código de 6 dígitos enviado por e-mail: recuperação de senha ou confirmação do endereço. Só o hash é gravado."""
+    """Código de 6 dígitos enviado por e-mail: recuperação de senha, confirmação do endereço ou volta do convidado
+    (RF02, outro aparelho). Só o hash é gravado."""
 
     class Purpose(models.TextChoices):
         SENHA = 'senha', 'Recuperação de senha'
         EMAIL = 'email', 'Confirmação de e-mail'
+        ACESSO = 'acesso', 'Acesso do convidado'
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reset_codes')
-    finalidade = models.CharField(max_length=5, choices=Purpose.choices, default=Purpose.SENHA)
+    finalidade = models.CharField(max_length=10, choices=Purpose.choices, default=Purpose.SENHA)
     code_hash = models.CharField(max_length=64)
     expires_at = models.DateTimeField()
     attempts = models.PositiveSmallIntegerField(default=0)
