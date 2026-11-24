@@ -111,15 +111,30 @@ class NotificationDelivery(models.Model):
 
 
 class JourneyProgress(models.Model):
+    """Guia pessoal (RF05/RF06): o próprio titular marca as etapas que já fez. Não é status oficial do SUS."""
+
     class Region(models.TextChoices):
         MACEIO = 'maceio'
         RECIFE = 'recife'
         OUTRA = 'outra'
 
+    # Etapas do guia, na ordem do app. As marcas só aceitam estes ids.
+    STEPS = {
+        'doador': ('cadastro', 'coleta', 'redome', 'contato', 'doacao', 'pos-doacao'),
+        'receptor': ('indicacao', 'encaminhamento', 'busca', 'preparacao', 'transplante', 'pos-tcth'),
+    }
+
     participant = models.OneToOneField(Participant, on_delete=models.CASCADE, related_name='journey')
-    current = models.PositiveSmallIntegerField(default=1)
+    # Ids das etapas que o titular marcou como feitas, em qualquer ordem e desmarcáveis.
+    done = models.JSONField(default=list, blank=True)
+    # Itens marcados no checklist de cada etapa: {"cadastro": ["Documento oficial com foto"]}.
+    checklist = models.JSONField(default=dict, blank=True)
     region = models.CharField(max_length=10, choices=Region.choices, default=Region.MACEIO)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def clear(self) -> None:
+        self.done = []
+        self.checklist = {}
 
 
 class SavedContent(models.Model):
