@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { api, tokens } from '../lib/api'
 import type { Account, AccountStatus, Content, Journey } from './types'
 
-type ContentFields = Omit<Content, 'id' | 'anexos' | 'atualizadoEm' | 'historico' | 'validadoPor' | 'linkOriginal'>
+type ContentFields = Omit<Content, 'id' | 'anexos' | 'atualizadoEm' | 'publicadoEm' | 'historico' | 'validadoPor' | 'linkOriginal'>
 
 interface Store {
   ready: boolean

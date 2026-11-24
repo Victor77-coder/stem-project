@@ -17,7 +17,7 @@ from participants.models import ChangeEvent
 from participants.views import find_participants
 
 from .models import AccessRequest, Channel, PasswordResetCode, Role, Status, User
-from .permissions import IsTeamMember, TeamReadAdminWrite
+from .permissions import IsTeamAdmin, IsTeamMember, TeamReadAdminWrite
 from .serializers import (
     EmailSerializer,
     ForgotSerializer,
@@ -190,6 +190,30 @@ def _confirm(request) -> None:
         raise ValidationError({'senha': ['Senha incorreta. Tente novamente.']})
 
 
+def audit(actor: User, entidade: str, objeto_id, acao: str, snapshot: dict | None = None) -> None:
+    """Log de ações do painel (RF13): o mesmo histórico de conteúdo, jornada, centros e avisos."""
+    from catalog.models import CatalogHistory  # catalog depende de accounts; o import fica aqui para não fechar ciclo
+
+    CatalogHistory.objects.create(
+        entidade=entidade,
+        objeto_id=str(objeto_id),
+        autor=actor,
+        autor_nome=actor.name or actor.email or 'Equipe',
+        acao=acao,
+        snapshot=snapshot or {},
+    )
+
+
+def create_staff_account(data: dict) -> tuple[User, str]:
+    serializer = StaffAccountSerializer(data=data)
+    serializer.is_valid(raise_exception=True)
+    password = temporary_password()
+    user = User(role=Role.STAFF)
+    user.set_password(password)
+    serializer.save_to(user)
+    return user, password
+
+
 class StaffAccountViewSet(viewsets.ViewSet):
     """Contas da equipe do painel. Participantes do app nunca aparecem aqui (RF012, RS004)."""
 
@@ -213,12 +237,8 @@ class StaffAccountViewSet(viewsets.ViewSet):
         return Response(staff_payload(self._get(pk)))
 
     def create(self, request):
-        serializer = StaffAccountSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        password = temporary_password()
-        user = User(role=Role.STAFF)
-        user.set_password(password)
-        serializer.save_to(user)
+        user, password = create_staff_account(request.data)
+        audit(request.user, 'conta', user.pk, 'Criou a conta', {'nome': user.name})
         return Response({**staff_payload(user), 'senhaTemporaria': password}, status=status.HTTP_201_CREATED)
 
     def partial_update(self, request, pk=None):
@@ -227,7 +247,11 @@ class StaffAccountViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         if user == request.user and serializer.validated_data.get('nivel', user.staff.nivel) != user.staff.nivel:
             raise PermissionDenied('Você não pode alterar o próprio nível de acesso.')
+        before = (user.staff.nivel, user.staff.tipo_conta)
         serializer.save_to(user)
+        after = (user.staff.nivel, user.staff.tipo_conta)
+        acao = f'Mudou o acesso para {after[0]}{" · " + after[1] if after[1] else ""}' if after != before else 'Editou a conta'
+        audit(request.user, 'conta', user.pk, acao, {'nome': user.name})
         return Response(staff_payload(user))
 
     update = partial_update
@@ -243,6 +267,7 @@ class StaffAccountViewSet(viewsets.ViewSet):
         if target != Status.ATIVO:
             _confirm(request)
         set_status(user, target, actor=request.user)
+        audit(request.user, 'conta', user.pk, f'Mudou o status para {Status(target).label}', {'nome': user.name})
         return Response(staff_payload(user))
 
     @action(detail=True, methods=['post'], url_path='reset-password')
@@ -252,4 +277,61 @@ class StaffAccountViewSet(viewsets.ViewSet):
         user.set_password(password)
         user.save(update_fields=['password'])
         revoke_sessions(user)
+        audit(request.user, 'conta', user.pk, 'Gerou senha temporária', {'nome': user.name})
         return Response({'senhaTemporaria': password})
+
+
+def access_request_payload(entry: AccessRequest) -> dict:
+    return {
+        'id': entry.pk,
+        'email': entry.email,
+        'criadoEm': entry.created_at.isoformat(),
+        'situacao': entry.situacao,
+        'atendidoPor': entry.atendido_por.name if entry.atendido_por else '',
+        'atendidoEm': entry.atendido_em.isoformat() if entry.atendido_em else None,
+        'jaTemConta': User.objects.filter(role=Role.STAFF, email__iexact=entry.email).exclude(status=Status.CANCELADO).exists(),
+    }
+
+
+class StaffAccessRequestViewSet(viewsets.ViewSet):
+    """Pedidos de acesso ao painel (Logs e Suporte, RF13). Só administradores veem e atendem."""
+
+    permission_classes = [IsTeamAdmin]
+
+    def list(self, request):
+        entries = AccessRequest.objects.select_related('atendido_por').order_by('-created_at')[:100]
+        pending = [entry for entry in entries if entry.situacao == AccessRequest.State.PENDENTE]
+        done = [entry for entry in entries if entry.situacao != AccessRequest.State.PENDENTE]
+        return Response([access_request_payload(entry) for entry in [*pending, *done]])
+
+    def _pending(self, pk) -> AccessRequest:
+        entry = get_object_or_404(AccessRequest, pk=pk)
+        if entry.situacao != AccessRequest.State.PENDENTE:
+            raise ValidationError({'detail': 'Este pedido já foi atendido ou recusado.'})
+        return entry
+
+    def _close(self, entry: AccessRequest, state: str, actor: User) -> None:
+        entry.situacao = state
+        entry.atendido_por = actor
+        entry.atendido_em = timezone.now()
+        entry.save(update_fields=['situacao', 'atendido_por', 'atendido_em'])
+
+    @action(detail=True, methods=['post'])
+    def aprovar(self, request, pk=None):
+        """Cria a conta com o e-mail do pedido e devolve a senha temporária para o administrador repassar."""
+        entry = self._pending(pk)
+        data = {key: request.data[key] for key in ('nome', 'nivel', 'tipoConta') if key in request.data}
+        user, password = create_staff_account({**data, 'email': entry.email})
+        self._close(entry, AccessRequest.State.ATENDIDO, request.user)
+        audit(request.user, 'conta', user.pk, 'Criou a conta a partir de um pedido de acesso', {'nome': user.name})
+        return Response(
+            {'pedido': access_request_payload(entry), 'conta': staff_payload(user), 'senhaTemporaria': password},
+            status=status.HTTP_201_CREATED,
+        )
+
+    @action(detail=True, methods=['post'])
+    def recusar(self, request, pk=None):
+        entry = self._pending(pk)
+        self._close(entry, AccessRequest.State.RECUSADO, request.user)
+        audit(request.user, 'acesso', entry.pk, 'Recusou um pedido de acesso')
+        return Response(access_request_payload(entry))

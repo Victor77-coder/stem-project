@@ -538,9 +538,22 @@ function ListScreen({
       ) : (
         results.map((center) => <CenterRow key={center.id} center={center} onPress={() => onOpen(center.id)} />)
       )}
-      <Text style={styles.source}>Fonte: CNES/DataSUS · carga curada em 30/09/2026</Text>
+      {results.length ? <Text style={styles.source}>{sourceLine(results)}</Text> : null}
     </ScrollView>
   );
+}
+
+const sortable = (date: string) => date.split('/').reverse().join('');
+
+/** RF08: fonte e data vêm das unidades listadas (a carga do CNES é mensal), não de uma data fixa no código. */
+function sourceLine(centers: { source: string; sourceDate: string }[]) {
+  const sources = [...new Set(centers.map((center) => center.source).filter(Boolean))];
+  const newest = centers
+    .map((center) => center.sourceDate)
+    .filter(Boolean)
+    .reduce((best, date) => (sortable(date) > sortable(best) ? date : best), '');
+  const label = sources.length > 1 ? 'Fontes' : 'Fonte';
+  return `${label}: ${sources.join(', ') || 'CNES/DataSUS'}${newest ? ` · dados de até ${newest}` : ''}`;
 }
 
 function DetailScreen({

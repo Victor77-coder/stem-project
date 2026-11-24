@@ -96,6 +96,8 @@ export interface Content {
   validadoPor: string
   anexos: Attachment[]
   atualizadoEm: string
+  /** RF04: data da primeira publicação (aaaa-mm-dd); vazia enquanto for rascunho. */
+  publicadoEm: string
   historico: HistoryEntry[]
   /** Matéria original de uma novidade coletada dos portais. Só leitura no painel. */
   linkOriginal: string
@@ -151,4 +153,82 @@ export interface Dashboard {
   recentes: { id: string; titulo: string; status: PublishStatus; atualizadoEm: string }[]
   atividade: (HistoryEntry & { titulo: string })[]
   porCategoria: { categoria: Category; total: number }[]
+}
+
+export const UFS = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ')
+
+export type CenterKind = 'hemocentro' | 'transplante' | 'campanha'
+
+export const CENTER_KINDS: Record<CenterKind, string> = {
+  hemocentro: 'Hemocentro',
+  transplante: 'Centro de transplante',
+  campanha: 'Campanha',
+}
+
+/** Centro ou campanha (RF08, RF13). Os nomes seguem os campos do modelo no backend. */
+export interface Center {
+  id: number
+  slug: string
+  cnes: string
+  origem: 'manual' | 'cnes'
+  revisar: boolean
+  motivo_revisao: string
+  nome: string
+  nome_curto: string
+  endereco: string
+  cidade: string
+  uf: string
+  tipo: CenterKind
+  lat: number | null
+  lng: number | null
+  horario: string
+  telefone: string
+  observacoes: string
+  evento_quando: string
+  fonte: string
+  fonte_data: string | null
+  status: PublishStatus
+  atualizado_em: string
+}
+
+type ProfileCounts = Record<'doador' | 'receptor' | 'convidado', number | null>
+
+/** Relatórios do painel (GET /staff/relatorios/). null = recorte de 1 a 4 pessoas, mostrado como "menos de 5". */
+export interface Reports {
+  participantes: {
+    ativos: ProfileCounts
+    inativos: number
+    porUf: ({ uf: string } & ProfileCounts)[]
+  }
+  meses: { mes: string; novos: ProfileCounts; inativacoes: number }[]
+  avisos: { publicados: number; envios: Record<'push' | 'email', Record<'enviado' | 'falhou' | 'ignorado', number>> }
+  conteudos: Record<string, number>
+  recorteMinimo: number
+  desde: string
+}
+
+export interface LogEntry {
+  id: number
+  quando: string
+  tipo: string
+  tipoLabel: string
+  objeto: string
+  pessoa: string
+  acao: string
+}
+
+export interface ActionLog {
+  itens: LogEntry[]
+  tipos: { id: string; label: string }[]
+  limite: number
+}
+
+export interface AccessRequest {
+  id: number
+  email: string
+  criadoEm: string
+  situacao: 'pendente' | 'atendido' | 'recusado'
+  atendidoPor: string
+  atendidoEm: string | null
+  jaTemConta: boolean
 }
