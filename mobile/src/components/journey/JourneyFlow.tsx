@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  DONOR_STEPS,
   REGIONS,
-  progressLabel,
+  doneCount,
   progressPercent,
-  receptorSteps,
-  stepState,
-  withRegionPlace,
+  stepStates,
+  stepsFor,
   type JourneyKind,
+  type JourneyMarks,
   type JourneyStep,
   type RegionId,
   type StepState,
@@ -18,34 +17,40 @@ import { colors } from '@/theme';
 
 type Props = {
   kind: JourneyKind | 'convidado';
-  current: number;
-  onComplete: () => void;
+  /** Guia pessoal (RF05/RF06): etapas e itens que o próprio usuário marcou. */
+  marks: JourneyMarks;
+  region: RegionId;
+  onRegion: (region: RegionId) => void;
+  onToggleStep: (stepId: string) => void;
+  onToggleItem: (stepId: string, label: string) => void;
   onChooseProfile: (profile: 'doador' | 'receptor') => void;
 };
 
-export function JourneyFlow({ kind, current, onComplete, onChooseProfile }: Props) {
-  const [region, setRegion] = useState<RegionId>('maceio');
+export function JourneyFlow({ kind, marks, region, onRegion, onToggleStep, onToggleItem, onChooseProfile }: Props) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   if (kind === 'convidado') {
     return <ConvidadoJourney onChooseProfile={onChooseProfile} />;
   }
 
-  const steps = kind === 'doador' ? DONOR_STEPS.map((step) => withRegionPlace(step, region)) : receptorSteps(region);
-  const open = steps.find((step) => step.id === openId);
+  const steps = stepsFor(kind, region);
+  const states = stepStates(steps, marks.done);
+  const count = doneCount(steps, marks.done);
+  const openIndex = steps.findIndex((step) => step.id === openId);
 
-  if (open) {
-    const index = steps.findIndex((step) => step.id === open.id) + 1;
-    const state = stepState(index, current);
+  if (openIndex >= 0) {
+    const open = steps[openIndex];
     return (
       <StepDetail
         step={open}
-        index={index}
+        index={openIndex + 1}
         total={steps.length}
-        state={state}
+        state={states[openIndex]}
+        checked={marks.checklist[open.id] ?? []}
         onBack={() => setOpenId(null)}
-        onComplete={() => {
-          onComplete();
+        onToggleItem={(label) => onToggleItem(open.id, label)}
+        onToggle={() => {
+          onToggleStep(open.id);
           setOpenId(null);
         }}
       />
@@ -70,7 +75,7 @@ export function JourneyFlow({ kind, current, onComplete, onChooseProfile }: Prop
                 key={item.id}
                 accessibilityRole="button"
                 accessibilityState={{ selected: on }}
-                onPress={() => setRegion(item.id)}
+                onPress={() => onRegion(item.id)}
                 style={[styles.regionChip, on ? styles.regionOn : styles.regionOff]}
               >
                 <Text style={[styles.regionText, on ? styles.regionTextOn : styles.regionTextOff]}>{item.label}</Text>
@@ -91,33 +96,38 @@ export function JourneyFlow({ kind, current, onComplete, onChooseProfile }: Prop
 
       <View style={styles.progressCard}>
         <View style={styles.progressHead}>
-          <Text style={styles.progressLabel}>Seu progresso</Text>
-          <Text style={styles.progressValue}>{progressLabel(current)}</Text>
+          <Text style={styles.progressLabel}>Etapas que você marcou</Text>
+          <Text style={styles.progressValue}>
+            {count} de {steps.length}
+          </Text>
         </View>
-        <View style={styles.progressTrack} accessibilityRole="progressbar" accessibilityValue={{ now: Math.min(current, 6), min: 0, max: 6 }}>
-          <View style={[styles.progressFill, { width: progressPercent(current) }]} />
+        <View
+          style={styles.progressTrack}
+          accessibilityRole="progressbar"
+          accessibilityValue={{ now: count, min: 0, max: steps.length }}
+        >
+          <View style={[styles.progressFill, { width: progressPercent(count, steps.length) }]} />
         </View>
       </View>
 
       <View style={styles.timeline}>
-        {steps.map((step, i) => {
-          const index = i + 1;
-          const state = stepState(index, current);
-          const last = i === steps.length - 1;
-          return (
-            <StepRow
-              key={step.id}
-              index={index}
-              step={step}
-              state={state}
-              last={last}
-              onPress={() => setOpenId(step.id)}
-            />
-          );
-        })}
+        {steps.map((step, i) => (
+          <StepRow
+            key={step.id}
+            index={i + 1}
+            step={step}
+            state={states[i]}
+            last={i === steps.length - 1}
+            onPress={() => setOpenId(step.id)}
+            onToggle={() => onToggleStep(step.id)}
+          />
+        ))}
       </View>
 
-      <Text style={styles.hint}>Marcar uma etapa só aparece para a sua etapa atual.</Text>
+      <Text style={styles.hint}>
+        Você marca as etapas que já fez, em qualquer ordem. Serve só para o seu controle: o app não recebe informações do
+        SUS nem do REDOME.
+      </Text>
     </ScrollView>
   );
 }
@@ -128,24 +138,35 @@ function StepRow({
   state,
   last,
   onPress,
+  onToggle,
 }: {
   index: number;
   step: JourneyStep;
   state: StepState;
   last: boolean;
   onPress: () => void;
+  onToggle: () => void;
 }) {
-  const current = state === 'current';
+  const next = state === 'next';
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${step.title}, ${statusLabel(state)}`}
+      accessibilityHint="Abre a etapa"
       onPress={onPress}
-      style={[styles.step, current && styles.stepCurrent]}
+      style={[styles.step, next && styles.stepCurrent]}
     >
       <View style={styles.rail}>
-        <StatusMark index={index} state={state} />
-        {last ? null : <View style={[styles.railLine, current && styles.railLineCurrent]} />}
+        <Pressable
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: state === 'done' }}
+          accessibilityLabel={`Marcar ${step.title} como concluída`}
+          onPress={onToggle}
+          hitSlop={8}
+        >
+          <StatusMark index={index} state={state} />
+        </Pressable>
+        {last ? null : <View style={[styles.railLine, next && styles.railLineCurrent]} />}
       </View>
       <View style={styles.stepCopy}>
         <View style={styles.stepHead}>
@@ -166,7 +187,7 @@ function StatusMark({ index, state }: { index: number; state: StepState }) {
       </View>
     );
   }
-  if (state === 'current') {
+  if (state === 'next') {
     return (
       <View style={[styles.mark, styles.markCurrent]}>
         <Text style={styles.markCurrentText}>{index}</Text>
@@ -185,20 +206,21 @@ function StepDetail({
   index,
   total,
   state,
+  checked,
   onBack,
-  onComplete,
+  onToggleItem,
+  onToggle,
 }: {
   step: JourneyStep;
   index: number;
   total: number;
   state: StepState;
+  checked: string[];
   onBack: () => void;
-  onComplete: () => void;
+  onToggleItem: (label: string) => void;
+  onToggle: () => void;
 }) {
-  const [checked, setChecked] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries((step.checklist ?? []).map((item, i) => [item.label, i === 0])),
-  );
-
+  const done = state === 'done';
   return (
     <View style={styles.fill}>
       <ScrollView style={styles.fill} contentContainerStyle={styles.detailContent} showsVerticalScrollIndicator={false}>
@@ -212,23 +234,23 @@ function StepDetail({
           <View style={styles.iconBtn} />
         </View>
 
-        <View style={[styles.badge, state === 'done' && styles.badgeDone]}>
-          <Text style={[styles.badgeText, state === 'done' && styles.badgeTextDone]}>{statusLabel(state)}</Text>
+        <View style={[styles.badge, done && styles.badgeDone]}>
+          <Text style={[styles.badgeText, done && styles.badgeTextDone]}>{statusLabel(state)}</Text>
         </View>
         <Text style={styles.detailTitle}>{step.title}</Text>
         <Text style={styles.detailBody}>{step.body}</Text>
 
         {step.checklist ? (
           <View style={styles.block}>
-            <Text style={styles.blockTitle}>O que levar</Text>
+            <Text style={styles.blockTitle}>Checklist da etapa</Text>
             {step.checklist.map((item) => {
-              const on = Boolean(checked[item.label]);
+              const on = checked.includes(item.label);
               return (
                 <Pressable
                   key={item.label}
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: on }}
-                  onPress={() => setChecked((current) => ({ ...current, [item.label]: !current[item.label] }))}
+                  onPress={() => onToggleItem(item.label)}
                   style={styles.checkRow}
                 >
                   <View style={[styles.check, on && styles.checkOn]}>
@@ -250,12 +272,8 @@ function StepDetail({
               </View>
               <View style={styles.placeCopy}>
                 <Text style={styles.placeName}>{step.place.name}</Text>
-                <Text style={styles.placeMeta}>
-                  {step.place.address}
-                  {step.place.distance ? ` · ${step.place.distance}` : ''}
-                </Text>
+                <Text style={styles.placeMeta}>{step.place.address}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
             </View>
           </View>
         ) : null}
@@ -263,13 +281,13 @@ function StepDetail({
         <Text style={styles.source}>Fonte: {step.source}</Text>
       </ScrollView>
 
-      {state === 'current' ? (
-        <View style={styles.footer}>
-          <Pressable accessibilityRole="button" onPress={onComplete} style={styles.primary}>
-            <Text style={styles.primaryText}>Marcar como concluída</Text>
-          </Pressable>
-        </View>
-      ) : null}
+      <View style={styles.footer}>
+        <Pressable accessibilityRole="button" onPress={onToggle} style={done ? styles.secondary : styles.primary}>
+          <Text style={done ? styles.secondaryText : styles.primaryText}>
+            {done ? 'Desmarcar etapa' : 'Marcar como concluída'}
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -338,13 +356,13 @@ function Choice({
 
 function statusLabel(state: StepState) {
   if (state === 'done') return 'Concluída';
-  if (state === 'current') return 'Atual';
+  if (state === 'next') return 'Próxima';
   return 'Pendente';
 }
 
 function statusColor(state: StepState) {
   if (state === 'done') return { color: colors.success600 };
-  if (state === 'current') return { color: colors.primary600 };
+  if (state === 'next') return { color: colors.primary600 };
   return { color: colors.textTertiary };
 }
 
@@ -477,6 +495,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   primaryText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: '#FFFFFF' },
+  secondary: {
+    height: 52,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: colors.ink },
   convidadoContent: { paddingHorizontal: 20, paddingTop: 36, paddingBottom: 28, alignItems: 'center' },
   convidadoBadge: {
     width: 88,
