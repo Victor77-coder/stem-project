@@ -244,7 +244,7 @@ def test_cep_invalid_or_unknown(api, monkeypatch):
 
 def test_estimate_always_carries_disclaimer(api, seeded):
     data = api.get('/api/v1/estimativa/', {'perfil': 'receptor', 'uf': 'AL'}).data
-    assert data['value'] == 'Média regional: 3 a 6 meses'
+    assert data['available'] is False and 'value' not in data, 'o seed não cria estimativa de exemplo'
     assert 'exclusivamente preditiva' in data['disclaimer']
     assert api.get('/api/v1/estimativa/', {'perfil': 'doador'}).data['available'] is False
 
@@ -252,9 +252,10 @@ def test_estimate_always_carries_disclaimer(api, seeded):
 def test_statistics_have_source_and_underreporting_notice(api, seeded):
     data = api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'PE'}).data
     assert data['headline']['donors'] == '', 'o seed só tem doadores no Brasil'
-    assert data['wait'] == '4,8 meses'
-    assert api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'BR'}).data['headline']['donors'] == '5,4 mi'
-    assert data['underreporting'] is True and data['source']
+    assert data['wait'] == '', 'o seed não cria tempo de espera de exemplo'
+    brasil = api.get('/api/v1/estatisticas/', {'ano': '2024', 'uf': 'BR'}).data
+    assert brasil['headline']['donors'] == '5,4 mi'
+    assert brasil['underreporting'] is True and brasil['source']
 
 
 def test_statistics_follow_the_profile(api, seeded):
@@ -270,7 +271,7 @@ def test_statistics_follow_the_profile(api, seeded):
 
     recipient = stats('BR', 'receptor')
     assert recipient['headline'] == {'donors': '', 'transplants': everyone['headline']['transplants']}
-    assert recipient['regions'] == everyone['regions'] and stats('PE', 'receptor')['wait'] == '4,8 meses'
+    assert recipient['regions'] == everyone['regions'] and stats('PE', 'receptor')['wait'] == ''
     assert stats('BR', 'convidado')['headline'] == everyone['headline']
 
 
