@@ -25,6 +25,7 @@ import {
 } from '@/content/profile';
 import { useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
+import { useConsentDoc } from '@/lib/consent';
 import { requestLocationPermission } from '@/lib/location';
 import { colors } from '@/theme';
 
@@ -808,16 +809,20 @@ function TermsScreen({
   onBack: () => void;
   onAccept: () => void;
 }) {
+  const doc = useConsentDoc('termos');
   return (
     <View style={styles.fill}>
       <TopBar title="Termos de uso" onBack={onBack} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Termos de uso</Text>
+          <Text style={styles.panelTitle}>Termos de uso · versão {doc.version}</Text>
           <Text style={styles.rowCaption}>{accepted ? when : 'Aceite pendente'}</Text>
-          <Text style={styles.body}>
-            O perfil convidado usa o STEM para aprender. Não coletamos dados clínicos. Um e-mail é opcional, só para novidades. O app não agenda atendimento e não confirma compatibilidade.
-          </Text>
+          {doc.sections.map((section) => (
+            <Text key={section.title} style={styles.body}>
+              <Text style={styles.bodyStrong}>{section.title}. </Text>
+              {section.body}
+            </Text>
+          ))}
         </View>
         {accepted ? null : (
           <Pressable accessibilityRole="button" onPress={onAccept} style={[styles.primaryBtn, styles.blockBtn]}>
@@ -1209,6 +1214,7 @@ const styles = StyleSheet.create({
   panel: { marginTop: 12, borderWidth: 1, borderColor: colors.borderSubtle, borderRadius: 16, padding: 14, gap: 10 },
   panelTitle: { fontSize: 15, lineHeight: 20, fontWeight: '700', color: colors.ink },
   body: { fontSize: 14, lineHeight: 21, color: colors.textSecondary },
+  bodyStrong: { fontWeight: '700', color: colors.ink },
   termRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   checkLine: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   checkText: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.ink },

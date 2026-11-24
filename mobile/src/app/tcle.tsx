@@ -4,29 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
 import { useRegistration } from '@/context/RegistrationContext';
+import { useConsentDoc } from '@/lib/consent';
 import { colors, type } from '@/theme';
 
-const SECTIONS = [
-  {
-    title: '1. Finalidade',
-    body: 'Seus dados serão usados apenas para personalizar conteúdos educativos, mostrar centros próximos e organizar sua jornada informativa no STEM Project.',
-  },
-  {
-    title: '2. Dados coletados',
-    body: 'Peso, altura, sexo biológico, comorbidades e CEP. Coletamos apenas o mínimo necessário (LGPD, art. 6º).',
-  },
-  {
-    title: '3. O que o app NÃO faz',
-    body: 'Não realiza validação clínica, não agenda consultas e não garante compatibilidade. A compatibilidade é avaliada por dois médicos do SUS.',
-  },
-  {
-    title: '4. Seus direitos',
-    body: 'Você pode consultar, corrigir e solicitar a inativação dos seus dados a qualquer momento em Perfil › Privacidade.',
-  },
-];
-
 export default function TcleDocumentScreen() {
-  const { update } = useRegistration();
+  const { update, isConvidado } = useRegistration();
+  // O convidado lê os termos de uso; doador e receptor, o TCLE.
+  const doc = useConsentDoc(isConvidado ? 'termos' : 'tcle');
 
   function goBack() {
     if (router.canGoBack()) router.back();
@@ -39,7 +23,7 @@ export default function TcleDocumentScreen() {
         <Button
           label="Li e aceito o termo"
           onPress={() => {
-            update({ tcleAccepted: true });
+            update({ tcleAccepted: true, tcleVersion: doc.version });
             goBack();
           }}
         />
@@ -55,17 +39,20 @@ export default function TcleDocumentScreen() {
         >
           <Ionicons name="chevron-back" size={24} color={colors.ink} />
         </Pressable>
-        <Text style={styles.navTitle}>Termo de consentimento</Text>
+        <Text style={styles.navTitle}>{isConvidado ? 'Termos de uso' : 'Termo de consentimento'}</Text>
         <View style={styles.spacer} />
       </View>
 
       <View style={styles.chip}>
-        <Text style={styles.chipText}>Versão 1.0 · 01/10/2026</Text>
+        <Text style={styles.chipText}>
+          Versão {doc.version}
+          {doc.publishedAt ? ` · ${doc.publishedAt}` : ''}
+        </Text>
       </View>
 
-      <Text style={styles.title}>Termo de Consentimento Livre e Esclarecido</Text>
+      <Text style={styles.title}>{doc.title}</Text>
 
-      {SECTIONS.map((section) => (
+      {doc.sections.map((section) => (
         <View key={section.title} style={styles.section}>
           <Text style={styles.sectionTitle}>{section.title}</Text>
           <Text style={styles.sectionBody}>{section.body}</Text>

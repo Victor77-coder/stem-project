@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,10 +7,17 @@ import { NavPair } from '@/components/NavPair';
 import { Screen } from '@/components/Screen';
 import { StepHeader } from '@/components/StepHeader';
 import { useRegistration } from '@/context/RegistrationContext';
+import { useConsentDoc } from '@/lib/consent';
 import { colors, type } from '@/theme';
 
 export default function TermsScreen() {
   const { draft, update, isConvidado, totalSteps } = useRegistration();
+  const doc = useConsentDoc(isConvidado ? 'termos' : 'tcle');
+
+  // O aceite vale para a versão vigente: é ela que vai no cadastro, e o servidor recusa outra.
+  useEffect(() => {
+    if (doc.version !== draft.tcleVersion) update({ tcleVersion: doc.version });
+  }, [doc.version, draft.tcleVersion, update]);
 
   function goNext() {
     if (isConvidado) {
