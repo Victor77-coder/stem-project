@@ -28,7 +28,15 @@ interface Store {
 
 const StoreContext = createContext<Store | null>(null)
 
-const accountFields = ({ id: _id, status: _s, criadoEm: _c, ultimoLogin: _u, podeValidar: _p, ...rest }: Account) => rest
+const accountFields = ({
+  id: _id,
+  status: _s,
+  criadoEm: _c,
+  ultimoLogin: _u,
+  podeValidar: _p,
+  podePublicarAvisos: _pa,
+  ...rest
+}: Account) => rest
 
 const contentFields = (c: Content): ContentFields => ({
   titulo: c.titulo,

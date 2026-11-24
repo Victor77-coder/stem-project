@@ -276,6 +276,8 @@ def test_statistics_follow_the_profile(api, seeded):
 
 def test_inbox_follows_preferences_and_region(donor):
     client = auth(APIClient(), donor['access'])
+    assert client.get('/api/v1/me/inbox/').data == [], 'opt-in: nenhum assunto ligado no cadastro'
+    client.patch('/api/v1/me/preferences/', {'campaigns': True, 'events': True, 'official': True}, format='json')
     titles = {item['title'] for item in client.get('/api/v1/me/inbox/').data}
     assert 'Mutirão de cadastro de medula' in titles
     client.patch('/api/v1/me/preferences/', {'campaigns': False}, format='json')

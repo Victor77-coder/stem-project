@@ -4,8 +4,16 @@ import { router } from 'expo-router';
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
 import { StepHeader } from '@/components/StepHeader';
-import { useRegistration } from '@/context/RegistrationContext';
+import { hasEmailContact, useRegistration, type NoticeChoices } from '@/context/RegistrationContext';
+import { turnOnPush } from '@/lib/push';
 import { colors, type } from '@/theme';
+
+function noticesSummary(notices: NoticeChoices, email: string) {
+  const topics = [notices.campaigns && 'Campanhas', notices.events && 'Eventos', notices.official && 'Comunicados'].filter(Boolean);
+  const channels = [notices.push && 'Celular', notices.email && hasEmailContact(email) && 'E-mail'].filter(Boolean);
+  if (!topics.length && !channels.length) return 'Nenhum';
+  return [topics.join(', ') || 'Nenhum assunto', channels.join(', ') || 'Só na caixa de entrada'].join(' · ');
+}
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -32,6 +40,8 @@ export default function ReviewScreen() {
     setError('');
     try {
       await (signedIn ? changeProfile() : signUp());
+      // Sem permissão do sistema, a conta fica criada e o push pode ser ligado depois no Perfil.
+      if (!signedIn && draft.notices.push) await turnOnPush().catch(() => false);
       router.push('/conclusion');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível concluir o cadastro.');
@@ -70,6 +80,7 @@ export default function ReviewScreen() {
         {!isConvidado ? <Row label="Endereço" value={draft.address} /> : null}
         {!isConvidado ? <Row label="Cidade" value={[draft.city, draft.uf].filter(Boolean).join(' / ')} /> : null}
         <Row label="TCLE" value={draft.tcleAccepted ? `Aceito · v${draft.tcleVersion}` : 'Pendente'} />
+        {!signedIn ? <Row label="Avisos" value={noticesSummary(draft.notices, draft.email)} /> : null}
       </View>
     </Screen>
   );

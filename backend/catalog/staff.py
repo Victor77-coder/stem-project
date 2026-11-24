@@ -8,13 +8,15 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from accounts.models import Role, Status, User
 from accounts.permissions import IsTeamMember, TeamReadAdminWrite
-from engagement.models import Notification
+from engagement.health import health
+from engagement.models import Notification, NotificationDelivery
+from engagement.services import reach
 from participants.models import Participant
 
 from .models import AppSettings, Attachment, CatalogHistory, Center, Content, JourneyStep, PublishStatus, Statistic
@@ -22,6 +24,7 @@ from .models import AppSettings, Attachment, CatalogHistory, Center, Content, Jo
 SUBSTANTIVE = ('titulo', 'descricao', 'categoria', 'fonte', 'secoes')
 NO_SOURCE = 'Informe a fonte para publicar. Sem fonte o conteúdo permanece como rascunho.'
 NO_VALIDATION = 'Conteúdo clínico-educacional só é publicado após a validação clínica da liga.'
+NO_PUBLISH = 'Somente administradores e administradores de conteúdo publicam avisos. Salve como rascunho.'
 
 
 def log(entidade: str, obj, user: User, acao: str, snapshot: dict | None = None) -> None:
@@ -266,10 +269,28 @@ class CenterSerializer(PublishRules):
 
 class NotificationSerializer(PublishRules):
     required_to_publish = {'origem': 'Campanhas e comunicados exigem origem oficial. Sem origem, permanece rascunho.'}
+    envios = serializers.SerializerMethodField()
 
     class Meta:
         model = Notification
         exclude = ()
+        read_only_fields = ('disparado_em',)
+
+    def get_envios(self, notice: Notification) -> dict:
+        totals = {
+            (channel, state): total
+            for channel, state, total in notice.deliveries.values_list('channel', 'status').annotate(total=Count('pk'))
+        }
+        return {
+            channel: {state: totals.get((channel, state), 0) for state in NotificationDelivery.Status.values}
+            for channel in NotificationDelivery.Channel.values
+        }
+
+
+class ReachQuery(serializers.Serializer):
+    tipo = serializers.ChoiceField(Notification.Kind.choices)
+    uf = serializers.CharField(max_length=2, required=False, allow_blank=True, default='')
+    cidade = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
 
 
 class StatisticSerializer(serializers.ModelSerializer):
@@ -316,15 +337,45 @@ class StaffCenterViewSet(AuditedViewSet):
 
 
 class StaffNotificationViewSet(AuditedViewSet):
+    """Qualquer pessoa da equipe escreve rascunhos; publicar, mexer no publicado e despublicar exige permissão."""
+
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     entidade = 'aviso'
 
+    def _require_publisher(self):
+        if not self.request.user.staff.can_publish_notices:
+            raise PermissionDenied(NO_PUBLISH)
+
+    def perform_create(self, serializer):
+        if serializer.validated_data.get('status') == PublishStatus.PUBLICADO:
+            self._require_publisher()
+        super().perform_create(serializer)
+
     def perform_update(self, serializer):
         notice = serializer.instance
-        if notice.status == PublishStatus.PUBLICADO and notice.data_disparo <= timezone.now():
+        if notice.disparado_em or (notice.status == PublishStatus.PUBLICADO and notice.data_disparo <= timezone.now()):
             raise ValidationError({'detail': 'Aviso já disparado não pode ser alterado. Despublique e crie outro.'})
+        if PublishStatus.PUBLICADO in (notice.status, serializer.validated_data.get('status')):
+            self._require_publisher()
         super().perform_update(serializer)
+
+    def perform_destroy(self, instance):
+        if instance.status == PublishStatus.PUBLICADO:
+            self._require_publisher()
+        super().perform_destroy(instance)
+
+    @action(detail=False, methods=['get'])
+    def alcance(self, request):
+        query = ReachQuery(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        data = query.validated_data
+        return Response(reach(data['tipo'], data['uf'].strip().upper(), data['cidade'].strip()))
+
+    @action(detail=False, methods=['get'])
+    def saude(self, request):
+        """Alertas do envio nas últimas 24 horas (credenciais de push, SMTP, falhas em massa, cota de e-mail)."""
+        return Response(health(timezone.now()))
 
 
 class StaffStatisticViewSet(AuditedViewSet):
