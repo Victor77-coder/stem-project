@@ -9,6 +9,8 @@ mobile/expo-env.d.ts
 .env
 backend/.venv/
 backend/media/
+# Cópias do banco feitas por scripts/backup-db.sh: nunca vão para o repositório.
+backups/
 backend/staticfiles/
 __pycache__/
 *.pyc
