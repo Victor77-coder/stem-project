@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/Layout'
 import { StoreProvider } from './data/store'
 import Account from './pages/Account'
+import CenterForm from './pages/centers/CenterForm'
+import CenterList from './pages/centers/CenterList'
 import ContentForm from './pages/content/ContentForm'
 import ContentList from './pages/content/ContentList'
 import JourneyForm from './pages/journey/JourneyForm'
@@ -35,7 +37,10 @@ export default function App() {
             <Route path="/notificacoes/novo" element={<NotificationForm />} />
             <Route path="/notificacoes/:id/editar" element={<NotificationForm />} />
             <Route path="/configuracoes" element={<Account />} />
-            {['/relatorios', '/cadastros', '/suporte'].map((p) => (
+            <Route path="/cadastros" element={<CenterList />} />
+            <Route path="/cadastros/novo" element={<CenterForm />} />
+            <Route path="/cadastros/:id/editar" element={<CenterForm />} />
+            {['/relatorios', '/suporte'].map((p) => (
               <Route key={p} path={p} element={<ComingSoon />} />
             ))}
           </Route>

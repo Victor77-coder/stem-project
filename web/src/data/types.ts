@@ -152,3 +152,40 @@ export interface Dashboard {
   atividade: (HistoryEntry & { titulo: string })[]
   porCategoria: { categoria: Category; total: number }[]
 }
+
+export const UFS = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ')
+
+export type CenterKind = 'hemocentro' | 'transplante' | 'campanha'
+
+export const CENTER_KINDS: Record<CenterKind, string> = {
+  hemocentro: 'Hemocentro',
+  transplante: 'Centro de transplante',
+  campanha: 'Campanha',
+}
+
+/** Centro ou campanha (RF08, RF13). Os nomes seguem os campos do modelo no backend. */
+export interface Center {
+  id: number
+  slug: string
+  cnes: string
+  origem: 'manual' | 'cnes'
+  revisar: boolean
+  motivo_revisao: string
+  nome: string
+  nome_curto: string
+  endereco: string
+  cidade: string
+  uf: string
+  tipo: CenterKind
+  lat: number | null
+  lng: number | null
+  horario: string
+  telefone: string
+  observacoes: string
+  evento_quando: string
+  fonte: string
+  fonte_data: string | null
+  status: PublishStatus
+  atualizado_em: string
+}
+
