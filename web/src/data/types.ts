@@ -96,6 +96,8 @@ export interface Content {
   validadoPor: string
   anexos: Attachment[]
   atualizadoEm: string
+  /** RF04: data da primeira publicação (aaaa-mm-dd); vazia enquanto for rascunho. */
+  publicadoEm: string
   historico: HistoryEntry[]
   /** Matéria original de uma novidade coletada dos portais. Só leitura no painel. */
   linkOriginal: string

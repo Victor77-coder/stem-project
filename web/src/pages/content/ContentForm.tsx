@@ -24,6 +24,7 @@ const blank = (): Content => ({
   validadoPor: '',
   anexos: [],
   atualizadoEm: today(),
+  publicadoEm: '',
   historico: [],
   linkOriginal: '',
 })

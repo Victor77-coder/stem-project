@@ -14,11 +14,12 @@ convidado vê todas. A equipe pode corrigir o público no painel, e a coleta seg
 
 import re
 import unicodedata
-from datetime import date
+from datetime import date, datetime, time
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.utils import timezone
 
 from catalog.models import CatalogHistory, Content, PublishStatus
 
@@ -91,6 +92,8 @@ def _news(item: dict) -> dict:
         'minutos': 1,
         'palavras_chave': _cut(portal, Content._meta.get_field('palavras_chave').max_length),
         'link_original': link,
+        # RF04: a data de publicação no app é a do portal, não a da coleta.
+        'publicado_em': timezone.make_aware(datetime.combine(published, time(12))),
     }
 
 
