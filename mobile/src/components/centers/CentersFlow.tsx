@@ -650,7 +650,12 @@ function FilterRow({
 }) {
   if (!options.length) return null;
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.chipsScroll}
+      contentContainerStyle={styles.chips}
+    >
       {options.map((item) => {
         const on = item.id === value;
         return (
@@ -788,7 +793,7 @@ const styles = StyleSheet.create({
   sheetHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   sheetTitle: { flex: 1, fontSize: 16, lineHeight: 24, fontWeight: '700', color: colors.ink },
   link: { fontSize: 14, lineHeight: 21, fontWeight: '600', color: colors.primary600 },
-  sheetList: { marginTop: 4 },
+  sheetList: { marginTop: 4, flexShrink: 1 },
   offline: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -811,6 +816,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceMuted,
   },
   outsideText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
+  chipsScroll: { flexGrow: 0, flexShrink: 0 },
   chips: { gap: 8, paddingVertical: 12 },
   chip: { height: 32, borderRadius: 999, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
   chipOn: { backgroundColor: colors.primary600 },
