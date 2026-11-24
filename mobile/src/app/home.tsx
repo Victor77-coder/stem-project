@@ -27,8 +27,10 @@ import { api, withFallback } from '@/lib/api';
 import { onNoticeOpened } from '@/lib/push';
 import { colors } from '@/theme';
 
-function firstName(name: string, fallback: string) {
-  return name.trim().split(/\s+/)[0] || fallback;
+/** Sem nome no cadastro, a saudação fica neutra (RS008: nada de nome de exemplo). */
+function greeting(name: string) {
+  const first = name.trim().split(/\s+/)[0];
+  return first ? `Olá, ${first}` : 'Olá!';
 }
 
 function resolveProfile(query: string | string[] | undefined, saved: ProfileType | null): ProfileType {
@@ -86,8 +88,8 @@ function DonorHome({
   return (
     <>
       <HomeHeader
-        greeting={`Olá, ${firstName(name, 'Maria')}`}
-        chip={sex === 'masculino' ? 'Doador' : 'Doadora'}
+        greeting={greeting(name)}
+        chip={sex === 'feminino' ? 'Doadora' : 'Doador'}
         chipBg={colors.primary100}
         chipFg={colors.primary600}
         subtitle="Que bom ter você por aqui. Veja seus próximos passos."
@@ -196,7 +198,7 @@ function ReceptorHome({
   return (
     <>
       <HomeHeader
-        greeting={`Olá, ${firstName(name, 'João')}`}
+        greeting={greeting(name)}
         chip={sex === 'feminino' ? 'Receptora' : 'Receptor'}
         chipBg={colors.teal100}
         chipFg={colors.teal600}
