@@ -77,6 +77,7 @@ def article(content: Content, request) -> dict:
         'automatic': content.is_collected_news and content.validado_em is None,
         'sections': content.secoes or [{'title': '', 'body': content.descricao}],
         'updatedAt': content.atualizado_em.isoformat(),
+        'publishedAt': br_date(timezone.localtime(content.publicado_em)) if content.publicado_em else '',
         'attachments': [
             {
                 'id': str(item.pk),

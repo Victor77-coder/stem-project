@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { LearnRoute } from '@/components/learn/LearnFlow';
+import type { ProfileType } from '@/context/RegistrationContext';
+import { UFS } from '@/content/insights';
 import { colors } from '@/theme';
 
 type Step = 'intro' | 'age' | 'conditions' | 'result';
@@ -40,7 +42,8 @@ type Reading = {
   route: LearnRoute;
 };
 
-function readings(conditions: ConditionId[]): Reading[] {
+/** RF07: as leituras seguem o perfil e as condições marcadas. Nenhuma resposta é guardada. */
+function readings(conditions: ConditionId[], profile: ProfileType): Reading[] {
   const who: Reading = {
     title: 'Quem pode ser doador de medula',
     meta: 'Conceito · 3 min',
@@ -82,21 +85,37 @@ function readings(conditions: ConditionId[]): Reading[] {
     route: { name: 'myths' },
   };
 
+  const rights: Reading = {
+    title: 'Direitos e leis no Brasil',
+    meta: 'Leis no Brasil',
+    icon: 'scale-outline',
+    well: colors.surfaceMuted,
+    iconColor: colors.textSecondary,
+    route: { name: 'library', category: 'Leis no Brasil' },
+  };
+
   const middle = conditions.includes('hipertensao')
     ? pressure
     : conditions.includes('sangue')
       ? blood
       : myths;
 
+  // Receptor: o tratamento e os direitos vêm antes de "quem pode doar".
+  if (profile === 'receptor') return [blood, middle === blood ? myths : middle, rights];
+  if (profile === 'convidado') return [who, middle, middle === myths ? blood : myths];
   return [who, middle, register];
 }
 
 type Props = {
+  profile: ProfileType;
+  /** UF do cadastro, quando houver: a localização que o app já tem. O questionário não pergunta de novo. */
+  uf?: string;
   onClose: () => void;
   onLearn: (route: LearnRoute) => void;
+  onCenters: () => void;
 };
 
-export function OrientationFlow({ onClose, onLearn }: Props) {
+export function OrientationFlow({ profile, uf = '', onClose, onLearn, onCenters }: Props) {
   const [step, setStep] = useState<Step>('intro');
   const [age, setAge] = useState<AgeId | null>(null);
   const [conditions, setConditions] = useState<ConditionId[]>([]);
@@ -116,7 +135,8 @@ export function OrientationFlow({ onClose, onLearn }: Props) {
   }
 
   const canContinue = step === 'age' ? age !== null : conditions.length > 0;
-  const suggestions = readings(conditions);
+  const suggestions = readings(conditions, profile);
+  const place = UFS.find(([code]) => code === uf.toUpperCase())?.[1] ?? '';
 
   return (
     <View style={styles.fill}>
@@ -137,14 +157,14 @@ export function OrientationFlow({ onClose, onLearn }: Props) {
             <Ionicons name="chevron-back" size={22} color={colors.ink} />
           </Pressable>
           <Text style={styles.topTitle}>
-            {step === 'intro' ? 'Questionário' : step === 'result' ? 'Sugestões para você' : step === 'age' ? 'Pergunta 1 de 4' : 'Pergunta 3 de 4'}
+            {step === 'intro' ? 'Questionário' : step === 'result' ? 'Sugestões para você' : step === 'age' ? 'Pergunta 1 de 2' : 'Pergunta 2 de 2'}
           </Text>
           <View style={styles.iconBtn} />
         </View>
 
         {step === 'age' || step === 'conditions' ? (
           <View style={styles.track}>
-            <View style={[styles.trackFill, { width: step === 'age' ? '25%' : '75%' }]} />
+            <View style={[styles.trackFill, { width: step === 'age' ? '50%' : '100%' }]} />
           </View>
         ) : null}
 
@@ -154,7 +174,7 @@ export function OrientationFlow({ onClose, onLearn }: Props) {
               <Ionicons name="clipboard-outline" size={28} color={colors.warning700} />
             </View>
             <Text style={styles.title}>Questionário de orientação</Text>
-            <Text style={styles.subtitle}>4 perguntas rápidas para sugerir conteúdos que combinam com você.</Text>
+            <Text style={styles.subtitle}>2 perguntas rápidas para sugerir conteúdos e centros que combinam com você.</Text>
             <View style={styles.noteCard}>
               {NOTES.map((note) => (
                 <View key={note.label} style={styles.noteRow}>
@@ -208,7 +228,7 @@ export function OrientationFlow({ onClose, onLearn }: Props) {
           <View>
             <View style={styles.ready}>
               <Text style={styles.readyLabel}>Pronto</Text>
-              <Text style={styles.readyTitle}>Separamos 3 leituras com base nas suas respostas</Text>
+              <Text style={styles.readyTitle}>Separamos 3 leituras e os centros perto de você</Text>
             </View>
             <View style={styles.warning}>
               <Ionicons name="warning-outline" size={18} color={colors.danger600} />
@@ -233,6 +253,17 @@ export function OrientationFlow({ onClose, onLearn }: Props) {
                 <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
               </Pressable>
             ))}
+            {/* Localização: a do cadastro, quando houver; sem ela, a aba Centros pede GPS ou CEP. */}
+            <Pressable accessibilityRole="button" onPress={onCenters} style={styles.reading}>
+              <View style={[styles.well, { backgroundColor: colors.teal100 }]}>
+                <Ionicons name="location-outline" size={22} color={colors.teal600} />
+              </View>
+              <View style={styles.readingCopy}>
+                <Text style={styles.readingTitle}>{place ? `Centros e campanhas em ${place}` : 'Centros e campanhas perto de você'}</Text>
+                <Text style={styles.readingMeta}>{place ? 'Pelo estado do seu cadastro' : 'Pelo GPS ou pelo CEP'}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+            </Pressable>
           </View>
         ) : null}
       </ScrollView>
