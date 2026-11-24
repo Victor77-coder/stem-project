@@ -131,7 +131,7 @@ export function Footer({ className = '' }: { className?: string }) {
       <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[7px] font-bold text-primary">
         STEM
       </span>
-      © {YEAR} STEM Project — CélulAI. Todos os direitos reservados.
+      © {YEAR} STEM Project. Todos os direitos reservados.
     </footer>
   )
 }
