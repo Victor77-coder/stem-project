@@ -44,6 +44,19 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # Relógio do Celery: a cada 5 minutos enfileira o disparo de avisos (push e e-mail, só das 8h às 21h).
+  # Uma única instância: duas réplicas enfileirariam o disparo em dobro.
+  celery-beat:
+    build:
+      context: ./backend
+    env_file: .env
+    environment: *backend-env
+    command: ["celery", "-A", "config", "beat", "--loglevel=info", "--schedule", "/tmp/celerybeat-schedule"]
+    depends_on:
+      broker:
+        condition: service_healthy
+    restart: unless-stopped
+
   db:
     image: postgres:17.6
     environment:

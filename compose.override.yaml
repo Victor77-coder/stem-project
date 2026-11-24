@@ -3,8 +3,9 @@ services:
     command: ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"]
     environment:
       DJANGO_DEBUG: "1"
-      EMAIL_HOST: mailpit
-      EMAIL_PORT: "1025"
+      # Por padrão o e-mail cai no Mailpit. Para testar o Brevo localmente, ver docs/notificacoes.md.
+      EMAIL_HOST: ${STEM_DEV_EMAIL_HOST:-mailpit}
+      EMAIL_PORT: ${STEM_DEV_EMAIL_PORT:-1025}
     volumes:
       - ./backend:/app
       - media-data:/app/media
@@ -13,6 +14,16 @@ services:
         condition: service_started
 
   celery-worker:
+    environment:
+      EMAIL_HOST: ${STEM_DEV_EMAIL_HOST:-mailpit}
+      EMAIL_PORT: ${STEM_DEV_EMAIL_PORT:-1025}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      mailpit:
+        condition: service_started
+
+  celery-beat:
     volumes:
       - ./backend:/app
 
