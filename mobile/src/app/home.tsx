@@ -13,7 +13,7 @@ import { type CenterFilter } from '@/content/centers';
 import { DONOR_STEPS, progressPercent, receptorSteps, type JourneyKind } from '@/content/journey';
 import {
   ArticleList,
-  CampaignCard,
+  CampaignSection,
   HomeHeader,
   JourneyCard,
   NoticeInvite,
@@ -57,6 +57,7 @@ function homeCard(kind: JourneyKind, current: number) {
 function DonorHome({
   name,
   sex,
+  uf,
   current,
   unread,
   open,
@@ -69,6 +70,7 @@ function DonorHome({
 }: {
   name: string;
   sex: Sexo;
+  uf: string;
   current: number;
   unread: number;
   open: (route: LearnRoute) => void;
@@ -138,10 +140,7 @@ function DonorHome({
           },
         ]}
       />
-      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
-        Campanhas perto de você
-      </SectionTitle>
-      <CampaignCard onPress={() => onCenters('campanha')} />
+      <CampaignSection uf={uf} onOpen={() => onCenters('campanha')} />
       <SectionTitle link="Ver mais" onLink={() => open({ name: 'library' })}>
         Recomendado para você
       </SectionTitle>
@@ -356,10 +355,7 @@ function ConvidadoHome({
         ]}
       />
       <ProfileInvite onPress={() => router.push('/profile')} />
-      <SectionTitle link="Ver todas" onLink={() => onCenters('campanha')}>
-        Campanhas perto de você
-      </SectionTitle>
-      <CampaignCard onPress={() => onCenters('campanha')} />
+      <CampaignSection onOpen={() => onCenters('campanha')} />
     </>
   );
 }
@@ -506,6 +502,7 @@ export default function HomeScreen() {
               <DonorHome
                 name={draft.name}
                 sex={draft.sex}
+                uf={draft.uf}
                 current={progress.doador}
                 unread={unread}
                 open={openLearn}
