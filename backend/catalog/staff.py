@@ -68,6 +68,7 @@ def content_payload(content: Content, history: list[dict]) -> dict:
             for item in content.anexos.all()
         ],
         'atualizadoEm': content.atualizado_em.date().isoformat(),
+        'publicadoEm': timezone.localtime(content.publicado_em).date().isoformat() if content.publicado_em else '',
         'historico': history,
         'slug': content.slug or '',
         'secoes': content.secoes,
