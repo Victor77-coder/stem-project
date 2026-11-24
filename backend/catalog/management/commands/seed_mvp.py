@@ -70,14 +70,14 @@ class Command(BaseCommand):
         return admin
 
     def _consent(self):
-        for kind, title, sections in (
-            (ConsentDocument.Kind.TCLE, 'Termo de Consentimento Livre e Esclarecido', data.TCLE),
-            (ConsentDocument.Kind.TERMOS, 'Termos de uso', data.TERMOS),
+        for kind, version, title, sections in (
+            (ConsentDocument.Kind.TCLE, '1.0', 'Termo de Consentimento Livre e Esclarecido', data.TCLE),
+            (ConsentDocument.Kind.TERMOS, data.TERMOS_VERSION, 'Termos de uso', data.TERMOS),
         ):
             if not ConsentDocument.objects.filter(kind=kind, is_current=True).exists():
                 ConsentDocument.objects.update_or_create(
                     kind=kind,
-                    version='1.0',
+                    version=version,
                     defaults={'title': title, 'sections': sections, 'published_at': date(2026, 10, 1), 'is_current': True},
                 )
 
