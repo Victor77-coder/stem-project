@@ -80,6 +80,7 @@ python -m workers --source novidades --competencia 2608 --skip-ingest
 - Centro publicado recebe só mudanças seguras (fonte, data, código IBGE, telefone ausente).
 - Coordenada a mais de 1 km, tipo diferente ou habilitações alteradas: o centro continua publicado e fica com `revisar=true` e o motivo.
 - Saiu do recorte: vai para inativo.
+- Tipo 69 (Centro de Atenção Hemoterapia e/ou Hematológica) só entra com coleta de sangue declarada (serviço 128, classe 001). O tipo 69 também inclui agências transfusionais, que guardam e transfundem sangue mas não recebem doador. Sem coleta declarada, a unidade só fica se o nome fantasia indicar unidade de coleta (hemocentro, hemonúcleo, posto ou unidade de coleta, marca da hemorrede pública como Hemoes ou Hemosul) e não for agência transfusional; ela entra com a regra `tipo-69-pelo-nome`. Se o site do CNES não devolver o nome, a unidade fica, para uma falha passageira não despublicar hemocentro. Na competência 2610 isso tirou 90 unidades (agências, laboratórios, clínicas de hemodiálise) e manteve 12 pelo nome.
 - Centros com `origem=manual` (campanhas, unidades sem CNES próprio) nunca são alterados.
 
 ## Estatísticas de transplante de medula (`tcth`)
