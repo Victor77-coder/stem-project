@@ -8,6 +8,8 @@ import JourneyForm from './pages/journey/JourneyForm'
 import JourneyList from './pages/journey/JourneyList'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
+import NotificationForm from './pages/notifications/NotificationForm'
+import NotificationList from './pages/notifications/NotificationList'
 import UserProfile from './pages/users/UserProfile'
 import UsersList from './pages/users/UsersList'
 
@@ -29,8 +31,11 @@ export default function App() {
             <Route path="/jornada" element={<JourneyList />} />
             <Route path="/jornada/nova" element={<JourneyForm />} />
             <Route path="/jornada/:id/editar" element={<JourneyForm />} />
+            <Route path="/notificacoes" element={<NotificationList />} />
+            <Route path="/notificacoes/novo" element={<NotificationForm />} />
+            <Route path="/notificacoes/:id/editar" element={<NotificationForm />} />
             <Route path="/configuracoes" element={<Account />} />
-            {['/relatorios', '/cadastros', '/notificacoes', '/suporte'].map((p) => (
+            {['/relatorios', '/cadastros', '/suporte'].map((p) => (
               <Route key={p} path={p} element={<ComingSoon />} />
             ))}
           </Route>

@@ -17,7 +17,7 @@ const sexos: { id: Exclude<Sexo, 'outro' | ''>; label: string }[] = [
 const COMORBIDITIES = ['Nenhuma', 'Hipertensão', 'Diabetes', 'Cardiopatia', 'Doença autoimune', 'Outra'];
 
 export default function PhysicalScreen() {
-  const { draft, update } = useRegistration();
+  const { draft, update, totalSteps } = useRegistration();
 
   function toggleComorbidity(item: string) {
     if (item === 'Nenhuma') {
@@ -45,7 +45,7 @@ export default function PhysicalScreen() {
         title="Dados físicos"
         subtitle="Usamos apenas para personalizar conteúdos. Você pode alterar depois."
         step={4}
-        total={5}
+        total={totalSteps}
         brand={<Logo />}
       />
 

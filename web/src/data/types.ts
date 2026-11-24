@@ -8,6 +8,8 @@ export interface Account {
   status: AccountStatus
   nivel: AccountLevel
   podeValidar?: boolean
+  /** Admin ou Administrador de conteúdo: só eles publicam avisos. */
+  podePublicarAvisos?: boolean
   avatar?: string
   documento1: string
   documento2: string
@@ -97,6 +99,47 @@ export interface Content {
   historico: HistoryEntry[]
   /** Matéria original de uma novidade coletada dos portais. Só leitura no painel. */
   linkOriginal: string
+}
+
+export type NoticeKind = 'campanha' | 'evento' | 'comunicado'
+
+export const NOTICE_KINDS: Record<NoticeKind, string> = {
+  campanha: 'Campanha de doação',
+  evento: 'Evento de saúde',
+  comunicado: 'Comunicado oficial',
+}
+
+export type DeliveryCounts = Record<'pendente' | 'enviado' | 'falhou' | 'ignorado', number>
+
+/** Aviso do app (RF10). Os nomes seguem os campos do modelo no backend. */
+export interface Notice {
+  id: number
+  tipo: NoticeKind
+  titulo: string
+  mensagem: string
+  origem: string
+  uf: string
+  cidade: string
+  data_disparo: string
+  status: PublishStatus
+  centro: number | null
+  conteudo: string | null
+  atualizado_em: string
+  disparado_em: string | null
+  envios: { push: DeliveryCounts; email: DeliveryCounts }
+}
+
+/** Saúde do envio nas últimas 24 horas (GET /staff/notifications/saude/). Só contagens, sem dado de pessoa. */
+export interface NoticeHealth {
+  ultimas24h: Record<'push' | 'email', { enviados: number; falhas: number }>
+  alertas: { nivel: 'erro' | 'aviso' | 'info'; titulo: string; texto: string }[]
+}
+
+/** Só contagens: o painel nunca vê quem recebe. */
+export interface NoticeReach {
+  caixaDeEntrada: number
+  push: number
+  email: number
 }
 
 export interface Dashboard {

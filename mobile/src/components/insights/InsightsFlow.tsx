@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -13,8 +13,10 @@ import {
   type NoticeKind,
   type StatYear,
 } from '@/content/insights';
-import { useRegistration, type ProfileType } from '@/context/RegistrationContext';
+import { EmailCode } from '@/components/EmailCode';
+import { hasEmailContact, useRegistration, type ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
+import { pushAvailable, turnOnPush } from '@/lib/push';
 import { colors } from '@/theme';
 
 export type InsightScreen = 'stats' | 'inbox' | 'prefs';
@@ -26,15 +28,20 @@ type Prefs = {
   campaigns: boolean;
   events: boolean;
   official: boolean;
+  hasEmail?: boolean;
+  emailConfirmed?: boolean;
 };
 
+// Opt-in estrito (RF10): nada vem ligado.
 const DEFAULT_PREFS: Prefs = {
-  push: true,
-  email: true,
-  campaigns: true,
-  events: true,
-  official: true,
+  push: false,
+  email: false,
+  campaigns: false,
+  events: false,
+  official: false,
 };
+
+const errorText = (err: unknown) => (err instanceof Error ? err.message : 'Não foi possível salvar agora. Tente novamente.');
 
 let sessionInbox: Notice[] = INBOX;
 let sessionPrefs: Prefs = DEFAULT_PREFS;
@@ -75,11 +82,13 @@ export function toNotice(item: ApiNotice): Notice {
 }
 
 export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }: Props) {
-  const { signedIn } = useRegistration();
+  const { signedIn, setEmailConfirmed } = useRegistration();
   const [screen, setScreen] = useState<InsightScreen>(initial);
   const [notices, setNotices] = useState<Notice[]>(sessionInbox);
   const [prefs, setPrefs] = useState<Prefs>(sessionPrefs);
   const [filter, setFilter] = useState<InboxFilter>('todas');
+  const [prefsError, setPrefsError] = useState('');
+  const [askingCode, setAskingCode] = useState(false);
 
   useEffect(() => {
     if (!signedIn) return;
@@ -99,9 +108,35 @@ export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }
     onUnread?.(notices.filter((item) => !item.read).length);
   }, [notices, prefs, onUnread, signedIn]);
 
-  function changePrefs(patch: Partial<Prefs>) {
+  async function changePrefs(patch: Partial<Prefs>) {
+    const before = prefs;
+    setPrefsError('');
     setPrefs((current) => ({ ...current, ...patch }));
-    if (signedIn) api('/me/preferences/', { method: 'PATCH', body: patch }).catch(() => undefined);
+    if (!signedIn) return;
+    try {
+      setPrefs(await api<Prefs>('/me/preferences/', { method: 'PATCH', body: patch }));
+    } catch (err) {
+      setPrefs(before);
+      setPrefsError(errorText(err));
+    }
+  }
+
+  async function togglePush(on: boolean) {
+    if (!on) return changePrefs({ push: false });
+    setPrefsError('');
+    if (await turnOnPush().catch(() => false)) setPrefs((current) => ({ ...current, push: true }));
+    else setPrefsError('Permita as notificações do STEM Project nas configurações do celular e tente de novo.');
+  }
+
+  async function toggleEmail(on: boolean) {
+    if (!on || prefs.emailConfirmed) return changePrefs({ email: on });
+    setPrefsError('');
+    try {
+      await api('/me/email/codigo/', { method: 'POST' });
+      setAskingCode(true);
+    } catch (err) {
+      setPrefsError(errorText(err));
+    }
   }
 
   function open(id: string) {
@@ -115,7 +150,31 @@ export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }
   }
 
   if (screen === 'prefs') {
-    return <PreferencesScreen email={email} prefs={prefs} onChange={changePrefs} onBack={() => setScreen('inbox')} />;
+    return (
+      <PreferencesScreen
+        email={email}
+        prefs={prefs}
+        signedIn={signedIn}
+        error={prefsError}
+        code={
+          askingCode ? (
+            <EmailCode
+              email={email.trim()}
+              onConfirmed={(data) => {
+                setPrefs((current) => ({ ...current, ...(data as Partial<Prefs>) }));
+                setEmailConfirmed(true);
+                setAskingCode(false);
+              }}
+              onLater={() => setAskingCode(false)}
+            />
+          ) : null
+        }
+        onChange={changePrefs}
+        onPush={togglePush}
+        onEmail={toggleEmail}
+        onBack={() => setScreen('inbox')}
+      />
+    );
   }
 
   if (screen === 'inbox') {
@@ -365,7 +424,13 @@ function InboxScreen({
           })}
         </ScrollView>
 
-        {visible.length === 0 ? <Text style={styles.empty}>Nenhum aviso neste filtro.</Text> : null}
+        {visible.length === 0 ? (
+          <Text style={styles.empty}>
+            {filter === 'todas'
+              ? 'Nenhum aviso por enquanto. Escolha os assuntos que quer receber em Preferências de aviso, no ícone acima.'
+              : 'Nenhum aviso neste filtro.'}
+          </Text>
+        ) : null}
         <NoticeGroup title="Hoje" items={today} onOpen={onOpen} />
         <NoticeGroup title="Esta semana" items={week} onOpen={onOpen} />
 
@@ -415,28 +480,56 @@ function NoticeGroup({ title, items, onOpen }: { title: string; items: Notice[];
 function PreferencesScreen({
   email,
   prefs,
+  signedIn,
+  error,
+  code,
   onChange,
+  onPush,
+  onEmail,
   onBack,
 }: {
   email: string;
   prefs: Prefs;
+  signedIn: boolean;
+  error: string;
+  code: ReactNode;
   onChange: (patch: Partial<Prefs>) => void;
+  onPush: (on: boolean) => void;
+  onEmail: (on: boolean) => void;
   onBack: () => void;
 }) {
-  const masked = email ? maskEmail(email) : 'm***@gmail.com';
+  const withEmail = signedIn && (prefs.hasEmail ?? hasEmailContact(email));
+  const emailCaption = !signedIn
+    ? 'Informe um contato no Perfil para ativar'
+    : !withEmail
+      ? 'Cadastre um e-mail no Perfil para ativar'
+      : prefs.emailConfirmed
+        ? maskEmail(email)
+        : `${maskEmail(email)} · confirmação por código`;
   return (
     <View style={styles.fill}>
       <TopBar title="Preferências de aviso" onBack={onBack} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.pageTitle}>Como quer ser avisado?</Text>
-        <Text style={styles.pageSubtitle}>Você só recebe avisos que autorizar (opt-in). Pode mudar a qualquer momento.</Text>
+        <Text style={styles.pageSubtitle}>
+          Você só recebe avisos que autorizar (opt-in). Push e e-mail chegam das 8h às 21h. Pode mudar a qualquer momento.
+        </Text>
 
         <View style={styles.panel}>
           <Text style={styles.kicker}>Canais</Text>
-          <PrefRow icon="phone-portrait-outline" title="Notificações no celular" value={prefs.push} onChange={(push) => onChange({ push })} />
-          <PrefRow icon="mail-outline" title="E-mail" caption={masked} value={prefs.email} onChange={(emailOn) => onChange({ email: emailOn })} />
-          <PrefRow icon="logo-whatsapp" title="WhatsApp" caption="Requer número cadastrado" value={false} disabled />
+          <PrefRow
+            icon="phone-portrait-outline"
+            title="Notificações no celular"
+            caption={!signedIn ? 'Informe um contato no Perfil para ativar' : pushAvailable ? undefined : 'Disponível no aplicativo instalado'}
+            value={prefs.push}
+            disabled={!signedIn || !pushAvailable}
+            onChange={onPush}
+          />
+          <PrefRow icon="mail-outline" title="E-mail" caption={emailCaption} value={prefs.email} disabled={!withEmail} onChange={onEmail} />
+          <PrefRow icon="logo-whatsapp" title="WhatsApp" caption="Em breve (Fase 2)" value={false} disabled />
         </View>
+        {error ? <Text style={styles.prefsError}>{error}</Text> : null}
+        {code ? <View style={styles.code}>{code}</View> : null}
 
         <View style={styles.panel}>
           <Text style={styles.kicker}>Tipos de aviso</Text>
@@ -612,6 +705,8 @@ const styles = StyleSheet.create({
   kicker: { fontSize: 12, lineHeight: 16, fontWeight: '700', letterSpacing: 0.4, color: colors.textTertiary },
   prefRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   disabledText: { color: colors.textTertiary },
+  prefsError: { marginTop: 12, fontSize: 12, lineHeight: 16, fontWeight: '600', color: colors.danger600 },
+  code: { marginTop: 16 },
   info: { marginTop: 16, flexDirection: 'row', gap: 8, backgroundColor: colors.primary50, borderRadius: 12, padding: 12 },
   infoText: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.primary900 },
   backdrop: { flex: 1, backgroundColor: 'rgba(28,36,51,0.4)', justifyContent: 'flex-end' },

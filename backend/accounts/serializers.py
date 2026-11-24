@@ -31,6 +31,7 @@ def staff_payload(user: User) -> dict:
         'status': user.status,
         'nivel': profile.nivel,
         'podeValidar': profile.can_validate,
+        'podePublicarAvisos': profile.can_publish_notices,
         **{key: getattr(profile, attr) for key, attr in PROFILE_FIELDS.items()},
         'criadoEm': user.created_at.date().isoformat(),
         'ultimoLogin': user.last_login.date().isoformat() if user.last_login else '',

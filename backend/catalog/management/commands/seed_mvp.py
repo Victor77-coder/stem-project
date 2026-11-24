@@ -145,11 +145,13 @@ class Command(BaseCommand):
     def _notices(self):
         now = timezone.now()
         for key, kind, title, body, origin, uf, hours, center in data.NOTICES:
+            sent = now - timedelta(hours=hours)
+            # Exemplos só para a caixa de entrada: já nascem disparados, sem push nem e-mail.
             Notification.objects.update_or_create(
                 titulo=title,
                 defaults={
                     'tipo': kind, 'mensagem': body, 'origem': origin, 'uf': uf,
-                    'data_disparo': now - timedelta(hours=hours), 'status': PublishStatus.PUBLICADO,
+                    'data_disparo': sent, 'disparado_em': sent, 'status': PublishStatus.PUBLICADO,
                     'centro': Center.objects.filter(slug=center).first() if center else None,
                 },
             )

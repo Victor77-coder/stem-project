@@ -8,6 +8,15 @@ from .models import Profile
 from .validators import LooseDecimalField, clean_cep, clean_phone, clean_uf
 
 
+class NoticeChoicesSerializer(serializers.Serializer):
+    """Etapa "Quer receber avisos?" do cadastro. Push só liga depois que o aparelho registra o token."""
+
+    email = serializers.BooleanField(required=False, default=False)
+    campaigns = serializers.BooleanField(required=False, default=False)
+    events = serializers.BooleanField(required=False, default=False)
+    official = serializers.BooleanField(required=False, default=False)
+
+
 class ParticipantInputSerializer(serializers.Serializer):
     """Campos com os mesmos nomes do rascunho de cadastro do app (RegistrationDraft)."""
 
@@ -32,6 +41,7 @@ class ParticipantInputSerializer(serializers.Serializer):
     tcleAccepted = serializers.BooleanField(required=False)
     tcleVersion = serializers.CharField(max_length=10, required=False, allow_blank=True)
     channel = serializers.ChoiceField(Channel.choices, required=False)
+    notices = NoticeChoicesSerializer(required=False)
 
     def validate_cep(self, value):
         return clean_cep(value)
