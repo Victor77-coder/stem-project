@@ -17,6 +17,17 @@ class NoticeChoicesSerializer(serializers.Serializer):
     official = serializers.BooleanField(required=False, default=False)
 
 
+class GuestCodeSerializer(serializers.Serializer):
+    """Volta do convidado em outro aparelho: e-mail, código de 6 dígitos e o que ele marcou na entrada."""
+
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=12)
+    tcleAccepted = serializers.BooleanField(required=False)
+    tcleVersion = serializers.CharField(max_length=10, required=False, allow_blank=True)
+    notices = NoticeChoicesSerializer(required=False)
+    channel = serializers.ChoiceField(Channel.choices, required=False)
+
+
 class ParticipantInputSerializer(serializers.Serializer):
     """Campos com os mesmos nomes do rascunho de cadastro do app (RegistrationDraft)."""
 

@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -191,9 +192,13 @@ CELERY_BEAT_SCHEDULE = {
     'avisos-disparo': {'task': 'engagement.tasks.dispatch_due', 'schedule': 300},
     # Recibos do push: o que a Apple e o Google responderam sobre cada envio aceito pela Expo.
     'avisos-recibos': {'task': 'engagement.tasks.check_receipts_due', 'schedule': 900},
+    # RF02: convidado sem acesso há GUEST_RETENTION_DAYS é inativado e tem o e-mail apagado. Uma vez por dia.
+    'convidados-prazo': {'task': 'participants.tasks.expire_guests_due', 'schedule': crontab(hour=3, minute=0)},
 }
 
 PASSWORD_RESET_CODE_MINUTES = 15
+# RF02: por quanto tempo o e-mail do convidado fica guardado depois do último acesso ao app.
+GUEST_RETENTION_DAYS = 365
 PASSWORD_RESET_MAX_ATTEMPTS = 5
 
 # Avisos (RF10). O link "parar de receber" dos e-mails aponta para cá; em produção, o endereço público da API.
