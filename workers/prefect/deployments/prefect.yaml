@@ -40,7 +40,7 @@ deployments:
         timezone: America/Maceio
 
   - name: novidades-portais
-    description: Notícias sobre medula óssea e células-tronco (REDOME, Ameo, SBTMO, Abrale) como rascunhos para a liga validar
+    description: Notícias sobre medula óssea e células-tronco (REDOME, Ameo, SBTMO, Abrale) na categoria Novidades do Aprender (publicação conforme NOVIDADES_AUTO_PUBLISH)
     entrypoint: workers/flows/collect.py:collect_flow
     work_pool:
       name: stem-docker
