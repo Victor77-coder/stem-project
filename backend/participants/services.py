@@ -7,7 +7,8 @@ from rest_framework import serializers
 from accounts.models import Channel, Role, Status, User
 from accounts.services import record_login, set_status
 from consent.models import ConsentAcceptance, ConsentDocument
-from engagement.models import JourneyProgress, Preferences, SavedContent
+from engagement.models import JourneyProgress, Preferences, PushToken, SavedContent
+from engagement.services import email_changed, send_email_code
 
 from .models import CLINICAL_PROFILES, COMORBIDITIES, ChangeEvent, Participant, Profile
 from .validators import format_decimal, valid_cpf
@@ -126,7 +127,11 @@ def register(data: dict) -> User:
     )
     ChangeEvent.objects.create(participant=participant, icon='person', title='Conta criada', detail=f'Perfil {participant.get_profile_display()}', actor=user)
     _accept(user, profile, data, channel)
-    Preferences.objects.create(participant=participant)
+    notices = data.get('notices') or {}
+    Preferences.objects.create(participant=participant, **{key: notices.get(key, False) for key in ('campaigns', 'events', 'official')})
+    # O canal e-mail só liga quando a pessoa digitar o código no app.
+    if notices.get('email') and user.email:
+        send_email_code(user)
     JourneyProgress.objects.create(participant=participant, region=_region_for(participant.uf))
     record_login(user, channel)
     return user
@@ -176,9 +181,12 @@ def _apply(participant: Participant, data: dict, actor: User) -> None:
     for icon, title, detail in _changes(participant, data):
         ChangeEvent.objects.create(participant=participant, icon=icon, title=title, detail=detail, actor=actor)
 
+    previous_email = user.email
     for field in ('name', 'email', 'phone', 'cpf'):
         if field in data:
             setattr(user, field, data[field].strip() if field == 'name' else data[field] or None)
+    if (user.email or '').strip().lower() != (previous_email or ''):
+        email_changed(user)
     if not user.email and not user.phone:
         _fail('email', 'Mantenha ao menos um e-mail ou telefone na conta.')
     user.save()
@@ -198,7 +206,7 @@ def _state(participant: Participant, data: dict) -> dict:
 
 @transaction.atomic
 def update(participant: Participant, data: dict, actor: User) -> None:
-    data = {key: value for key, value in data.items() if key not in ('profile', 'password', 'tcleAccepted', 'tcleVersion', 'channel')}
+    data = {key: value for key, value in data.items() if key not in ('profile', 'password', 'tcleAccepted', 'tcleVersion', 'channel', 'notices')}
     _check_profile_rules(participant.profile, _state(participant, data))
     _apply(participant, data, actor)
 
@@ -238,8 +246,10 @@ def anonymize(participant: Participant) -> None:
     user.email = None
     user.phone = None
     user.cpf = None
+    user.email_confirmado_em = None
     user.set_unusable_password()
     user.save()
+    PushToken.objects.filter(user=user).delete()
     set_status(user, Status.INATIVO, actor=user)
 
     participant.weight = None
@@ -269,6 +279,7 @@ def payload(participant: Participant) -> dict:
         'profile': participant.profile,
         'name': user.name,
         'email': user.email or '',
+        'emailConfirmed': user.email_confirmado_em is not None,
         'phone': user.phone or '',
         'cpf': user.cpf or '',
         'weight': format_decimal(participant.weight),

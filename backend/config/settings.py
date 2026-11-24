@@ -187,9 +187,31 @@ CELERY_TASK_IGNORE_RESULT = True
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_TASK_PUBLISH_RETRY_POLICY = {'max_retries': 2, 'interval_start': 0, 'interval_step': 0.5, 'interval_max': 1}
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULE = {
+    'avisos-disparo': {'task': 'engagement.tasks.dispatch_due', 'schedule': 300},
+    # Recibos do push: o que a Apple e o Google responderam sobre cada envio aceito pela Expo.
+    'avisos-recibos': {'task': 'engagement.tasks.check_receipts_due', 'schedule': 900},
+}
 
 PASSWORD_RESET_CODE_MINUTES = 15
 PASSWORD_RESET_MAX_ATTEMPTS = 5
+
+# Avisos (RF10). O link "parar de receber" dos e-mails aponta para cá; em produção, o endereço público da API.
+PUBLIC_API_URL = os.environ.get('PUBLIC_API_URL', 'http://localhost:8000').rstrip('/')
+# Push e e-mail só saem das 8h às 21h de Brasília; fora disso esperam a próxima janela.
+# NOTIFY_HOURS=0-24 desliga a janela (útil em testes locais); em produção, fica o padrão.
+NOTIFY_TIMEZONE = 'America/Sao_Paulo'
+NOTIFY_HOURS = tuple(int(hour) for hour in os.environ.get('NOTIFY_HOURS', '8-21').split('-', 1))
+EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send'
+EXPO_RECEIPTS_URL = 'https://exp.host/--/api/v2/push/getReceipts'
+# Opcional: só é exigido se o projeto no EAS ativar "Enhanced Security for Push Notifications".
+EXPO_ACCESS_TOKEN = os.environ.get('EXPO_ACCESS_TOKEN', '')
+# Cota diária do provedor de e-mail, somando códigos de 6 dígitos e avisos (Brevo grátis: 300). 0 = sem limite.
+EMAIL_DAILY_LIMIT = int(os.environ.get('EMAIL_DAILY_LIMIT', '0'))
+# Parte da cota que os avisos não usam: fica para códigos de 6 dígitos e e-mails da equipe.
+EMAIL_DAILY_RESERVE = int(os.environ.get('EMAIL_DAILY_RESERVE', '50'))
+# Tentativas por envio (push ou e-mail) antes de desistir; a próxima vem no disparo seguinte, a cada 5 minutos.
+NOTIFY_MAX_ATTEMPTS = 3
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
