@@ -1,18 +1,21 @@
 from collections import defaultdict
+from datetime import datetime
 
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.text import slugify
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
-from accounts.models import Role, Status, User
+from accounts.models import Role, Status, StatusChange, User
 from accounts.permissions import IsTeamMember, TeamReadAdminWrite
 from engagement.health import health
 from engagement.models import Notification, NotificationDelivery
@@ -256,7 +259,23 @@ class JourneyStepSerializer(PublishRules):
         exclude = ()
 
 
+# Centro do CNES: a coleta mensal atualiza estes campos. No painel só se corrige o resto (telefone, horário,
+# observações, coordenadas, nome curto, status e a revisão).
+CNES_LOCKED = ('cnes', 'codigo_ibge', 'nome', 'endereco', 'cidade', 'uf', 'tipo', 'fonte', 'fonte_data')
+CNES_LOCKED_MESSAGE = 'Vem do CNES e é atualizado pela coleta mensal. Corrija na fonte ou marque o centro para revisão.'
+
+
+def unique_center_slug(text: str) -> str:
+    base = slugify(text)[:50].strip('-') or 'centro'
+    slug, n = base, 2
+    while Center.objects.filter(slug=slug).exists():
+        slug, n = f'{base}-{n}', n + 1
+    return slug
+
+
 class CenterSerializer(PublishRules):
+    """Cadastros do painel (RF13): campanhas e centros manuais por inteiro; centros do CNES, só as correções seguras."""
+
     required_to_publish = {
         'fonte': 'Fonte é obrigatória. Sem fonte a unidade não é publicada.',
         'fonte_data': 'Informe a data de atualização da fonte.',
@@ -265,6 +284,21 @@ class CenterSerializer(PublishRules):
     class Meta:
         model = Center
         exclude = ()
+        read_only_fields = ('origem', 'dados_cnes')
+        extra_kwargs = {'slug': {'required': False}}
+
+    def validate(self, attrs):
+        if self.instance is not None and self.instance.origem == Center.Origin.CNES:
+            locked = [field for field in CNES_LOCKED if field in attrs and attrs[field] != getattr(self.instance, field)]
+            if locked:
+                raise ValidationError({field: [CNES_LOCKED_MESSAGE] for field in locked})
+        return super().validate(attrs)
+
+    def create(self, validated_data):
+        validated_data['origem'] = Center.Origin.MANUAL
+        if not validated_data.get('slug'):
+            validated_data['slug'] = unique_center_slug(validated_data.get('nome_curto') or validated_data['nome'])
+        return super().create(validated_data)
 
 
 class NotificationSerializer(PublishRules):
@@ -383,6 +417,133 @@ class StaffStatisticViewSet(AuditedViewSet):
     serializer_class = StatisticSerializer
     entidade = 'estatistica'
     soft_delete = False
+
+
+# RF13: relatórios só com contagens. Recortes de 1 a 4 pessoas viram "menos de 5" para ninguém ser identificado.
+SMALL_COUNT = 5
+REPORT_MONTHS = 12
+ENTITY_LABEL = {
+    'conteudo': 'Conteúdo',
+    'etapa': 'Jornada',
+    'centro': 'Centros e campanhas',
+    'aviso': 'Avisos',
+    'estatistica': 'Estatísticas',
+    'configuracao': 'Configurações',
+    'conta': 'Contas da equipe',
+    'acesso': 'Pedidos de acesso',
+}
+LOG_LIMIT = 300
+
+
+def _masked(total: int) -> int | None:
+    return total if total == 0 or total >= SMALL_COUNT else None
+
+
+def _months(now) -> list[str]:
+    """Os últimos REPORT_MONTHS meses, do mais antigo ao atual, como 'aaaa-mm'."""
+    year, month, months = now.year, now.month, []
+    for _ in range(REPORT_MONTHS):
+        months.append(f'{year:04d}-{month:02d}')
+        year, month = (year - 1, 12) if month == 1 else (year, month - 1)
+    return months[::-1]
+
+
+def _by_month(query, field: str, start) -> dict[str, int]:
+    rows = query.filter(**{f'{field}__gte': start}).annotate(mes=TruncMonth(field)).values('mes').annotate(total=Count('pk'))
+    return {timezone.localtime(row['mes']).strftime('%Y-%m'): row['total'] for row in rows}
+
+
+@api_view(['GET'])
+@permission_classes([IsTeamMember])
+def reports(request):
+    """Relatórios do painel (RF13): volumes de cadastros, inativações, avisos e conteúdos. Nenhum nome nem identificador."""
+    now = timezone.localtime()
+    months = _months(now)
+    start = timezone.make_aware(datetime.strptime(months[0], '%Y-%m'))
+    participants = Participant.objects.all()
+    active = participants.filter(user__status=Status.ATIVO)
+    profiles = Participant._meta.get_field('profile').choices
+
+    by_profile = dict(active.values_list('profile').annotate(total=Count('pk')))
+    by_uf: dict[str, dict[str, int | None]] = defaultdict(dict)
+    for uf, profile, total in active.exclude(uf='').values_list('uf', 'profile').annotate(total=Count('pk')):
+        by_uf[uf][profile] = _masked(total)
+    new = {profile: _by_month(participants.filter(profile=profile), 'created_at', start) for profile, _ in profiles}
+    inactive = _by_month(
+        StatusChange.objects.filter(user__role=Role.PARTICIPANT, to_status=Status.INATIVO), 'created_at', start
+    )
+    deliveries = NotificationDelivery.objects.filter(updated_at__gte=start)
+    sent = {
+        (channel, state): total for channel, state, total in deliveries.values_list('channel', 'status').annotate(total=Count('pk'))
+    }
+    return Response(
+        {
+            'participantes': {
+                'ativos': {profile: by_profile.get(profile, 0) for profile, _ in profiles},
+                'inativos': participants.exclude(user__status=Status.ATIVO).count(),
+                'porUf': [
+                    {'uf': uf, **{profile: counts.get(profile, 0) for profile, _ in profiles}} for uf, counts in sorted(by_uf.items())
+                ],
+            },
+            'meses': [
+                {
+                    'mes': month,
+                    'novos': {profile: new[profile].get(month, 0) for profile, _ in profiles},
+                    'inativacoes': inactive.get(month, 0),
+                }
+                for month in months
+            ],
+            'avisos': {
+                'publicados': Notification.objects.filter(status=PublishStatus.PUBLICADO, data_disparo__gte=start).count(),
+                'envios': {
+                    channel: {state: sent.get((channel, state), 0) for state in ('enviado', 'falhou', 'ignorado')}
+                    for channel in NotificationDelivery.Channel.values
+                },
+            },
+            'conteudos': dict(
+                Content.objects.filter(status=PublishStatus.PUBLICADO).values_list('categoria').annotate(total=Count('pk'))
+            ),
+            'recorteMinimo': SMALL_COUNT,
+            'desde': months[0],
+        }
+    )
+
+
+def _log_item(item: CatalogHistory) -> dict:
+    snapshot = item.snapshot or {}
+    title = snapshot.get('titulo') or snapshot.get('nome') or snapshot.get('nome_curto') or ''
+    return {
+        'id': item.pk,
+        'quando': item.data.isoformat(),
+        'tipo': item.entidade,
+        'tipoLabel': ENTITY_LABEL.get(item.entidade, item.entidade.capitalize()),
+        'objeto': title or f'#{item.objeto_id}',
+        'pessoa': item.autor_nome,
+        'acao': item.acao,
+    }
+
+
+@api_view(['GET'])
+@permission_classes([IsTeamMember])
+def action_log(request):
+    """Log de ações da equipe (RF13): quem fez o quê e quando. Filtros: tipo, pessoa, desde e até (aaaa-mm-dd)."""
+    params = request.query_params
+    query = CatalogHistory.objects.all()
+    if params.get('tipo'):
+        query = query.filter(entidade=params['tipo'])
+    if pessoa := params.get('pessoa', '').strip():
+        query = query.filter(autor_nome__icontains=pessoa)
+    if params.get('desde'):
+        query = query.filter(data__date__gte=params['desde'])
+    if params.get('ate'):
+        query = query.filter(data__date__lte=params['ate'])
+    return Response(
+        {
+            'itens': [_log_item(item) for item in query.order_by('-data')[:LOG_LIMIT]],
+            'tipos': [{'id': key, 'label': label} for key, label in ENTITY_LABEL.items()],
+            'limite': LOG_LIMIT,
+        }
+    )
 
 
 @api_view(['GET'])
