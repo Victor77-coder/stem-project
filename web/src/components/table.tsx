@@ -1,10 +1,10 @@
 import { ChevronsUpDown } from 'lucide-react'
 import { useState } from 'react'
 
-export function useSort<T>(rows: T[], initial: keyof T) {
+export function useSort<T>(rows: T[], initial: keyof T, initialAsc = true) {
   type K = keyof T
   const [key, setKey] = useState<K>(initial)
-  const [asc, setAsc] = useState(true)
+  const [asc, setAsc] = useState(initialAsc)
   const sorted = [...rows].sort((a, b) => String(a[key]).localeCompare(String(b[key]), 'pt-BR') * (asc ? 1 : -1))
   const toggle = (k: K) => {
     if (k === key) setAsc((v) => !v)

@@ -42,6 +42,53 @@ def test_out_of_scope(cnes, why):
     assert cnes not in by_cnes(), why
 
 
+AGENCIA = {'CNES': '9000001', 'CODUFMUN': '270430', 'COD_CEP': '57000000', 'TP_UNID': '69', 'NAT_JUR': '1023', 'VINC_SUS': '1'}
+
+
+def test_type_69_without_blood_collection_depends_on_the_name():
+    sr = [{'CNES': '9000001', 'SERV_ESP': '128', 'CLASS_SR': '002'}, {'CNES': '9000001', 'SERV_ESP': '128', 'CLASS_SR': '004'}]
+    selected = {item.cnes: item for item in classify([*ROWS['ST'], AGENCIA], ROWS['HB'], [*ROWS['SR'], *sr], '2609')}
+    assert selected['9000001'].regra == collector.REGRA_69_PELO_NOME
+    assert selected['9000001'].servicos == []
+    assert selected['2003899'].regra == 'tipo-69', 'Hemoal declara coleta (128/001)'
+
+
+@pytest.mark.parametrize(
+    'name',
+    [
+        'Hemocentro Regional de Ouricuri',
+        'Hemonúcleo Municipal de Teresópolis',
+        'Hemoes Serra',
+        'Unidade de Hemoterapia Hemosul Navirai',
+        'Posto de Coleta Mauá',
+        'Posto de Doacao Banco de Sangue Luciano Vitor Batista',
+        'Unidade de Coleta e Transfusão de Paranaguá',
+        'Fundação Hemeron',
+    ],
+)
+def test_collection_units_by_name(name):
+    assert collector.is_collection_unit(name)
+
+
+@pytest.mark.parametrize(
+    'name',
+    [
+        'Agencia Transfusional de Goiatuba',
+        'Agencia Transfusional do Hemocentro Coordenador',
+        'Agencia Transfuncional de Campo Maior',
+        'Colsan Mario Covas',
+        'Clinica de Hemodialise de Mineiros',
+        'Dinamica Hemodinamica',
+        'Hemovita Laboratorio de Analises Clinicas',
+        'Apsmed Assessoria e Prestacao de Servicos Medicos LTDA',
+        'Servico de Hemoterapia Madre Regina',
+        'Banco de Sangue Unidade Transfusional',
+    ],
+)
+def test_not_collection_units_by_name(name):
+    assert not collector.is_collection_unit(name)
+
+
 def test_expired_habilitation_is_ignored():
     expired = [{**row, 'CMPT_FIM': '202512'} if row['CNES'] == '0000434' and row['SGRUPHAB'].startswith('240') else row for row in ROWS['HB']]
     assert '0000434' not in by_cnes(hb=expired)
@@ -105,3 +152,31 @@ def test_collect_survives_cnes_site_outage(tmp_path, monkeypatch):
     hemoal = next(item for item in payload['establishments'] if item['cnes'] == '2003899')
     assert hemoal['detalhes_ok'] is False and hemoal['nome'] == 'Estabelecimento CNES 2003899'
     assert any('cadastro indisponível' in warning for warning in payload['warnings'])
+
+
+def _collect_with_agencia(tmp_path, monkeypatch, details_fn):
+    rows = {'ST': [*ROWS['ST'], AGENCIA], 'HB': ROWS['HB'], 'SR': ROWS['SR']}
+
+    def fake_fetch(path, url, **kwargs):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'x')
+        return collector.RemoteFile(path=path, url=url, status='downloaded', sha256='abc', size=1)
+
+    monkeypatch.setattr(collector, 'fetch_remote_file', fake_fetch)
+    monkeypatch.setattr(collector, 'read_dbc', lambda path, fields: rows[path.name[:2]])
+    payload = collector.collect(['AL'], '2609', tmp_path, details_fn=details_fn, municipalities_fn=lambda uf: {})
+    return {item['cnes'] for item in payload['establishments']}
+
+
+def test_collect_drops_transfusion_agency_without_blood_collection(tmp_path, monkeypatch):
+    names = {'9000001': 'AGENCIA TRANSFUSIONAL DE MACEIO', '2003899': 'HEMOCENTRO DE ALAGOAS HEMOAL'}
+    seen = _collect_with_agencia(tmp_path, monkeypatch, lambda codufmun, cnes: {'noFantasia': names.get(cnes, 'HOSPITAL')})
+    assert '9000001' not in seen
+    assert '2003899' in seen
+
+
+def test_collect_keeps_type_69_without_name_when_cnes_site_is_down(tmp_path, monkeypatch):
+    def down(*args):
+        raise OSError('connection reset by peer')
+
+    assert '9000001' in _collect_with_agencia(tmp_path, monkeypatch, down), 'falha passageira não despublica'

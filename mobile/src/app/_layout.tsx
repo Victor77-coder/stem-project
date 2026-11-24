@@ -16,6 +16,7 @@ export default function RootLayout() {
         <Stack.Screen name="register" />
         <Stack.Screen name="physical" />
         <Stack.Screen name="location" />
+        <Stack.Screen name="avisos" />
         <Stack.Screen name="terms" />
         <Stack.Screen name="tcle" />
         <Stack.Screen name="review" />

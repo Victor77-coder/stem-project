@@ -66,6 +66,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.ATIVO)
     created_at = models.DateTimeField(default=timezone.now)
     last_login_channel = models.CharField(max_length=10, choices=Channel.choices, blank=True)
+    # Avisos por e-mail (RF10) só valem para endereço confirmado por código; trocar o e-mail zera.
+    email_confirmado_em = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()
 
@@ -165,6 +167,10 @@ class StaffProfile(models.Model):
     def can_validate(self):
         return self.is_admin or self.tipo_conta == self.Kind.CLINICAL
 
+    @property
+    def can_publish_notices(self):
+        return self.is_admin or self.tipo_conta == self.Kind.CONTENT_ADMIN
+
 
 class AccessRequest(models.Model):
     """Pedido de acesso ao painel feito na tela de login."""
@@ -178,9 +184,14 @@ def _hash_code(code: str) -> str:
 
 
 class PasswordResetCode(models.Model):
-    """Código de 6 dígitos da recuperação de senha do app. Só o hash é gravado."""
+    """Código de 6 dígitos enviado por e-mail: recuperação de senha ou confirmação do endereço. Só o hash é gravado."""
+
+    class Purpose(models.TextChoices):
+        SENHA = 'senha', 'Recuperação de senha'
+        EMAIL = 'email', 'Confirmação de e-mail'
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reset_codes')
+    finalidade = models.CharField(max_length=5, choices=Purpose.choices, default=Purpose.SENHA)
     code_hash = models.CharField(max_length=64)
     expires_at = models.DateTimeField()
     attempts = models.PositiveSmallIntegerField(default=0)
@@ -191,19 +202,26 @@ class PasswordResetCode(models.Model):
         ordering = ['-created_at']
 
     @classmethod
-    def issue(cls, user: User) -> str:
-        cls.objects.filter(user=user, used_at__isnull=True).update(used_at=timezone.now())
+    def discard(cls, user: User, finalidade: str) -> None:
+        cls.objects.filter(user=user, finalidade=finalidade, used_at__isnull=True).update(used_at=timezone.now())
+
+    @classmethod
+    def issue(cls, user: User, finalidade: str = Purpose.SENHA) -> str:
+        cls.discard(user, finalidade)
         code = f'{secrets.randbelow(10**6):06d}'
         cls.objects.create(
             user=user,
+            finalidade=finalidade,
             code_hash=_hash_code(code),
             expires_at=timezone.now() + timedelta(minutes=settings.PASSWORD_RESET_CODE_MINUTES),
         )
         return code
 
     @classmethod
-    def verify(cls, user: User, code: str) -> 'PasswordResetCode | None':
-        entry = cls.objects.filter(user=user, used_at__isnull=True, expires_at__gt=timezone.now()).first()
+    def verify(cls, user: User, code: str, finalidade: str = Purpose.SENHA) -> 'PasswordResetCode | None':
+        entry = cls.objects.filter(
+            user=user, finalidade=finalidade, used_at__isnull=True, expires_at__gt=timezone.now()
+        ).first()
         if not entry or entry.attempts >= settings.PASSWORD_RESET_MAX_ATTEMPTS:
             return None
         if not hmac.compare_digest(entry.code_hash, _hash_code(digits(code))):

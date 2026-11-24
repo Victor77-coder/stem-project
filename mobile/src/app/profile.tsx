@@ -36,7 +36,7 @@ const options: {
 ];
 
 export default function ProfileScreen() {
-  const { draft, update } = useRegistration();
+  const { draft, update, totalSteps } = useRegistration();
 
   useEffect(() => {
     if (draft.profile !== 'doador' && draft.profile !== 'receptor') {
@@ -65,7 +65,7 @@ export default function ProfileScreen() {
         title="Escolha seu perfil"
         subtitle="Selecione uma das opções abaixo."
         step={1}
-        total={5}
+        total={totalSteps}
         brand={<Logo />}
       />
       <Text style={styles.hint}>Selecione o perfil que corresponde à sua necessidade.</Text>
