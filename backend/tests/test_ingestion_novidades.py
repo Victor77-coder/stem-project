@@ -61,6 +61,7 @@ def test_new_items_are_published_without_clinical_validation(api, seeded):
 
     shown = public(api, content.pk)
     assert shown['category'] == 'Novidades' and shown['link'] == REDOME_LINK
+    assert shown['publishedAt'] == '26/10/2026', 'RF04: a data de publicação é a do portal, não a da coleta'
     assert shown['automatic'] is True and shown['validated'] == '', 'o app não pode dizer que a liga validou'
     assert CollectionRun.objects.get().warnings == []
 
