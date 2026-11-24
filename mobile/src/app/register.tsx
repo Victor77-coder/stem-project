@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
 import { Logo } from '@/components/Logo';
@@ -11,15 +11,18 @@ export default function RegisterScreen() {
   const { draft, update, isConvidado, totalSteps } = useRegistration();
 
   function next() {
-    router.push('/terms');
+    router.push('/physical');
   }
+
+  // RNF05/RS001: sem o aceite do TCLE, nenhum formulário é mostrado.
+  if (!isConvidado && !draft.tcleAccepted) return <Redirect href="/terms" />;
 
   return (
     <Screen footer={<Button label="Continuar" onPress={next} />}>
       <StepHeader
         title="Crie sua conta"
         subtitle="Informe os dados para criar seu acesso."
-        step={2}
+        step={3}
         total={isConvidado ? 3 : totalSteps}
         brand={<Logo size="sm" />}
       />

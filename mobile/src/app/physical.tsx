@@ -35,7 +35,7 @@ export default function PhysicalScreen() {
         <NavPair
           onLeft={() => {
             if (router.canGoBack()) router.back();
-            else router.replace('/terms');
+            else router.replace('/register');
           }}
           onRight={() => router.push('/location')}
         />
