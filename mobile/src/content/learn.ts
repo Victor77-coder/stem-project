@@ -19,6 +19,8 @@ export type Article = {
   featured?: boolean;
   keywords?: string;
   validated?: string;
+  /** RF04: data da primeira publicação (dd/mm/aaaa). Nas novidades coletadas, a do portal. */
+  published?: string;
   source: string;
   /** Matéria original, nas novidades coletadas dos portais */
   link?: string;
@@ -328,6 +330,7 @@ type ApiArticle = {
   keywords: string;
   tag: string;
   validated: string;
+  publishedAt: string;
   source: string;
   link: string;
   automatic: boolean;
@@ -370,6 +373,7 @@ export function loadCatalog(): Promise<boolean> {
             featured: item.featured || undefined,
             keywords: item.keywords || undefined,
             validated: item.validated || undefined,
+            published: item.publishedAt || undefined,
             source: item.source,
             link: item.link || undefined,
             automatic: item.automatic || undefined,

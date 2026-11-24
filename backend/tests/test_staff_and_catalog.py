@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from catalog import geo
@@ -71,6 +72,27 @@ def test_publish_requires_source_and_clinical_validation(staff_login):
     edited = editor.patch(f'/api/v1/staff/contents/{pk}/', {'descricao': 'Texto novo sem revisão.'}, format='json')
     assert edited.status_code == 400
     assert Content.objects.get(pk=pk).validado_por is not None
+
+
+def test_publication_date_is_set_once(api, staff_login):
+    """RF04: a data de publicação é gravada na primeira publicação e não muda com edições nem despublicações."""
+    admin = staff_login()
+    created = admin.post('/api/v1/staff/contents/', DRAFT, format='json')
+    pk = created.data['id']
+    assert created.data['publicadoEm'] == '' and Content.objects.get(pk=pk).publicado_em is None, 'rascunho não tem data'
+
+    published = admin.patch(f'/api/v1/staff/contents/{pk}/', {'status': 'publicado', 'fonte': 'INCA', 'validacaoClinica': True}, format='json')
+    assert published.data['publicadoEm'] == timezone.localdate().isoformat()
+    first = Content.objects.get(pk=pk).publicado_em
+    Content.objects.filter(pk=pk).update(publicado_em=first - timedelta(days=3))
+    before = Content.objects.get(pk=pk).publicado_em
+
+    admin.patch(f'/api/v1/staff/contents/{pk}/', {'descricao': 'Texto revisado.', 'validacaoClinica': True}, format='json')
+    admin.post(f'/api/v1/staff/contents/{pk}/despublicar/', {'senha': 'admin123'}, format='json')
+    admin.patch(f'/api/v1/staff/contents/{pk}/', {'status': 'publicado', 'validacaoClinica': True}, format='json')
+    assert Content.objects.get(pk=pk).publicado_em == before
+    shown = next(item for item in api.get('/api/v1/conteudos/').data if item['id'] == str(pk))
+    assert shown['publishedAt'] == timezone.localtime(before).strftime('%d/%m/%Y')
 
 
 def test_public_catalog_only_shows_published_and_refreshes_cache(api, staff_login):

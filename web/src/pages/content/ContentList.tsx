@@ -117,6 +117,8 @@ export default function ContentList() {
             )}
             <dt className="font-semibold">Validação clínica</dt>
             <dd>{preview.validacaoClinica ? `Validado por ${preview.validadoPor}` : 'Pendente'}</dd>
+            <dt className="font-semibold">Publicado em</dt>
+            <dd>{preview.publicadoEm ? formatDate(preview.publicadoEm) : 'Ainda não publicado'}</dd>
             <dt className="font-semibold">Atualizado em</dt>
             <dd>{formatDate(preview.atualizadoEm)}</dd>
             <dt className="font-semibold">Anexos</dt>
