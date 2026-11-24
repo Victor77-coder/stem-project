@@ -80,6 +80,7 @@ python -m workers --source novidades --competencia 2608 --skip-ingest
 - Centro publicado recebe só mudanças seguras (fonte, data, código IBGE, telefone ausente).
 - Coordenada a mais de 1 km, tipo diferente ou habilitações alteradas: o centro continua publicado e fica com `revisar=true` e o motivo.
 - Saiu do recorte: vai para inativo.
+- Tipo 69 (Centro de Atenção Hemoterapia e/ou Hematológica) só entra com coleta de sangue declarada (serviço 128, classe 001). O tipo 69 também inclui agências transfusionais, que guardam e transfundem sangue mas não recebem doador. Sem coleta declarada, a unidade só fica se o nome fantasia indicar unidade de coleta (hemocentro, hemonúcleo, posto ou unidade de coleta, marca da hemorrede pública como Hemoes ou Hemosul) e não for agência transfusional; ela entra com a regra `tipo-69-pelo-nome`. Se o site do CNES não devolver o nome, a unidade fica, para uma falha passageira não despublicar hemocentro. Na competência 2610 isso tirou 90 unidades (agências, laboratórios, clínicas de hemodiálise) e manteve 12 pelo nome.
 - Centros com `origem=manual` (campanhas, unidades sem CNES próprio) nunca são alterados.
 
 ## Estatísticas de transplante de medula (`tcth`)
@@ -134,11 +135,11 @@ Alimenta a categoria Novidades do módulo Aprender.
 |---|---|---|
 | REDOME/INCA | `redome.inca.gov.br/wp-json/wp/v2/posts` | Tudo (o portal só publica sobre medula) |
 | Ameo | `ameo.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
-| SBTMO | `sbtmo.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
+| SBTMO | `sbtmo.org.br/wp-json/wp/v2/posts` | Tudo (sociedade de transplante de medula; o filtro perdia matérias como a do manual de terapia celular) |
 | Abrale | `abrale.org.br/wp-json/wp/v2/posts` | Só matéria que cita o tema |
 
 - Todos usam a API pública do WordPress, sem login, filtrando por data no servidor (`after`). O robots.txt dos quatro libera esse caminho.
-- "Cita o tema": título ou resumo com medula, célula(s)-tronco, TMO, TCTH, transplante, REDOME, hematopoiético ou cordão umbilical (sem acento e como palavra inteira). Ex.: de 18 posts da Abrale entre agosto e novembro de 2026, entrou 1 (consulta pública da Conitec sobre TMO).
+- "Cita o tema" (Ameo e Abrale): título ou resumo com medula, célula(s)-tronco, TMO, TCTH, transplante, REDOME, hematopoiético, cordão umbilical ou terapia celular (sem acento e como palavra inteira). Ex.: de 18 posts da Abrale entre agosto e novembro de 2026, entrou 1 (consulta pública da Conitec sobre TMO).
 - Vem só título, resumo (até 600 caracteres), data e link. O texto da matéria não é copiado: no app, o botão leva para o original.
 - A notícia entra com fonte `<Portal> · Publicado em dd/mm/aaaa`, visibilidade pública, os três públicos e o link em `Content.link_original`. O histórico registra "Coleta automática" como autor.
 - O link original identifica a matéria: coletas seguintes não recriam nem alteram o texto do que já veio. O que a equipe removeu (Deletar, status inativo) continua removido.

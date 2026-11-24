@@ -7,7 +7,7 @@ from django.core.cache import cache
 
 BRASILAPI_URL = 'https://brasilapi.com.br/api/cep/v2/{cep}'
 NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search'
-USER_AGENT = 'CelulAI/1.0 (STEM Project)'
+USER_AGENT = 'STEMProject/1.0'
 TIMEOUT_SECONDS = 4
 # CEP e centroide de cidade quase nunca mudam; o cache também segura o limite de 1 req/s do Nominatim.
 CACHE_SECONDS = 30 * 24 * 3600

@@ -5,8 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
 import { Logo } from '@/components/Logo';
+import { NoticeChoices } from '@/components/NoticeChoices';
 import { Screen } from '@/components/Screen';
 import { useRegistration } from '@/context/RegistrationContext';
+import { turnOnPush } from '@/lib/push';
 import { colors, type } from '@/theme';
 
 export default function ConvidadoScreen() {
@@ -24,6 +26,7 @@ export default function ConvidadoScreen() {
     setError('');
     try {
       await signUp();
+      if (draft.notices.push) await turnOnPush().catch(() => false);
       router.push('/conclusion');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível salvar o contato.');
@@ -64,7 +67,7 @@ export default function ConvidadoScreen() {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.infoTitle}>Acesso como convidado</Text>
-          <Text style={styles.infoBody}>Sem dados físicos, jornada ou alertas.</Text>
+          <Text style={styles.infoBody}>Sem dados físicos nem jornada. Avisos só se você quiser.</Text>
         </View>
       </View>
 
@@ -75,6 +78,15 @@ export default function ConvidadoScreen() {
         keyboardType="email-address"
         value={draft.email}
         onChangeText={(email) => update({ email, profile: 'convidado' })}
+      />
+
+      <Text style={styles.sectionTitle}>Quer receber avisos?</Text>
+      {!draft.email.trim() ? <Text style={styles.caption}>Informe um e-mail ou telefone acima para escolher os avisos.</Text> : null}
+      <NoticeChoices
+        value={draft.notices}
+        onChange={(notices) => update({ notices })}
+        email={draft.email}
+        disabled={!draft.email.trim()}
       />
 
       <View style={styles.check}>
@@ -138,5 +150,6 @@ const styles = StyleSheet.create({
   checkText: { ...type.secondary, color: colors.ink, flex: 1 },
   link: { color: colors.primary, fontWeight: '600' },
   caption: { ...type.caption, color: colors.muted },
+  sectionTitle: { ...type.body, fontWeight: '700', color: colors.ink },
   error: { ...type.caption, color: colors.danger },
 });

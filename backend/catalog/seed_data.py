@@ -211,14 +211,8 @@ STATS_DATE = '2026-08-01'
 HEADLINES = {'2025': (5_700_000, '5,7 mi', 3400, '3,4 mil'), '2024': (5_400_000, '5,4 mi', 3100, '3,1 mil'), '2023': (5_100_000, '5,1 mi', 2900, '2,9 mil')}
 YEAR_SCALE = {'2025': 1, '2024': 0.9, '2023': 0.82}
 REGION_BASE = {'Sudeste': 1820, 'Sul': 720, 'Nordeste': 510, 'Centro-Oeste': 230, 'Norte': 120}
-WAIT = {'Sudeste': (3.6, '3,6 meses'), 'Sul': (4.1, '4,1 meses'), 'Nordeste': (4.8, '4,8 meses'), 'Centro-Oeste': (5.2, '5,2 meses'), 'Norte': (6.1, '6,1 meses')}
-
-ESTIMATE_NOTE = 'Aproximação estatística baseada em dados públicos. Não é garantia de atendimento, procedimento ou prazo.'
-ESTIMATES = [
-    ('receptor', 'AL', 'Estimativa · Busca de doador', 'Média regional: 3 a 6 meses'),
-    ('receptor', 'PE', 'Estimativa · Busca de doador', 'Média regional: 2 a 5 meses'),
-    ('receptor', '*', 'Estimativa · Busca de doador', 'Varia por região'),
-]
+# Tempo de busca de doador (indicador `espera`) e regras de estimativa não têm exemplo: não há fonte pública desse
+# tempo, e um número inventado no app pareceria dado oficial. A estimativa (RF12) é desejável e está fora do app.
 
 GLOSSARY = [
     ('HLA', 'Antígenos leucocitários humanos. São as características genéticas usadas para comparar quem doa e quem recebe. A compatibilidade não depende do tipo sanguíneo.'),

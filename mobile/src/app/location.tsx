@@ -10,7 +10,7 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { colors, type } from '@/theme';
 
 export default function LocationScreen() {
-  const { draft, update } = useRegistration();
+  const { draft, update, signedIn, totalSteps } = useRegistration();
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState('Preenchimento automático de endereço via API');
 
@@ -54,7 +54,7 @@ export default function LocationScreen() {
             if (router.canGoBack()) router.back();
             else router.replace('/physical');
           }}
-          onRight={() => router.push('/review')}
+          onRight={() => router.push(signedIn ? '/review' : '/avisos')}
         />
       }
     >
@@ -62,7 +62,7 @@ export default function LocationScreen() {
         title="Localização"
         subtitle="Informe o CEP para preenchimento automático do endereço"
         step={5}
-        total={5}
+        total={totalSteps}
         brand={<Logo />}
       />
 

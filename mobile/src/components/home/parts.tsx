@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { api } from '@/lib/api';
 import { colors } from '@/theme';
 
 type Ion = keyof typeof Ionicons.glyphMap;
@@ -158,45 +156,6 @@ export function ArticleList({
   );
 }
 
-type Estimate = { available: boolean; label?: string; value?: string; detail?: string; disclaimer: string };
-
-export function EstimateCard({ uf = '', city = '', onStats }: { uf?: string; city?: string; onStats?: () => void }) {
-  const [estimate, setEstimate] = useState<Estimate | null>(null);
-
-  useEffect(() => {
-    api<Estimate>(`/estimativa/?perfil=receptor&uf=${encodeURIComponent(uf)}`)
-      .then(setEstimate)
-      .catch(() => setEstimate(null));
-  }, [uf]);
-
-  const place = city && uf ? `${city}/${uf}` : uf || 'Maceió/AL';
-  const value = estimate ? (estimate.available ? estimate.value : estimate.detail) : '~120 dias';
-  const caption = estimate?.available ? `${estimate.label} · ${place}` : estimate ? '' : 'tempo médio até o transplante em Maceió/AL';
-  const note =
-    estimate?.disclaimer ??
-    'Aproximação estatística baseada em dados públicos e localização. Não é garantia de atendimento, procedimento ou prazo.';
-
-  return (
-    <View style={styles.estimate}>
-      <View style={styles.estimateHead}>
-        <Ionicons name="sparkles" size={16} color={colors.warning700} />
-        <Text style={styles.estimateTitle}>Estimativa para a sua região</Text>
-      </View>
-      <View style={styles.estimateStat}>
-        <Text style={styles.estimateValue}>{value}</Text>
-        {caption ? <Text style={styles.estimateCaption}>{caption}</Text> : null}
-      </View>
-      <Text style={styles.estimateNote}>{note}</Text>
-      {onStats ? (
-        <Pressable accessibilityRole="button" onPress={onStats} style={styles.estimateLink}>
-          <Text style={styles.estimateLinkText}>Ver estatísticas de transplantes</Text>
-          <Ionicons name="chevron-forward" size={16} color={colors.warning700} />
-        </Pressable>
-      ) : null}
-    </View>
-  );
-}
-
 export function ProfileInvite({ onPress }: { onPress: () => void }) {
   return (
     <View style={styles.invite}>
@@ -211,6 +170,26 @@ export function ProfileInvite({ onPress }: { onPress: () => void }) {
       </View>
       <Pressable accessibilityRole="button" onPress={onPress} style={styles.inviteButton}>
         <Text style={styles.inviteButtonText}>Escolher um perfil</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+/** Contas sem push nem e-mail ligados (o opt-in começa desligado). Some quando algum canal é ativado. */
+export function NoticeInvite({ onPress }: { onPress: () => void }) {
+  return (
+    <View style={styles.invite}>
+      <View style={styles.row}>
+        <View style={[styles.well, styles.inviteWell]}>
+          <Ionicons name="notifications-outline" size={20} color={colors.primary600} />
+        </View>
+        <View style={styles.copy}>
+          <Text style={styles.cardTitle}>Ative avisos de campanhas perto de você</Text>
+          <Text style={styles.cardMeta}>Receba no celular ou por e-mail só o que escolher. Pode desligar quando quiser.</Text>
+        </View>
+      </View>
+      <Pressable accessibilityRole="button" onPress={onPress} style={styles.inviteButton}>
+        <Text style={styles.inviteButtonText}>Escolher avisos</Text>
       </Pressable>
     </View>
   );
@@ -352,21 +331,6 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 10,
   },
-  estimate: {
-    marginTop: 12,
-    backgroundColor: colors.warning100,
-    borderRadius: 16,
-    padding: 14,
-    gap: 8,
-  },
-  estimateHead: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  estimateTitle: { fontSize: 14, lineHeight: 20, fontWeight: '600', color: colors.warning700 },
-  estimateStat: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  estimateValue: { fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.warning700 },
-  estimateCaption: { flex: 1, fontSize: 14, lineHeight: 20, color: colors.warning700 },
-  estimateNote: { fontSize: 14, lineHeight: 21, color: colors.warning700 },
-  estimateLink: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start', paddingVertical: 4 },
-  estimateLinkText: { fontSize: 14, lineHeight: 21, fontWeight: '600', color: colors.warning700 },
   invite: {
     marginTop: 16,
     backgroundColor: colors.primary100,
