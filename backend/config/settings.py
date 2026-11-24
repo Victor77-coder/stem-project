@@ -218,10 +218,18 @@ EMAIL_DAILY_RESERVE = int(os.environ.get('EMAIL_DAILY_RESERVE', '50'))
 # Tentativas por envio (push ou e-mail) antes de desistir; a próxima vem no disparo seguinte, a cada 5 minutos.
 NOTIFY_MAX_ATTEMPTS = 3
 
+# RS002: em produção, tudo por HTTPS. O proxy (Caddy ou Nginx) termina o TLS e repassa X-Forwarded-Proto.
+# Ficam em HTTP só o healthcheck e a carga dos coletores, que chegam pela rede interna do Docker (api:8000).
+SSL_REDIRECT_EXEMPT = [r'^api/v1/health/$', r'^api/internal/']
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = env_bool('SECURE_SSL_REDIRECT', default=True)
+    SECURE_REDIRECT_EXEMPT = SSL_REDIRECT_EXEMPT
+    # Um ano de HSTS. Subdomínios só entram se todos os do domínio da liga tiverem HTTPS (ver docs/producao.md).
+    SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS')
 
 LOGGING = {
     'version': 1,

@@ -24,6 +24,8 @@ urlpatterns = [
     path('termos/<str:kind>/', public.consent_document),
     path('config/', public.app_config),
     path('staff/dashboard/', staff.dashboard),
+    path('staff/relatorios/', staff.reports),
+    path('staff/logs/', staff.action_log),
     path('staff/config/', staff.app_settings),
     *router.urls,
 ]

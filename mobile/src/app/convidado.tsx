@@ -116,25 +116,6 @@ export default function ConvidadoScreen() {
         </View>
       </View>
 
-      <Field
-        label="E-mail (opcional)"
-        placeholder="voce@email.com"
-        autoCapitalize="none"
-        autoComplete="email"
-        keyboardType="email-address"
-        value={draft.email}
-        onChangeText={(value) => update({ email: value, profile: 'convidado' })}
-      />
-
-      <Text style={styles.sectionTitle}>Quer receber avisos?</Text>
-      {!email ? <Text style={styles.caption}>Informe um e-mail acima para escolher os avisos.</Text> : null}
-      <NoticeChoices
-        value={draft.notices}
-        onChange={(notices) => update({ notices })}
-        email={draft.email}
-        disabled={!email}
-      />
-
       <View style={styles.check}>
         <Pressable
           accessibilityRole="checkbox"
@@ -156,6 +137,28 @@ export default function ConvidadoScreen() {
           .
         </Text>
       </View>
+
+      <Field
+        label="E-mail (opcional)"
+        placeholder="voce@email.com"
+        autoCapitalize="none"
+        autoComplete="email"
+        keyboardType="email-address"
+        value={draft.email}
+        onChangeText={(value) => update({ email: value, profile: 'convidado' })}
+        editable={draft.tcleAccepted}
+        hint={draft.tcleAccepted ? undefined : 'Aceite os termos de uso acima para informar o e-mail.'}
+      />
+
+      <Text style={styles.sectionTitle}>Quer receber avisos?</Text>
+      {!email ? <Text style={styles.caption}>Informe um e-mail acima para escolher os avisos.</Text> : null}
+      <NoticeChoices
+        value={draft.notices}
+        onChange={(notices) => update({ notices })}
+        email={draft.email}
+        disabled={!email || !draft.tcleAccepted}
+      />
+
 
       <Text style={styles.caption}>
         Sem e-mail, nada é guardado. Com e-mail, ele fica guardado por 12 meses desde o seu último acesso, e você

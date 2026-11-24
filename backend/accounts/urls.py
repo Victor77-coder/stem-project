@@ -6,6 +6,7 @@ from . import views
 
 router = SimpleRouter()
 router.register('staff/accounts', views.StaffAccountViewSet, basename='staff-accounts')
+router.register('staff/access-requests', views.StaffAccessRequestViewSet, basename='staff-access-requests')
 
 urlpatterns = [
     path('auth/refresh/', TokenRefreshView.as_view()),

@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 
 
 class PublishStatus(models.TextChoices):
@@ -58,6 +59,8 @@ class Content(models.Model):
     )
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
+    # RF04: data da primeira publicação no app. Edições e despublicações não mudam. Novidade coletada usa a data do portal.
+    publicado_em = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-atualizado_em']
@@ -72,6 +75,13 @@ class Content(models.Model):
 
     def __str__(self):
         return self.titulo
+
+    def save(self, *args, **kwargs):
+        if self.status == PublishStatus.PUBLICADO and self.publicado_em is None:
+            self.publicado_em = timezone.now()
+            if kwargs.get('update_fields') is not None:
+                kwargs['update_fields'] = {*kwargs['update_fields'], 'publicado_em'}
+        super().save(*args, **kwargs)
 
     @property
     def is_collected_news(self) -> bool:

@@ -57,7 +57,11 @@ export default function ProfileScreen() {
             if (router.canGoBack()) router.back();
             else router.replace('/welcome');
           }}
-          onRight={() => router.push('/register')}
+          onRight={() => {
+            // O aceite vale para o termo do perfil escolhido (TCLE): um aceite anterior, como o dos termos do convidado, não conta.
+            update({ tcleAccepted: false });
+            router.push('/terms');
+          }}
         />
       }
     >

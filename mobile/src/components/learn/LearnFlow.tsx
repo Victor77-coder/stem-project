@@ -284,6 +284,7 @@ function ArticleScreen({
         </View>
       </View>
       <Text style={styles.articleHeading}>{article.title}</Text>
+      {article.published ? <Text style={styles.published}>Publicado em {article.published}</Text> : null}
       {article.validated ? (
         <View style={styles.validated}>
           <Ionicons name="checkmark-circle" size={16} color={colors.success600} />
@@ -641,6 +642,7 @@ const styles = StyleSheet.create({
   timeChip: { backgroundColor: colors.surfaceMuted, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
   timeChipText: { fontSize: 12, lineHeight: 16, fontWeight: '600', color: colors.textSecondary },
   articleHeading: { marginTop: 12, fontSize: 22, lineHeight: 28, fontWeight: '700', color: colors.ink },
+  published: { marginTop: 4, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
   validated: { marginTop: 10, flexDirection: 'row', alignItems: 'flex-start', gap: 6 },
   validatedText: { flex: 1, fontSize: 13, lineHeight: 18, color: colors.textSecondary },
   hero: {
