@@ -177,6 +177,7 @@ function ReceptorHome({
   unread,
   open,
   onJourney,
+  onQuestionnaire,
   onCenters,
   onStats,
   onNotifications,
@@ -189,6 +190,7 @@ function ReceptorHome({
   open: (route: LearnRoute) => void;
   /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
   onJourney?: () => void;
+  onQuestionnaire: () => void;
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
@@ -250,6 +252,13 @@ function ReceptorHome({
             well: colors.warning100,
             onPress: () => open({ name: 'faq' }),
           },
+          {
+            title: 'Questionário de\norientação',
+            icon: 'clipboard-outline',
+            iconColor: colors.warning700,
+            well: colors.warning100,
+            onPress: onQuestionnaire,
+          },
           // Sem o cartão de estimativa (RF12 desejável), o atalho para Estatísticas vem para o acesso rápido.
           {
             title: 'Estatísticas do\nBrasil',
@@ -290,6 +299,7 @@ function ReceptorHome({
 function ConvidadoHome({
   unread,
   open,
+  onQuestionnaire,
   onCenters,
   onStats,
   onNotifications,
@@ -297,6 +307,7 @@ function ConvidadoHome({
 }: {
   unread: number;
   open: (route: LearnRoute) => void;
+  onQuestionnaire: () => void;
   onCenters: (filter?: CenterFilter) => void;
   onStats: () => void;
   onNotifications: () => void;
@@ -346,6 +357,13 @@ function ConvidadoHome({
             iconColor: colors.teal600,
             well: colors.teal100,
             onPress: () => onCenters(),
+          },
+          {
+            title: 'Questionário de\norientação',
+            icon: 'clipboard-outline',
+            iconColor: colors.warning700,
+            well: colors.warning100,
+            onPress: onQuestionnaire,
           },
           {
             title: 'Estatísticas do\nBrasil',
@@ -478,7 +496,16 @@ export default function HomeScreen() {
             onUnread={setUnread}
           />
         ) : tab === 'inicio' && orientation ? (
-          <OrientationFlow onClose={() => setOrientation(false)} onLearn={openFromQuestionnaire} />
+          <OrientationFlow
+            profile={profile}
+            uf={draft.uf}
+            onClose={() => setOrientation(false)}
+            onLearn={openFromQuestionnaire}
+            onCenters={() => {
+              setOrientation(false);
+              openCenters();
+            }}
+          />
         ) : tab === 'inicio' ? (
           <ScrollView style={shell.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={shell.content}>
             {profile === 'receptor' ? (
@@ -489,6 +516,7 @@ export default function HomeScreen() {
                 unread={unread}
                 open={openLearn}
                 onJourney={journeyOn ? openJourney : undefined}
+                onQuestionnaire={() => setOrientation(true)}
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
@@ -498,6 +526,7 @@ export default function HomeScreen() {
               <ConvidadoHome
                 unread={unread}
                 open={openLearn}
+                onQuestionnaire={() => setOrientation(true)}
                 onCenters={openCenters}
                 onStats={() => openInsight('stats')}
                 onNotifications={() => openInsight('inbox')}
