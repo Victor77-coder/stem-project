@@ -158,7 +158,7 @@ SIMPLE_JWT = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'STEM Project · CélulAI API',
+    'TITLE': 'STEM Project API',
     'DESCRIPTION': 'Cadastro de participantes, conteúdo educacional e painel da liga (RF001–RF012).',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
