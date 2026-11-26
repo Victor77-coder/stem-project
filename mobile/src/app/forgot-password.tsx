@@ -170,10 +170,6 @@ export default function ForgotPasswordScreen() {
               void call('/auth/password/forgot/', {}, 'code');
             }}
           />
-          <View style={styles.info}>
-            <Ionicons name="information-circle" size={20} color={colors.primary} />
-            <Text style={styles.infoText}>Por segurança, o STEM nunca pede sua senha do Gov.br.</Text>
-          </View>
         </>
       ) : null}
 

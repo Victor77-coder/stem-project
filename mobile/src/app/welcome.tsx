@@ -51,8 +51,8 @@ export default function WelcomeScreen() {
       </View>
 
       <Field
-        label="Email ou CPF"
-        placeholder="@gmail.com"
+        label="E-mail, telefone ou CPF"
+        placeholder="voce@email.com"
         icon="mail-outline"
         autoCapitalize="none"
         keyboardType="email-address"

@@ -80,3 +80,34 @@ def test_export_includes_the_guide(donor):
     assert client.post('/api/v1/me/export/').status_code == 202
     exported = json.loads(mail.outbox[0].attachments[0][1])
     assert exported['journey'] == {'region': 'maceio', 'done': ['cadastro'], 'checklist': {}}
+
+
+def test_step_added_in_panel_can_be_marked(donor):
+    from catalog.models import JourneyStep
+    JourneyStep.objects.create(jornada='doador', slug='nova-etapa', ordem=99, titulo='Nova', titulo_curto='Nova',
+                               resumo='Resumo.', corpo='Corpo.', fonte='INCA', status='publicado')
+    client = auth(APIClient(), donor['access'])
+    response = client.patch('/api/v1/me/journey/', {'done': ['nova-etapa', 'cadastro']}, format='json')
+    assert response.status_code == 200, response.data
+    assert response.data['done'] == ['cadastro', 'nova-etapa']
+
+
+def test_only_admins_publish_or_change_official_steps(staff_login):
+    from catalog.models import JourneyStep
+    editor = staff_login('silva_js@email.com', 'senha123')
+    published = JourneyStep.objects.get(jornada='doador', slug='cadastro')
+    assert editor.patch(f'/api/v1/staff/journeys/{published.pk}/', {'titulo': 'Outro'}, format='json').status_code == 403
+    body = {'jornada': 'doador', 'slug': 'rascunho', 'ordem': 50, 'titulo': 'T', 'titulo_curto': 'T',
+            'resumo': 'R', 'corpo': 'C', 'fonte': 'INCA'}
+    draft = editor.post('/api/v1/staff/journeys/', {**body, 'status': 'rascunho'}, format='json')
+    assert draft.status_code == 201, draft.data
+    assert editor.patch(f'/api/v1/staff/journeys/{draft.data["id"]}/', {'status': 'publicado'}, format='json').status_code == 403
+    admin = staff_login()
+    assert admin.patch(f'/api/v1/staff/journeys/{draft.data["id"]}/', {'status': 'publicado'}, format='json').status_code == 200
+
+
+def test_public_journey_serves_panel_steps_with_region_summary(api, seeded):
+    steps = api.get('/api/v1/jornadas/receptor/?regiao=recife').data
+    assert [step['id'] for step in steps][:2] == ['indicacao', 'encaminhamento']
+    assert 'Recife tem centros habilitados' in steps[1]['summary']
+    assert all(step['source'] and step['updatedAt'] for step in steps)

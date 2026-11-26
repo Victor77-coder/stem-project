@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
@@ -8,7 +8,10 @@ import { useConsentDoc } from '@/lib/consent';
 import { colors, type } from '@/theme';
 
 export default function TcleDocumentScreen() {
-  const { update, isConvidado } = useRegistration();
+  const { update, isConvidado, signedIn, acceptTerms } = useRegistration();
+  // Aberto pelo Perfil (?reaceite=1): quem já tem conta aceita a versão nova direto no servidor.
+  const { reaceite } = useLocalSearchParams<{ reaceite?: string }>();
+  const fromProfile = signedIn && reaceite === '1';
   // O convidado lê os termos de uso; doador e receptor, o TCLE.
   const doc = useConsentDoc(isConvidado ? 'termos' : 'tcle');
 
@@ -23,8 +26,16 @@ export default function TcleDocumentScreen() {
         <Button
           label="Li e aceito o termo"
           onPress={() => {
-            update({ tcleAccepted: true, tcleVersion: doc.version });
-            goBack();
+            if (!fromProfile) {
+              update({ tcleAccepted: true, tcleVersion: doc.version });
+              goBack();
+              return;
+            }
+            acceptTerms(doc.version)
+              .then(goBack)
+              .catch((err: unknown) =>
+                Alert.alert('Não foi possível registrar o aceite', err instanceof Error ? err.message : 'Tente novamente.'),
+              );
           }}
         />
       }

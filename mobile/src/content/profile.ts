@@ -34,5 +34,7 @@ export type HistoryEvent = {
   title: string;
   detail: string;
   when: string;
+  /** Quem fez a alteração: "Você", "Equipe STEM" ou "Sistema" (RF001, RNF10). */
+  by?: string;
 };
 

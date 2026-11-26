@@ -6,13 +6,35 @@ type Props = TextInputProps & {
   label: string;
   hint?: string;
   icon?: keyof typeof Ionicons.glyphMap;
+  /** Mostra o * no rótulo. */
+  required?: boolean;
+  /** Mensagem de validação: substitui a dica e destaca o campo. */
+  error?: string;
 };
 
-export function Field({ label, hint, icon, ...rest }: Props) {
+/** Rótulo de campo; com `required`, ganha o * de obrigatório. */
+export function FieldLabel({ text, required }: { text: string; required?: boolean }) {
+  return (
+    <Text style={styles.label} accessibilityLabel={required ? `${text}, obrigatório` : text}>
+      {text}
+      {required ? <Text style={styles.star}> *</Text> : null}
+    </Text>
+  );
+}
+
+export function FieldError({ text }: { text?: string }) {
+  return text ? (
+    <Text style={styles.error} accessibilityRole="alert">
+      {text}
+    </Text>
+  ) : null;
+}
+
+export function Field({ label, hint, icon, required, error, ...rest }: Props) {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrap}>
+      <FieldLabel text={label} required={required} />
+      <View style={[styles.inputWrap, error ? styles.inputError : null]}>
         {icon ? <Ionicons name={icon} size={18} color={colors.muted} /> : null}
         <TextInput
           placeholderTextColor={colors.muted}
@@ -20,7 +42,7 @@ export function Field({ label, hint, icon, ...rest }: Props) {
           style={[styles.input, rest.style]}
         />
       </View>
-      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+      {error ? <FieldError text={error} /> : hint ? <Text style={styles.hint}>{hint}</Text> : null}
     </View>
   );
 }
@@ -46,4 +68,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   hint: { ...type.caption, color: colors.muted },
+  star: { color: colors.danger },
+  inputError: { borderColor: colors.danger },
+  error: { ...type.caption, color: colors.danger },
 });
