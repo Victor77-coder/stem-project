@@ -74,6 +74,11 @@ function refreshAccess(): Promise<boolean> {
   return refreshing;
 }
 
+/** Para arquivos (PDF) que não passam por `api`: endereço completo, token atual e a renovação da sessão. */
+export const apiUrl = (path: string) => `${BASE}${path}`;
+export const authHeader = (): Record<string, string> => (memory ? { Authorization: `Bearer ${memory.access}` } : {});
+export const renewSession = refreshAccess;
+
 type Options = { method?: string; body?: unknown; auth?: boolean };
 
 export async function api<T = unknown>(path: string, { method = 'GET', body, auth = true }: Options = {}): Promise<T> {
