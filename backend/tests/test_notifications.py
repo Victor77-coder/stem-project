@@ -483,7 +483,8 @@ def test_health_flags_push_credentials(api, seeded, expo):
     assert report['ultimas24h']['push'] == {'enviados': 0, 'falhas': 3}
     assert [alert['titulo'] for alert in report['alertas']] == ['Credenciais de push com problema']
     assert report['alertas'][0]['nivel'] == 'erro' and '3 envio(s)' in report['alertas'][0]['texto']
-    assert health(MORNING + timedelta(days=2))['alertas'] == [], 'só as últimas 24 horas'
+    # O updated_at dos envios é o relógio real: a janela de 24 h é contada a partir dele, não de MORNING.
+    assert health(timezone.now() + timedelta(days=2))['alertas'] == [], 'só as últimas 24 horas'
 
 
 def test_health_flags_mass_failures_and_quota(api, seeded, expo, settings):
