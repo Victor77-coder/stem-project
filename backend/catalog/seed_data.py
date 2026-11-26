@@ -202,6 +202,7 @@ CENTERS = [
     {'slug': 'mutirao-hemoal', 'nome': 'Mutirão de cadastro de doadores de medula', 'nome_curto': 'Mutirão de cadastro',
      'endereco': 'Hemoal · Av. Jorge de Lima, 58 · Trapiche da Barra', 'endereco_lista': 'Hemoal · Trapiche',
      'cidade': 'Maceió', 'uf': 'AL', 'tipo': 'campanha', 'lat': -9.6724, 'lng': -35.7578, 'evento_quando': '25 out · 8h–16h',
+     'evento_fim': '2026-10-25',
      'fonte': 'Ministério da Saúde', 'fonte_data': '2026-10-12', 'servicos': ['Cadastro de medula (REDOME)'], 'origem': 'manual'},
     {'slug': 'hemope', 'cnes': '0000809', 'nome': 'Hemope · Fundação de Hematologia de Pernambuco', 'nome_curto': 'Hemope · Recife',
      'endereco': 'Rua Joaquim Nabuco, 171 · Graças', 'cidade': 'Recife', 'uf': 'PE', 'tipo': 'hemocentro', 'lat': -8.0479,

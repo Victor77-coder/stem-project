@@ -49,12 +49,14 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="grid gap-6">
+        {/* grid-cols-1 = minmax(0, 1fr): a trilha não cresce até o título mais longo (o truncate é nowrap) e a
+            coluna não invade a de "Conteúdos por categoria". */}
+        <div className="grid min-w-0 grid-cols-1 gap-6">
           <div className={panel}>
             <h3 className="mb-3 text-xs font-medium">Conteúdos recentes</h3>
             <ul className="space-y-2 text-[11px]">
               {recent.map((c) => (
-                <li key={c.id} className="flex justify-between gap-2">
+                <li key={c.id} className="flex min-w-0 justify-between gap-2">
                   <Link to={`/conteudo/${c.id}/editar`} className="truncate hover:text-primary">
                     {c.titulo}
                   </Link>

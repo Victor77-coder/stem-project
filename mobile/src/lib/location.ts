@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import * as Location from 'expo-location';
-import { ORIGINS, originFromQuery, type Origin } from '@/content/centers';
+import { originFromQuery, type Origin } from '@/content/centers';
 import { api, ApiError } from '@/lib/api';
 
 /** RF009: as coordenadas do aparelho só existem em memória; nada aqui é gravado ou enviado ao perfil. */
@@ -82,10 +82,8 @@ export async function requestDeviceOrigin(): Promise<DeviceOriginResult> {
   };
 }
 
-type CepLocation = {
-  cep: string;
-  address: string;
-  district: string;
+/** Resposta de /geo/cep/ e /geo/cidade/ (a do CEP traz também rua e bairro). */
+type GeoLocation = {
   city: string;
   uf: string;
   lat: number;
@@ -95,21 +93,15 @@ type CepLocation = {
 
 export type CepOriginResult = { ok: true; origin: Origin; offline?: boolean } | { ok: false; message: string };
 
-const OFFLINE_CEP_MESSAGE = 'Sem conexão com o servidor para localizar este CEP. Tente novamente em instantes.';
+const OFFLINE_MESSAGE = 'Sem conexão com o servidor para localizar este endereço. Tente novamente em instantes.';
 
-/** Só as cidades do fixture embarcado têm origem offline; qualquer outro CEP iria parar em Maceió por engano. */
-function offlineOriginForCep(digits: string): Origin | null {
-  if (digits.startsWith('50')) return { ...ORIGINS.recife, mode: 'cep' };
-  if (digits.startsWith('57')) return { ...ORIGINS.maceio, mode: 'cep' };
-  return null;
-}
-
-/** CEP vira coordenada no backend (BrasilAPI + centro da cidade). Sem servidor, cai no fixture embarcado se houver. */
-export async function originFromCep(value: string): Promise<CepOriginResult> {
-  const digits = value.replace(/\D/g, '');
-  if (digits.length !== 8) return { ok: true, origin: originFromQuery(value) };
+/**
+ * Pergunta ao backend e devolve a origem. Erro 4xx (CEP ou cidade não encontrados) volta como mensagem; sem
+ * servidor, só Maceió e Recife têm origem embarcada: qualquer outro lugar iria parar em Maceió por engano.
+ */
+async function locate(path: string, typed: string): Promise<CepOriginResult> {
   try {
-    const data = await api<CepLocation>(`/geo/cep/${digits}/`, { auth: false });
+    const data = await api<GeoLocation>(path, { auth: false });
     const label = `${data.city}/${data.uf}`;
     return {
       ok: true,
@@ -119,7 +111,20 @@ export async function originFromCep(value: string): Promise<CepOriginResult> {
     if (error instanceof ApiError && error.status !== 0 && error.status < 500) {
       return { ok: false, message: error.message };
     }
-    const origin = offlineOriginForCep(digits);
-    return origin ? { ok: true, origin, offline: true } : { ok: false, message: OFFLINE_CEP_MESSAGE };
+    const origin = originFromQuery(typed);
+    return origin ? { ok: true, origin, offline: true } : { ok: false, message: OFFLINE_MESSAGE };
   }
+}
+
+/** Cidade de qualquer UF ("Salvador", "Feira de Santana, BA") vira coordenada no backend (RF009). */
+export function originFromCityName(name: string, uf = ''): Promise<CepOriginResult> {
+  const params = new URLSearchParams({ nome: name.trim(), ...(uf ? { uf } : {}) });
+  return locate(`/geo/cidade/?${params}`, name);
+}
+
+/** CEP vira coordenada no backend (BrasilAPI + centro da cidade). Texto que não é CEP é tratado como cidade. */
+export function originFromCep(value: string): Promise<CepOriginResult> {
+  const digits = value.replace(/\D/g, '');
+  if (digits.length !== 8) return originFromCityName(value);
+  return locate(`/geo/cep/${digits}/`, digits);
 }

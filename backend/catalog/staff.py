@@ -265,6 +265,7 @@ class JourneyStepSerializer(PublishRules):
 # observações, coordenadas, nome curto, status e a revisão).
 CNES_LOCKED = ('cnes', 'codigo_ibge', 'nome', 'endereco', 'cidade', 'uf', 'tipo', 'fonte', 'fonte_data')
 CNES_LOCKED_MESSAGE = 'Vem do CNES e é atualizado pela coleta mensal. Corrija na fonte ou marque o centro para revisão.'
+CAMPAIGN_NEEDS_END = 'Informe o último dia da campanha. Sem a data, ela não aparece no app.'
 
 
 def unique_center_slug(text: str) -> str:
@@ -294,7 +295,12 @@ class CenterSerializer(PublishRules):
             locked = [field for field in CNES_LOCKED if field in attrs and attrs[field] != getattr(self.instance, field)]
             if locked:
                 raise ValidationError({field: [CNES_LOCKED_MESSAGE] for field in locked})
-        return super().validate(attrs)
+        attrs = super().validate(attrs)
+        # Campanha tem fim: sem a data, o app não sabe quando tirá-la do ar e mostraria evento vencido como atual.
+        state = {**(model_to_dict(self.instance) if self.instance else {}), **attrs}
+        if state.get('status') == PublishStatus.PUBLICADO and state.get('tipo') == Center.Kind.CAMPANHA and not state.get('evento_fim'):
+            raise ValidationError({'evento_fim': [CAMPAIGN_NEEDS_END]})
+        return attrs
 
     def create(self, validated_data):
         validated_data['origem'] = Center.Origin.MANUAL

@@ -5,6 +5,7 @@ import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
 import { StepHeader } from '@/components/StepHeader';
 import { hasEmailContact, useRegistration, type NoticeChoices } from '@/context/RegistrationContext';
+import { resetTo } from '@/lib/navigation';
 import { turnOnPush } from '@/lib/push';
 import { colors, type } from '@/theme';
 
@@ -42,7 +43,7 @@ export default function ReviewScreen() {
       await (signedIn ? changeProfile() : signUp());
       // Sem permissão do sistema, a conta fica criada e o push pode ser ligado depois no Perfil.
       if (!signedIn && draft.notices.push) await turnOnPush().catch(() => false);
-      router.push('/conclusion');
+      resetTo('/conclusion'); // a conta existe: o voltar não reabre o cadastro
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível concluir o cadastro.');
     } finally {

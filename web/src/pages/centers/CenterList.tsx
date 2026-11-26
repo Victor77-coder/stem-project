@@ -17,6 +17,13 @@ const statusStyle: Record<PublishStatus, string> = {
 
 type Filters = { tipo: CenterKind | ''; origem: Center['origem'] | ''; status: PublishStatus | ''; uf: string; revisar: boolean }
 
+/** Por que uma campanha publicada não aparece no app (mesma regra da API pública); vazio se aparece. */
+function campaignHidden(c: Center) {
+  if (!c.evento_fim) return 'sem último dia, oculta no app'
+  const todayLocal = new Date().toLocaleDateString('sv-SE') // AAAA-MM-DD no fuso do navegador
+  return c.evento_fim < todayLocal ? 'encerrada' : ''
+}
+
 /** Cadastros (RF13): centros do CNES (só correções seguras) e campanhas e centros cadastrados pela equipe. */
 export default function CenterList() {
   const navigate = useNavigate()
@@ -136,6 +143,9 @@ export default function CenterList() {
                 <span className="truncate pr-2">
                   <b>{c.nome_curto || c.nome}</b>
                   {c.tipo === 'campanha' && c.evento_quando ? <span className="text-ink/60"> · {c.evento_quando}</span> : null}
+                  {c.tipo === 'campanha' && c.status === 'publicado' && campaignHidden(c) ? (
+                    <span className="text-danger"> · {campaignHidden(c)}</span>
+                  ) : null}
                 </span>
                 <span>{CENTER_KINDS[c.tipo]}</span>
                 <span className="truncate pr-2">

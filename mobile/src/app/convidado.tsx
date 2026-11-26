@@ -10,6 +10,7 @@ import { NoticeChoices } from '@/components/NoticeChoices';
 import { Screen } from '@/components/Screen';
 import { hasEmailContact, useRegistration } from '@/context/RegistrationContext';
 import { useConsentDoc } from '@/lib/consent';
+import { resetTo } from '@/lib/navigation';
 import { turnOnPush } from '@/lib/push';
 import { colors, type } from '@/theme';
 
@@ -29,13 +30,13 @@ export default function ConvidadoScreen() {
 
   async function finish() {
     if (draft.notices.push) await turnOnPush().catch(() => false);
-    router.push('/conclusion');
+    resetTo('/conclusion');
   }
 
   async function enter() {
     update({ profile: 'convidado' });
     if (!email) {
-      router.push('/conclusion');
+      resetTo('/conclusion');
       return;
     }
     if (!hasEmailContact(email)) {

@@ -120,22 +120,7 @@ export const CENTERS: Center[] = [
     services: HEMO_SERVICES,
     openNow: true,
   },
-  {
-    id: 'mutirao-hemoal',
-    name: 'Mutirão de cadastro de doadores de medula',
-    shortName: 'Mutirão de cadastro',
-    address: 'Hemoal · Av. Jorge de Lima, 58 · Trapiche da Barra',
-    listAddress: 'Hemoal · Trapiche',
-    city: 'Maceió',
-    uf: 'AL',
-    kind: 'campanha',
-    lat: -9.6724,
-    lng: -35.7578,
-    eventWhen: '25 out · 8h–16h',
-    source: 'Ministério da Saúde',
-    sourceDate: '12/10/2026',
-    services: ['Cadastro de medula (REDOME)'],
-  },
+  // Sem campanhas: elas têm data de término e o dado embarcado não expira. Campanha só vem da API.
   {
     id: 'hemope',
     cnes: '0000809',
@@ -157,19 +142,17 @@ export const CENTERS: Center[] = [
   },
 ];
 
-export function originFromCity(city: string, uf: string, mode: Origin['mode'] = 'cep'): Origin {
-  const recife = city.toLowerCase().includes('recife') || uf.toUpperCase() === 'PE';
-  const base = recife ? ORIGINS.recife : ORIGINS.maceio;
-  return { ...base, mode };
-}
-
-export function originFromQuery(value: string): Origin {
+/** Origem offline: o dado embarcado só tem Maceió e Recife. Outra cidade é null, nunca Maceió por engano. */
+export function originFromQuery(value: string): Origin | null {
   const raw = value.trim().toLowerCase();
   const digits = raw.replace(/\D/g, '');
   if (raw.includes('recife') || digits.startsWith('50')) {
     return { ...ORIGINS.recife, mode: 'cep' };
   }
-  return { ...ORIGINS.maceio, mode: 'cep' };
+  if (/macei[oó]/.test(raw) || digits.startsWith('57')) {
+    return { ...ORIGINS.maceio, mode: 'cep' };
+  }
+  return null;
 }
 
 export function listCenters(origin: Origin, kind: CenterFilter, query = '', kinds = KINDS_FOR.convidado): CenterResult[] {

@@ -45,6 +45,24 @@ def test_checklist_and_region_are_saved(donor):
     assert response.data['region'] == 'recife'
 
 
+def test_marks_sent_close_together_do_not_overwrite_each_other(donor):
+    """Item do checklist e "marcar concluída" em sequência rápida: um PATCH não apaga o que o outro gravou."""
+    from engagement.views import JourneySerializer
+
+    client = auth(APIClient(), donor['access'])
+    stale = JourneyProgress.objects.get()  # lido antes do PATCH do checklist, como num pedido concorrente
+    saved = client.patch('/api/v1/me/journey/', {'checklist': {'cadastro': ['Documento oficial com foto']}}, format='json')
+    assert saved.status_code == 200, saved.data
+
+    concurrent = JourneySerializer(stale, data={'done': ['cadastro']}, partial=True, context={'kind': 'doador'})
+    concurrent.is_valid(raise_exception=True)
+    concurrent.save()
+
+    marks = client.get('/api/v1/me/journey/').data
+    assert marks['done'] == ['cadastro']
+    assert marks['checklist'] == {'cadastro': ['Documento oficial com foto']}, 'o PATCH da etapa não regrava o checklist'
+
+
 def test_guest_has_no_guide_to_fill(api, seeded):
     created = api.post(
         '/api/v1/auth/register/',

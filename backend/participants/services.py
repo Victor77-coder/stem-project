@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.mail import send_mail
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
@@ -52,6 +52,11 @@ def _check_password(password: str, user: User | None = None) -> None:
         raise serializers.ValidationError({'password': list(exc.messages)})
 
 
+def _fail_in_use(field: str):
+    label = {'email': 'este e-mail', 'phone': 'este telefone', 'cpf': 'este CPF'}[field]
+    _fail(field, f'Não foi possível usar {label}. Se você já tem conta, entre ou recupere a senha.')
+
+
 def _check_unique(field: str, value: str | None, exclude: User | None) -> None:
     if not value:
         return
@@ -59,8 +64,27 @@ def _check_unique(field: str, value: str | None, exclude: User | None) -> None:
     if exclude is not None:
         query = query.exclude(pk=exclude.pk)
     if query.exists():
-        label = {'email': 'este e-mail', 'phone': 'este telefone', 'cpf': 'este CPF'}[field]
-        _fail(field, f'Não foi possível usar {label}. Se você já tem conta, entre ou recupere a senha.')
+        _fail_in_use(field)
+
+
+# Constraint (Postgres) ou coluna (SQLite) de cada campo único de User, como aparece no IntegrityError.
+UNIQUE_MARKERS = {
+    'email': ('uniq_email_por_papel', 'accounts_user.email'),
+    'phone': ('uniq_telefone_por_papel', 'accounts_user.phone'),
+    'cpf': ('uniq_cpf_por_papel', 'accounts_user.cpf'),
+}
+
+
+def _save_user(user: User) -> None:
+    """Dois cadastros iguais ao mesmo tempo passam juntos por _check_unique: a constraint vira erro do campo, não 500."""
+    try:
+        with transaction.atomic():
+            user.save()
+    except IntegrityError as exc:
+        field = next((name for name, markers in UNIQUE_MARKERS.items() if any(m in str(exc) for m in markers)), None)
+        if field is None:
+            raise
+        _fail_in_use(field)
 
 
 def _check_profile_rules(profile: str, state: dict) -> None:
@@ -154,7 +178,7 @@ def register(data: dict) -> User:
 
     user = User(role=Role.PARTICIPANT, name=data.get('name', '').strip(), email=email, phone=phone, cpf=data.get('cpf') or None)
     user.set_password(password) if password else user.set_unusable_password()
-    user.save()
+    _save_user(user)
     participant = Participant.objects.create(
         user=user,
         profile=profile,
@@ -317,7 +341,7 @@ def _apply(participant: Participant, data: dict, actor: User) -> None:
         email_changed(user)
     if not user.email and not user.phone:
         _fail('email', 'Mantenha ao menos um e-mail ou telefone na conta.')
-    user.save()
+    _save_user(user)
     for field in (*CLINICAL_FIELDS, *LOCATION_FIELDS):
         if field in data:
             setattr(participant, field, data[field])

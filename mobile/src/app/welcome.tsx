@@ -7,6 +7,7 @@ import { Field } from '@/components/Field';
 import { Logo } from '@/components/Logo';
 import { Screen } from '@/components/Screen';
 import { useRegistration } from '@/context/RegistrationContext';
+import { resetTo } from '@/lib/navigation';
 import { colors, type } from '@/theme';
 
 export default function WelcomeScreen() {
@@ -21,7 +22,7 @@ export default function WelcomeScreen() {
     setError('');
     try {
       await signIn(email, password);
-      router.replace('/home');
+      resetTo('/home');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível entrar.');
     } finally {

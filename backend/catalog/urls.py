@@ -18,6 +18,7 @@ urlpatterns = [
     path('centros/', public.centers),
     path('centros/<slug:slug>/', public.center_detail),
     path('geo/cep/<str:cep>/', public.cep_location),
+    path('geo/cidade/', public.city_location),
     path('estatisticas/', public.statistics),
     path('estimativa/', public.estimate),
     path('glossario/', public.glossary),

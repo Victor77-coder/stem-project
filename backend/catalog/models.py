@@ -182,6 +182,8 @@ class Center(models.Model):
     servicos = models.JSONField(default=list, blank=True)
     observacoes = models.CharField(max_length=300, blank=True)
     evento_quando = models.CharField(max_length=80, blank=True)
+    # Último dia da campanha. Encerrada ou sem data, a campanha não aparece no app (RS008: nada vencido como atual).
+    evento_fim = models.DateField(null=True, blank=True)
     fonte = models.CharField(max_length=200, blank=True)
     fonte_data = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=PublishStatus.choices, default=PublishStatus.RASCUNHO)

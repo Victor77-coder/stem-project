@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -407,6 +407,8 @@ export default function HomeScreen() {
     region: 'maceio',
     ...NO_MARKS,
   });
+  // As marcas vão ao servidor uma de cada vez, na ordem dos toques: dois PATCHes juntos podiam chegar trocados.
+  const journeySaves = useRef<Promise<unknown>>(Promise.resolve());
   const [centersFilter, setCentersFilter] = useState<CenterFilter>('todos');
   const [insight, setInsight] = useState<InsightScreen | null>(null);
   const [unread, setUnread] = useState(0);
@@ -478,7 +480,10 @@ export default function HomeScreen() {
 
   function saveJourney(patch: Partial<JourneyMarks & { region: RegionId }>) {
     setJourney((value) => ({ ...value, ...patch }));
-    if (ownJourney) api('/me/journey/', { method: 'PATCH', body: patch }).catch(() => undefined);
+    if (!ownJourney) return;
+    journeySaves.current = journeySaves.current
+      .then(() => api('/me/journey/', { method: 'PATCH', body: patch }))
+      .catch(() => undefined);
   }
 
   function toggleStep(stepId: string) {
