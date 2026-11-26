@@ -109,16 +109,28 @@ def history(request):
     events = request.user.participant.history.all()[:200]
     return Response(
         [
-            {'id': event.pk, 'icon': event.icon, 'title': event.title, 'detail': event.detail, 'when': event.created_at.isoformat()}
+            {
+                'id': event.pk,
+                'icon': event.icon,
+                'title': event.title,
+                'detail': event.detail,
+                'by': services.actor_label(event, request.user),
+                'when': event.created_at.isoformat(),
+            }
             for event in events
         ]
     )
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsParticipant])
 def export(request):
+    """Portabilidade (LGPD art. 18). GET devolve a cópia direto no app; POST envia por e-mail."""
     user = request.user
+    if request.method == 'GET':
+        response = Response(services.export(user.participant))
+        response['Content-Disposition'] = 'attachment; filename="meus-dados-stem.json"'
+        return response
     if not user.email:
         raise ValidationError({'detail': 'Cadastre um e-mail para receber a cópia dos seus dados.'})
     message = EmailMessage(
@@ -143,3 +155,14 @@ def deactivate(request):
         raise ValidationError({'password': ['Senha incorreta.']})
     services.anonymize(user.participant)
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+@permission_classes([IsParticipant])
+def consent(request):
+    """Aceite da versão vigente do TCLE (doador/receptor) ou dos Termos de Uso (convidado)."""
+    serializer = ParticipantInputSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    participant = request.user.participant
+    services.accept_current_terms(participant, serializer.validated_data)
+    return Response(services.payload(participant))

@@ -28,6 +28,8 @@ class Participant(models.Model):
     height = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
     sex = models.CharField(max_length=10, choices=Sex.choices, blank=True)
     comorbidities = models.JSONField(default=list, blank=True)
+    # Etapa "Crie sua conta" do app. Não decide aptidão (RS003): só personaliza conteúdo.
+    birth_date = models.DateField(null=True, blank=True)
     cep = models.CharField(max_length=8, blank=True)
     address = models.CharField(max_length=200, blank=True)
     number = models.CharField(max_length=20, blank=True)

@@ -66,8 +66,8 @@ def _check_unique(field: str, value: str | None, exclude: User | None) -> None:
 def _check_profile_rules(profile: str, state: dict) -> None:
     """Minimização (RNF05): convidado nunca guarda dado clínico; doador e receptor precisam dos quatro campos."""
     if profile == Profile.CONVIDADO:
-        if any(state.get(field) for field in (*CLINICAL_FIELDS, 'cpf')):
-            _fail('profile', 'O perfil convidado não coleta CPF, peso, altura, sexo biológico nem comorbidades.')
+        if any(state.get(field) for field in (*CLINICAL_FIELDS, 'cpf', 'birthDate')):
+            _fail('profile', 'O perfil convidado não coleta CPF, data de nascimento, peso, altura, sexo biológico nem comorbidades.')
         return
     missing = {
         'weight': 'Informe o peso.',
@@ -100,6 +100,24 @@ def _accept(user: User, profile: str, data: dict, channel: str) -> ConsentAccept
     title = 'TCLE aceito' if document.kind == ConsentDocument.Kind.TCLE else 'Termos aceitos'
     ChangeEvent.objects.create(participant=user.participant, icon='shield', title=title, detail=f'Versão {document.version}', actor=user)
     return acceptance
+
+
+@transaction.atomic
+def accept_current_terms(participant: Participant, data: dict) -> None:
+    """Reaceite do TCLE ou dos Termos de Uso pelo perfil, quando a versão vigente muda (RF02 nota 5, RS001)."""
+    user = participant.user
+    if _has_current_consent(user, participant.profile):
+        return
+    _accept(user, participant.profile, data, data.get('channel') or Channel.WEB)
+
+
+def actor_label(event: ChangeEvent, owner: User) -> str:
+    """Quem fez a alteração (RF001, RNF10), sem expor o nome de quem é da equipe."""
+    if event.actor_id is None:
+        return 'Sistema'
+    if event.actor_id == owner.pk:
+        return 'Você'
+    return 'Equipe STEM'
 
 
 def _has_current_consent(user: User, profile: str) -> bool:
@@ -142,6 +160,7 @@ def register(data: dict) -> User:
         profile=profile,
         allow_location=data.get('allowLocation', False),
         ultimo_acesso=timezone.now(),
+        birth_date=data.get('birthDate'),
         **{field: data[field] for field in CLINICAL_FIELDS if data.get(field)},
         **{field: data.get(field, '') for field in LOCATION_FIELDS},
     )
@@ -259,6 +278,8 @@ def _changes(participant: Participant, data: dict) -> list[tuple[str, str, str]]
         events.append(('person', 'Telefone atualizado', ''))
     if 'cpf' in data and (data['cpf'] or None) != user.cpf:
         events.append(('person', 'CPF atualizado', ''))
+    if 'birthDate' in data and data['birthDate'] != participant.birth_date:
+        events.append(('person', 'Data de nascimento atualizada', ''))
     if 'weight' in data and data['weight'] != participant.weight:
         before = f'{format_decimal(participant.weight)} kg → ' if participant.weight else ''
         events.append(('pulse', 'Peso alterado', f'{before}{format_decimal(data["weight"])} kg'))
@@ -302,13 +323,16 @@ def _apply(participant: Participant, data: dict, actor: User) -> None:
             setattr(participant, field, data[field])
     if 'allowLocation' in data:
         participant.allow_location = data['allowLocation']
+    if 'birthDate' in data:
+        participant.birth_date = data['birthDate']
     participant.save()
 
 
 def _state(participant: Participant, data: dict) -> dict:
     current = {field: getattr(participant, field) for field in CLINICAL_FIELDS}
     current['cpf'] = participant.user.cpf
-    return {**current, **{key: data[key] for key in (*CLINICAL_FIELDS, 'cpf') if key in data}}
+    current['birthDate'] = participant.birth_date
+    return {**current, **{key: data[key] for key in (*CLINICAL_FIELDS, 'cpf', 'birthDate') if key in data}}
 
 
 @transaction.atomic
@@ -362,6 +386,7 @@ def anonymize(participant: Participant) -> None:
     PushToken.objects.filter(user=user).delete()
     set_status(user, Status.INATIVO, actor=user)
 
+    participant.birth_date = None
     participant.weight = None
     participant.height = None
     participant.sex = ''
@@ -394,6 +419,7 @@ def payload(participant: Participant) -> dict:
         'emailConfirmed': user.email_confirmado_em is not None,
         'phone': user.phone or '',
         'cpf': user.cpf or '',
+        'birthDate': participant.birth_date.isoformat() if participant.birth_date else '',
         'weight': format_decimal(participant.weight),
         'height': format_decimal(participant.height),
         'sex': participant.sex,
@@ -424,7 +450,8 @@ def export(participant: Participant) -> dict:
         for item in participant.user.consents.select_related('document')
     ]
     data['history'] = [
-        {'title': item.title, 'detail': item.detail, 'when': item.created_at.isoformat()} for item in participant.history.all()
+        {'title': item.title, 'detail': item.detail, 'by': actor_label(item, participant.user), 'when': item.created_at.isoformat()}
+        for item in participant.history.all()
     ]
     journey = JourneyProgress.objects.filter(participant=participant).first()
     if journey is not None:
