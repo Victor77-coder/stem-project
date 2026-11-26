@@ -141,6 +141,7 @@ def journey_step(step: JourneyStep, region: str) -> dict:
         'checklist': [{'label': label} for label in step.checklist],
         'place': step.local,
         'source': step.fonte,
+        'updatedAt': br_date(timezone.localtime(step.atualizado_em)),
     }
 
 

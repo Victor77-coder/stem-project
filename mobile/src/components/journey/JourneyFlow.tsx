@@ -6,7 +6,6 @@ import {
   doneCount,
   progressPercent,
   stepStates,
-  stepsFor,
   type JourneyKind,
   type JourneyMarks,
   type JourneyStep,
@@ -17,6 +16,8 @@ import { colors } from '@/theme';
 
 type Props = {
   kind: JourneyKind | 'convidado';
+  /** Etapas oficiais do perfil e da região, vindas do painel (ou as embarcadas, sem conexão). */
+  steps: JourneyStep[];
   /** Guia pessoal (RF05/RF06): etapas e itens que o próprio usuário marcou. */
   marks: JourneyMarks;
   region: RegionId;
@@ -26,14 +27,13 @@ type Props = {
   onChooseProfile: (profile: 'doador' | 'receptor') => void;
 };
 
-export function JourneyFlow({ kind, marks, region, onRegion, onToggleStep, onToggleItem, onChooseProfile }: Props) {
+export function JourneyFlow({ kind, steps, marks, region, onRegion, onToggleStep, onToggleItem, onChooseProfile }: Props) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   if (kind === 'convidado') {
     return <ConvidadoJourney onChooseProfile={onChooseProfile} />;
   }
 
-  const steps = stepsFor(kind, region);
   const states = stepStates(steps, marks.done);
   const count = doneCount(steps, marks.done);
   const openIndex = steps.findIndex((step) => step.id === openId);
@@ -278,7 +278,10 @@ function StepDetail({
           </View>
         ) : null}
 
-        <Text style={styles.source}>Fonte: {step.source}</Text>
+        <Text style={styles.source}>
+          Fonte: {step.source}
+          {step.updatedAt ? ` · Atualizado em ${step.updatedAt}` : ''}
+        </Text>
       </ScrollView>
 
       <View style={styles.footer}>

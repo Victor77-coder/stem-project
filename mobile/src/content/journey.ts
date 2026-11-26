@@ -1,3 +1,5 @@
+import { withFallback } from '@/lib/api';
+
 export type JourneyKind = 'doador' | 'receptor';
 export type RegionId = 'maceio' | 'recife' | 'outra';
 export type StepState = 'done' | 'next' | 'pending';
@@ -25,6 +27,8 @@ export type JourneyStep = {
   checklist?: ChecklistItem[];
   place?: JourneyPlace;
   source: string;
+  /** Data da última atualização no painel (RS008). As etapas embarcadas trazem a data da consulta na fonte. */
+  updatedAt?: string;
 };
 
 // RS008: cada etapa mostra a fonte oficial de onde o texto saiu e a data da consulta.
@@ -213,4 +217,44 @@ export const DONOR_PLACE_BY_REGION: Record<RegionId, JourneyPlace> = {
 export function withRegionPlace(step: JourneyStep, region: RegionId): JourneyStep {
   if (!step.place) return step;
   return { ...step, place: DONOR_PLACE_BY_REGION[region] };
+}
+
+/** Etapa como vem de GET /jornadas/<tipo>/ (catalog/public.py, journey_step). */
+type ApiJourneyStep = {
+  id: string;
+  title: string;
+  shortTitle: string;
+  summary: string;
+  homeBody: string | null;
+  body: string;
+  checklist: ChecklistItem[];
+  place: JourneyPlace | null;
+  source: string;
+  updatedAt: string;
+};
+
+function fromApi(step: ApiJourneyStep): JourneyStep {
+  return {
+    id: step.id,
+    title: step.title,
+    shortTitle: step.shortTitle,
+    summary: step.summary,
+    homeBody: step.homeBody ?? undefined,
+    body: step.body,
+    checklist: step.checklist.length ? step.checklist : undefined,
+    place: step.place ?? undefined,
+    source: step.source,
+    updatedAt: step.updatedAt || undefined,
+  };
+}
+
+/**
+ * Etapas oficiais publicadas no painel (RF05/RF06). Sem conexão ou sem etapa publicada,
+ * o app usa as etapas embarcadas acima (RNF08).
+ */
+export async function loadSteps(kind: JourneyKind, region: RegionId): Promise<JourneyStep[]> {
+  const items = await withFallback<ApiJourneyStep[]>(`/jornadas/${kind}/?regiao=${region}`, []);
+  if (!items.length) return stepsFor(kind, region);
+  // O local padrão do painel é o Hemoal; nele o guia troca pelo hemocentro da região. Local editado no painel fica como está.
+  return items.map(fromApi).map((step) => (step.place?.name === HEMOAL.name ? withRegionPlace(step, region) : step));
 }

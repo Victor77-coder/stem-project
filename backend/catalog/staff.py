@@ -28,6 +28,7 @@ SUBSTANTIVE = ('titulo', 'descricao', 'categoria', 'fonte', 'secoes')
 NO_SOURCE = 'Informe a fonte para publicar. Sem fonte o conteúdo permanece como rascunho.'
 NO_VALIDATION = 'Conteúdo clínico-educacional só é publicado após a validação clínica da liga.'
 NO_PUBLISH = 'Somente administradores e administradores de conteúdo publicam avisos. Salve como rascunho.'
+NO_PUBLISH_STEP = 'Somente administradores publicam ou alteram etapas oficiais da jornada. Salve como rascunho.'
 
 
 def log(entidade: str, obj, user: User, acao: str, snapshot: dict | None = None) -> None:
@@ -360,9 +361,30 @@ class AuditedViewSet(viewsets.ModelViewSet):
 
 
 class StaffJourneyViewSet(AuditedViewSet):
+    """RF05/RF06: as etapas oficiais só mudam pelos administradores. A equipe pode preparar rascunhos."""
+
     queryset = JourneyStep.objects.all()
     serializer_class = JourneyStepSerializer
     entidade = 'etapa'
+
+    def _require_admin(self):
+        if not self.request.user.staff.is_admin:
+            raise PermissionDenied(NO_PUBLISH_STEP)
+
+    def perform_create(self, serializer):
+        if serializer.validated_data.get('status') == PublishStatus.PUBLICADO:
+            self._require_admin()
+        super().perform_create(serializer)
+
+    def perform_update(self, serializer):
+        if PublishStatus.PUBLICADO in (serializer.instance.status, serializer.validated_data.get('status')):
+            self._require_admin()
+        super().perform_update(serializer)
+
+    def perform_destroy(self, instance):
+        if instance.status == PublishStatus.PUBLICADO:
+            self._require_admin()
+        super().perform_destroy(instance)
 
 
 class StaffCenterViewSet(AuditedViewSet):

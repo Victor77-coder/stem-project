@@ -13,11 +13,12 @@ import { type CenterFilter } from '@/content/centers';
 import {
   NO_MARKS,
   doneCount,
+  loadSteps,
   progressPercent,
   stepStates,
   stepsFor,
-  type JourneyKind,
   type JourneyMarks,
+  type JourneyStep,
   type RegionId,
 } from '@/content/journey';
 import {
@@ -49,8 +50,7 @@ function resolveProfile(query: string | string[] | undefined, saved: ProfileType
 }
 
 /** Cartão do guia pessoal: mostra a primeira etapa que o usuário ainda não marcou. */
-function homeCard(kind: JourneyKind, marks: JourneyMarks, region: RegionId) {
-  const steps = stepsFor(kind, region);
+function homeCard(steps: JourneyStep[], marks: JourneyMarks) {
   const next = stepStates(steps, marks.done).indexOf('next');
   if (next < 0) {
     return {
@@ -72,7 +72,7 @@ function DonorHome({
   sex,
   uf,
   marks,
-  region,
+  steps,
   unread,
   open,
   onJourney,
@@ -86,7 +86,7 @@ function DonorHome({
   sex: Sexo;
   uf: string;
   marks: JourneyMarks;
-  region: RegionId;
+  steps: JourneyStep[];
   unread: number;
   open: (route: LearnRoute) => void;
   /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
@@ -97,7 +97,7 @@ function DonorHome({
   onNotifications: () => void;
   onNoticeInvite?: () => void;
 }) {
-  const card = homeCard('doador', marks, region);
+  const card = homeCard(steps, marks);
   return (
     <>
       <HomeHeader
@@ -187,7 +187,7 @@ function ReceptorHome({
   name,
   sex,
   marks,
-  region,
+  steps,
   unread,
   open,
   onJourney,
@@ -200,7 +200,7 @@ function ReceptorHome({
   name: string;
   sex: Sexo;
   marks: JourneyMarks;
-  region: RegionId;
+  steps: JourneyStep[];
   unread: number;
   open: (route: LearnRoute) => void;
   /** Ausente quando o painel desligou a Jornada: o cartão some da tela inicial. */
@@ -211,7 +211,7 @@ function ReceptorHome({
   onNotifications: () => void;
   onNoticeInvite?: () => void;
 }) {
-  const card = homeCard('receptor', marks, region);
+  const card = homeCard(steps, marks);
   return (
     <>
       <HomeHeader
@@ -419,6 +419,11 @@ export default function HomeScreen() {
   // Com ?perfil= de outro perfil (pré-visualização), o guia aparece vazio e nada é gravado.
   const ownJourney = signedIn && journey.kind === profile;
   const marks: JourneyMarks = ownJourney ? journey : NO_MARKS;
+  const stepsKind = journeyKind === 'receptor' ? 'receptor' : 'doador';
+  // Etapas publicadas no painel para este perfil e região; até a API responder, as embarcadas no app.
+  const stepsKey = `${stepsKind}:${journey.region}`;
+  const [loadedSteps, setLoadedSteps] = useState<{ key: string; steps: JourneyStep[] } | null>(null);
+  const steps = loadedSteps?.key === stepsKey ? loadedSteps.steps : stepsFor(stepsKind, journey.region);
 
   useEffect(() => {
     withFallback('/config/', { jornadaAtiva: true }).then(({ jornadaAtiva }) => {
@@ -427,6 +432,16 @@ export default function HomeScreen() {
       if (!on) setTab((current) => (current === 'jornada' ? 'inicio' : current));
     });
   }, []);
+
+  useEffect(() => {
+    let alive = true;
+    loadSteps(stepsKind, journey.region).then((loaded) => {
+      if (alive) setLoadedSteps({ key: `${stepsKind}:${journey.region}`, steps: loaded });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [stepsKind, journey.region]);
 
   useEffect(() => {
     // Recarrega também na troca de perfil: o guia do novo perfil começa sem marcas.
@@ -542,7 +557,7 @@ export default function HomeScreen() {
                 name={draft.name}
                 sex={draft.sex}
                 marks={marks}
-                region={journey.region}
+                steps={steps}
                 unread={unread}
                 open={openLearn}
                 onJourney={journeyOn ? openJourney : undefined}
@@ -568,7 +583,7 @@ export default function HomeScreen() {
                 sex={draft.sex}
                 uf={draft.uf}
                 marks={marks}
-                region={journey.region}
+                steps={steps}
                 unread={unread}
                 open={openLearn}
                 onJourney={journeyOn ? openJourney : undefined}
@@ -590,6 +605,7 @@ export default function HomeScreen() {
         ) : tab === 'jornada' ? (
           <JourneyFlow
             kind={journeyKind}
+            steps={steps}
             marks={marks}
             region={journey.region}
             onRegion={(region) => saveJourney({ region })}
