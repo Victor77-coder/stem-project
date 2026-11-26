@@ -36,6 +36,7 @@ import {
 } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { useConsentDoc } from '@/lib/consent';
+import { downloadAndShare } from '@/lib/download';
 import { requestLocationPermission } from '@/lib/location';
 import { resetTo } from '@/lib/navigation';
 import { colors } from '@/theme';
@@ -174,8 +175,22 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
     resetTo('/welcome');
   }
 
-  // Portabilidade (LGPD art. 18): a cópia sai direto no app, mesmo sem e-mail cadastrado.
+  // Acesso (LGPD art. 18, II): a ficha em PDF sai direto no app, mesmo sem e-mail cadastrado.
   async function exportData() {
+    if (!signedIn) {
+      setExportNote('Entre na sua conta para baixar seus dados.');
+      return;
+    }
+    try {
+      await downloadAndShare('/me/export/?formato=pdf', 'meus-dados-stem.pdf', 'application/pdf', 'com.adobe.pdf');
+      setExportNote('Cópia dos seus dados gerada agora (PDF).');
+    } catch (err) {
+      setExportNote(err instanceof Error ? err.message : 'Não foi possível gerar a cópia agora.');
+    }
+  }
+
+  // Portabilidade (LGPD art. 18, V): os mesmos dados em JSON, para levar a outro serviço.
+  async function exportJson() {
     if (!signedIn) {
       setExportNote('Entre na sua conta para baixar seus dados.');
       return;
@@ -183,7 +198,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
     try {
       const data = await api<Record<string, unknown>>('/me/export/');
       await deliverCopy(JSON.stringify(data, null, 2));
-      setExportNote('Cópia dos seus dados gerada agora.');
+      setExportNote('Cópia em formato de dados (JSON) gerada agora.');
     } catch (err) {
       setExportNote(err instanceof Error ? err.message : 'Não foi possível gerar a cópia agora.');
     }
@@ -279,6 +294,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           onBack={() => setScreen('hub')}
           onReadTerm={() => router.push('/tcle?reaceite=1')}
           onExport={() => void exportData()}
+          onExportJson={() => void exportJson()}
           onEmailCopy={signedIn && shown.email ? () => void emailCopy() : undefined}
           onPermissions={() => setScreen('permissions')}
           onInactivate={() => setConfirm(true)}
@@ -830,6 +846,7 @@ function PrivacyScreen({
   onBack,
   onReadTerm,
   onExport,
+  onExportJson,
   onEmailCopy,
   onPermissions,
   onInactivate,
@@ -839,6 +856,7 @@ function PrivacyScreen({
   onBack: () => void;
   onReadTerm: () => void;
   onExport: () => void;
+  onExportJson: () => void;
   /** Só aparece com e-mail cadastrado. */
   onEmailCopy?: () => void;
   onPermissions: () => void;
@@ -875,7 +893,13 @@ function PrivacyScreen({
         </View>
 
         <Text style={styles.kicker}>SEUS DIREITOS (LGPD)</Text>
-        <Row icon="download-outline" title="Baixar meus dados" caption="Cópia completa em arquivo, na hora" onPress={onExport} />
+        <Row icon="download-outline" title="Baixar meus dados" caption="Ficha completa em PDF, na hora" onPress={onExport} />
+        <Row
+          icon="code-download-outline"
+          title="Dados para outros serviços"
+          caption="Arquivo JSON, para levar a outro app (portabilidade)"
+          onPress={onExportJson}
+        />
         {onEmailCopy ? (
           <Row icon="mail-outline" title="Enviar cópia por e-mail" caption={shown.emailMasked} onPress={onEmailCopy} />
         ) : null}
