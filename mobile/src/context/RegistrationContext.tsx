@@ -20,16 +20,23 @@ export type RegistrationDraft = {
   profile: ProfileType | null;
   name: string;
   email: string;
+  /** Telefone com DDD, mostrado com máscara (xx) xxxxx-xxxx. O servidor guarda só os dígitos. */
+  phone: string;
   password: string;
   cpf: string;
+  /** dd/mm/aaaa na tela; o servidor guarda a data. */
+  birthDate: string;
   weight: string;
   height: string;
   sex: Sexo;
   comorbidities: string[];
   cep: string;
   address: string;
+  number: string;
+  district: string;
   city: string;
   uf: string;
+  complement: string;
   allowLocation: boolean;
   tcleAccepted: boolean;
   tcleVersion: string;
@@ -37,7 +44,6 @@ export type RegistrationDraft = {
 };
 
 type Me = Omit<RegistrationDraft, 'password' | 'notices'> & {
-  phone: string;
   hasPassword: boolean;
   tcleAcceptedAt: string | null;
   emailConfirmed: boolean;
@@ -47,16 +53,21 @@ const emptyDraft: RegistrationDraft = {
   profile: null,
   name: '',
   email: '',
+  phone: '',
   password: '',
   cpf: '',
+  birthDate: '',
   weight: '',
   height: '',
   sex: '',
   comorbidities: [],
   cep: '',
   address: '',
+  number: '',
+  district: '',
   city: '',
   uf: '',
+  complement: '',
   allowLocation: false,
   tcleAccepted: false,
   tcleVersion: '1.0',
@@ -69,6 +80,8 @@ type Ctx = {
   reset: () => void;
   isConvidado: boolean;
   signedIn: boolean;
+  /** A conta já tem senha: na troca de perfil a etapa da conta não pede outra. */
+  hasPassword: boolean;
   restoring: boolean;
   acceptedAt: string | null;
   emailConfirmed: boolean;
@@ -84,16 +97,49 @@ type Ctx = {
   save: (patch: Partial<RegistrationDraft>, currentPassword?: string) => Promise<void>;
   signOut: () => Promise<void>;
   deactivate: (password: string) => Promise<void>;
+  /** Aceite da versão vigente do TCLE ou dos Termos de Uso, gravado no servidor (RS001). */
+  acceptTerms: (version: string) => Promise<void>;
 };
 
 const RegistrationContext = createContext<Ctx | null>(null);
 
 const decimal = (value: string) => value.replace(/[^\d,.]/g, '').replace(',', '.');
 
-function contact(email: string) {
-  const value = email.trim();
-  if (!value) return {};
-  return value.includes('@') ? { email: value } : { phone: value };
+const onlyDigits = (value: string) => value.replace(/\D/g, '');
+
+/** Máscara do telefone com DDD: (xx) xxxxx-xxxx no celular, (xx) xxxx-xxxx no fixo. */
+export function maskPhone(value: string) {
+  const d = onlyDigits(value).slice(0, 11);
+  if (d.length <= 2) return d ? `(${d}` : '';
+  const split = d.length === 11 ? 7 : 6;
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, split)}-${d.slice(split)}`;
+}
+
+/** Máscara do CPF: xxx.xxx.xxx-xx. O servidor guarda só os dígitos. */
+export function maskCpf(value: string) {
+  const d = onlyDigits(value).slice(0, 11);
+  if (d.length <= 3) return d;
+  if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
+  if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+}
+
+/** Máscara da data: dd/mm/aaaa. */
+export function maskDate(value: string) {
+  const d = onlyDigits(value).slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+/** 1995-03-15 → 15/03/1995. */
+const fromIsoDate = (iso: string) => (iso ? iso.split('-').reverse().join('/') : '');
+
+function contact(draft: Pick<RegistrationDraft, 'email' | 'phone' | 'profile'>) {
+  const email = draft.email.trim();
+  const phone = draft.profile === 'convidado' ? '' : onlyDigits(draft.phone);
+  return { ...(email ? { email } : {}), ...(phone ? { phone } : {}) };
 }
 
 export const hasEmailContact = (value: string) => value.trim().includes('@');
@@ -106,6 +152,7 @@ function noticesBody(draft: RegistrationDraft) {
 function clinicalBody(draft: RegistrationDraft) {
   return {
     cpf: draft.cpf,
+    ...(draft.birthDate ? { birthDate: draft.birthDate } : {}),
     weight: decimal(draft.weight),
     height: decimal(draft.height),
     sex: draft.sex,
@@ -117,12 +164,15 @@ function registrationBody(draft: RegistrationDraft) {
   const base = {
     profile: draft.profile,
     name: draft.name.trim(),
-    ...contact(draft.email),
+    ...contact(draft),
     ...(draft.password ? { password: draft.password } : {}),
     cep: draft.cep,
     address: draft.address,
+    number: draft.number,
+    district: draft.district,
     city: draft.city,
     uf: draft.uf,
+    complement: draft.complement,
     allowLocation: draft.allowLocation,
     tcleAccepted: draft.tcleAccepted,
     tcleVersion: draft.tcleVersion,
@@ -141,7 +191,9 @@ function patchBody(patch: Partial<RegistrationDraft>) {
   delete body.notices;
   if (patch.weight !== undefined) body.weight = decimal(patch.weight);
   if (patch.height !== undefined) body.height = decimal(patch.height);
-  if (patch.email !== undefined) Object.assign(body, { email: '', ...contact(patch.email) });
+  if (patch.email !== undefined) body.email = patch.email.trim();
+  if (patch.phone !== undefined) body.phone = onlyDigits(patch.phone);
+  if (patch.birthDate !== undefined) body.birthDate = patch.birthDate || null;
   return body;
 }
 
@@ -149,17 +201,22 @@ function fromMe(me: Me): RegistrationDraft {
   return {
     profile: me.profile,
     name: me.name,
-    email: me.email || me.phone,
+    email: me.email,
+    phone: maskPhone(me.phone),
     password: '',
-    cpf: me.cpf,
+    cpf: maskCpf(me.cpf),
+    birthDate: fromIsoDate(me.birthDate),
     weight: me.weight.replace('.', ','),
     height: me.height.replace('.', ','),
     sex: me.sex,
     comorbidities: me.comorbidities,
     cep: me.cep,
     address: me.address,
+    number: me.number,
+    district: me.district,
     city: me.city,
     uf: me.uf,
+    complement: me.complement,
     allowLocation: me.allowLocation,
     tcleAccepted: me.tcleAccepted,
     tcleVersion: me.tcleVersion || '1.0',
@@ -173,12 +230,14 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
   const [restoring, setRestoring] = useState(true);
   const [acceptedAt, setAcceptedAt] = useState<string | null>(null);
   const [emailConfirmed, setEmailConfirmed] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
 
   const hydrate = useCallback((me: Me) => {
     // Mantém a escolha de avisos do cadastro: a conclusão ainda usa para pedir o código do e-mail.
     setDraft((prev) => ({ ...fromMe(me), notices: prev.notices }));
     setAcceptedAt(me.tcleAcceptedAt);
     setEmailConfirmed(me.emailConfirmed);
+    setHasPassword(me.hasPassword);
     setSignedIn(true);
   }, []);
 
@@ -203,6 +262,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
     setSignedIn(false);
     setAcceptedAt(null);
     setEmailConfirmed(false);
+    setHasPassword(false);
     setDraft(emptyDraft);
   }, []);
 
@@ -221,6 +281,7 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
       reset: () => setDraft(emptyDraft),
       isConvidado: draft.profile === 'convidado',
       signedIn,
+      hasPassword,
       restoring,
       acceptedAt,
       emailConfirmed,
@@ -301,8 +362,15 @@ export function RegistrationProvider({ children }: { children: ReactNode }) {
         await api('/me/deactivate/', { method: 'POST', body: { password } });
         await clear();
       },
+      async acceptTerms(version) {
+        if (!signedIn) {
+          setDraft((prev) => ({ ...prev, tcleAccepted: true, tcleVersion: version }));
+          return;
+        }
+        hydrate(await api<Me>('/me/consent/', { method: 'POST', body: { tcleAccepted: true, tcleVersion: version, channel } }));
+      },
     }),
-    [draft, signedIn, restoring, acceptedAt, emailConfirmed, startSession, hydrate, clear],
+    [draft, signedIn, hasPassword, restoring, acceptedAt, emailConfirmed, startSession, hydrate, clear],
   );
 
   return <RegistrationContext.Provider value={value}>{children}</RegistrationContext.Provider>;

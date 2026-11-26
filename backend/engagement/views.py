@@ -69,7 +69,7 @@ class CodeSerializer(serializers.Serializer):
 class JourneySerializer(serializers.ModelSerializer):
     """Marcas do guia pessoal. Só aceita as etapas do perfil do titular (`kind` no contexto)."""
 
-    done = serializers.ListField(child=serializers.CharField(max_length=40), max_length=10, required=False)
+    done = serializers.ListField(child=serializers.CharField(max_length=40), max_length=30, required=False)
     checklist = serializers.DictField(
         child=serializers.ListField(child=serializers.CharField(max_length=120), max_length=10), required=False
     )
@@ -78,8 +78,10 @@ class JourneySerializer(serializers.ModelSerializer):
         model = JourneyProgress
         fields = ('done', 'checklist', 'region')
 
-    def _steps(self) -> tuple[str, ...]:
-        return JourneyProgress.STEPS[self.context['kind']]
+    def _steps(self) -> list[str]:
+        if not hasattr(self, '_step_ids'):
+            self._step_ids = JourneyProgress.step_ids(self.context['kind'])
+        return self._step_ids
 
     def _check_steps(self, ids) -> None:
         unknown = sorted(set(ids) - set(self._steps()))

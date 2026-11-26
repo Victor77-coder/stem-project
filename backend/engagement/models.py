@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 
-from catalog.models import Center, Content, PublishStatus, published_needs
+from catalog.models import Center, Content, JourneyStep, PublishStatus, published_needs
 from participants.models import Participant
 
 
@@ -118,7 +118,7 @@ class JourneyProgress(models.Model):
         RECIFE = 'recife'
         OUTRA = 'outra'
 
-    # Etapas do guia, na ordem do app. As marcas só aceitam estes ids.
+    # Etapas embarcadas no app (mobile/src/content/journey.ts). Valem só enquanto o painel não tiver etapas cadastradas.
     STEPS = {
         'doador': ('cadastro', 'coleta', 'redome', 'contato', 'doacao', 'pos-doacao'),
         'receptor': ('indicacao', 'encaminhamento', 'busca', 'preparacao', 'transplante', 'pos-tcth'),
@@ -131,6 +131,13 @@ class JourneyProgress(models.Model):
     checklist = models.JSONField(default=dict, blank=True)
     region = models.CharField(max_length=10, choices=Region.choices, default=Region.MACEIO)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @classmethod
+    def step_ids(cls, kind: str) -> list[str]:
+        """Ids que as marcas aceitam, na ordem do painel. Inclui rascunhos e inativas: uma etapa despublicada
+        não pode invalidar as marcas que o titular já tinha."""
+        ids = list(JourneyStep.objects.filter(jornada=kind).order_by('ordem').values_list('slug', flat=True))
+        return ids or list(cls.STEPS[kind])
 
     def clear(self) -> None:
         self.done = []

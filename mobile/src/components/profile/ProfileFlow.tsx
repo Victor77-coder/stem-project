@@ -6,6 +6,7 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Switch,
   Text,
@@ -23,7 +24,16 @@ import {
   type HistoryIcon,
 } from '@/content/profile';
 import { EmailCode } from '@/components/EmailCode';
-import { hasEmailContact, useRegistration, type ProfileType, type RegistrationDraft, type Sexo } from '@/context/RegistrationContext';
+import {
+  hasEmailContact,
+  maskCpf,
+  maskDate,
+  maskPhone,
+  useRegistration,
+  type ProfileType,
+  type RegistrationDraft,
+  type Sexo,
+} from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
 import { useConsentDoc } from '@/lib/consent';
 import { requestLocationPermission } from '@/lib/location';
@@ -70,14 +80,36 @@ const HISTORY_ICON: Record<HistoryIcon, keyof typeof Ionicons.glyphMap> = {
   person: 'person-outline',
 };
 
-type ApiHistory = { id: number; icon: HistoryIcon; title: string; detail: string; when: string };
+type ApiHistory = { id: number; icon: HistoryIcon; title: string; detail: string; by: string; when: string };
 
 function fromApi(item: ApiHistory): HistoryEvent {
-  return { id: String(item.id), icon: item.icon, title: item.title, detail: item.detail, when: stamp(new Date(item.when)) };
+  return {
+    id: String(item.id),
+    icon: item.icon,
+    title: item.title,
+    detail: item.detail,
+    by: item.by,
+    when: stamp(new Date(item.when)),
+  };
+}
+
+/** Salva a cópia dos dados: download no navegador; no celular, a folha de compartilhar (Arquivos, e-mail, Drive). */
+async function deliverCopy(json: string) {
+  if (Platform.OS === 'web') {
+    const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'meus-dados-stem.json';
+    link.click();
+    URL.revokeObjectURL(url);
+    return;
+  }
+  await Share.share({ title: 'Meus dados no STEM Project', message: json });
 }
 
 export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfile }: Props) {
-  const { draft, update, signedIn, acceptedAt, save, signOut, deactivate, enterAsGuest, confirmGuestCode } = useRegistration();
+  const { draft, update, signedIn, acceptedAt, save, signOut, deactivate, enterAsGuest, confirmGuestCode, acceptTerms } =
+    useRegistration();
   const [screen, setScreen] = useState<Screen>('hub');
   const [confirm, setConfirm] = useState(false);
   // Convidado apagando o e-mail: o registro é inativado na hora (RF02).
@@ -142,11 +174,22 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
     resetTo('/welcome');
   }
 
+  // Portabilidade (LGPD art. 18): a cópia sai direto no app, mesmo sem e-mail cadastrado.
   async function exportData() {
-    if (!signedIn || !shown.email) {
-      setExportNote('Adicione um e-mail em Dados da conta para receber a cópia.');
+    if (!signedIn) {
+      setExportNote('Entre na sua conta para baixar seus dados.');
       return;
     }
+    try {
+      const data = await api<Record<string, unknown>>('/me/export/');
+      await deliverCopy(JSON.stringify(data, null, 2));
+      setExportNote('Cópia dos seus dados gerada agora.');
+    } catch (err) {
+      setExportNote(err instanceof Error ? err.message : 'Não foi possível gerar a cópia agora.');
+    }
+  }
+
+  async function emailCopy() {
     try {
       const data = await api<{ detail: string }>('/me/export/', { method: 'POST' });
       setExportNote(`${data.detail} (${shown.emailMasked})`);
@@ -234,8 +277,9 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           shown={shown}
           exportNote={exportNote}
           onBack={() => setScreen('hub')}
-          onReadTerm={() => router.push('/tcle')}
+          onReadTerm={() => router.push('/tcle?reaceite=1')}
           onExport={() => void exportData()}
+          onEmailCopy={signedIn && shown.email ? () => void emailCopy() : undefined}
           onPermissions={() => setScreen('permissions')}
           onInactivate={() => setConfirm(true)}
         />
@@ -262,9 +306,18 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
           accepted={draft.tcleAccepted}
           when={shown.termsWhen}
           onBack={() => setScreen('hub')}
-          onAccept={() => {
-            update({ tcleAccepted: true });
-            pushHistory([event('shield', 'Termos aceitos', 'Versão 1.0')]);
+          onAccept={(version) => {
+            if (!signedIn) {
+              update({ tcleAccepted: true, tcleVersion: version });
+              pushHistory([event('shield', 'Termos aceitos', `Versão ${version}`)]);
+              return;
+            }
+            // Convidado com conta: o aceite da versão vigente fica gravado no servidor (RF02 nota 5).
+            acceptTerms(version)
+              .then(loadHistory)
+              .catch((err: unknown) =>
+                Alert.alert('Não foi possível registrar o aceite', err instanceof Error ? err.message : 'Tente novamente.'),
+              );
           }}
         />
       ) : null}
@@ -309,7 +362,7 @@ function Hub({
         </View>
         <View style={styles.identityCopy}>
           <Text style={styles.identityName}>{shown.name}</Text>
-          {convidado ? null : <Text style={styles.identityEmail}>{shown.emailMasked}</Text>}
+          {convidado ? null : <Text style={styles.identityEmail}>{shown.contactMasked}</Text>}
           <Text style={styles.identityRole}>{shown.role}</Text>
         </View>
       </View>
@@ -382,14 +435,21 @@ function AccountScreen({
 }) {
   const [name, setName] = useState(draft.name);
   const [email, setEmail] = useState(draft.email);
+  const [phone, setPhone] = useState(draft.phone);
   const [cpf, setCpf] = useState(draft.cpf);
+  const [birthDate, setBirthDate] = useState(draft.birthDate);
   const [currentPassword, setCurrentPassword] = useState('');
   const [nextPassword, setNextPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   function save() {
     if (nextPassword && nextPassword.length < 8) {
       setError('A nova senha precisa ter pelo menos 8 caracteres.');
+      return;
+    }
+    if (nextPassword && nextPassword !== confirmPassword) {
+      setError('As senhas não conferem. Digite a nova senha novamente.');
       return;
     }
     if (nextPassword && draft.password && currentPassword !== draft.password) {
@@ -398,14 +458,22 @@ function AccountScreen({
     }
     const events: HistoryEvent[] = [];
     if (name.trim() !== draft.name && name.trim()) events.push(event('person', 'Nome atualizado', 'Dados da conta'));
-    if (email.trim() !== draft.email && email.trim()) events.push(event('person', 'E-mail atualizado', 'Dados da conta'));
+    if (!email.trim() && !phone.trim()) {
+      setError('Mantenha ao menos um e-mail ou telefone na conta.');
+      return;
+    }
+    if (email.trim() !== draft.email) events.push(event('person', 'E-mail atualizado', 'Dados da conta'));
+    if (phone !== draft.phone) events.push(event('person', 'Telefone atualizado', 'Dados da conta'));
     if (cpf.trim() !== draft.cpf) events.push(event('person', 'CPF atualizado', 'Dados da conta'));
+    if (birthDate !== draft.birthDate) events.push(event('person', 'Data de nascimento atualizada', 'Dados da conta'));
     if (nextPassword) events.push(event('shield', 'Senha alterada', 'Acesso à conta'));
     onSave(
       {
         name: name.trim(),
         email: email.trim(),
+        phone,
         cpf: cpf.trim(),
+        birthDate,
         ...(nextPassword ? { password: nextPassword } : {}),
       },
       events,
@@ -415,11 +483,40 @@ function AccountScreen({
 
   return (
     <FormScreen title="Dados da conta" onCancel={onCancel} onSave={save}>
-      <Field label="Nome" value={name} onChangeText={setName} autoCapitalize="words" />
+      <Field label="Nome Completo" value={name} onChangeText={setName} autoCapitalize="words" maxLength={150} />
       <Field label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-      <Field label="CPF" value={cpf} onChangeText={setCpf} keyboardType="number-pad" placeholder="000.000.000-00" />
+      <Field
+        label="Telefone"
+        value={phone}
+        onChangeText={(value) => setPhone(maskPhone(value))}
+        keyboardType="phone-pad"
+        placeholder="(00) 00000-0000"
+      />
+      <Field
+        label="Data de nascimento"
+        value={birthDate}
+        onChangeText={(value) => setBirthDate(maskDate(value))}
+        keyboardType="number-pad"
+        maxLength={10}
+        placeholder="dd/mm/aaaa"
+      />
+      <Field
+        label="CPF"
+        value={cpf}
+        onChangeText={(value) => setCpf(maskCpf(value))}
+        keyboardType="number-pad"
+        maxLength={14}
+        placeholder="000.000.000-00"
+      />
       <Field label="Senha atual" value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry placeholder="Somente para trocar a senha" />
       <Field label="Nova senha" value={nextPassword} onChangeText={setNextPassword} secureTextEntry placeholder="Mínimo 8 caracteres" />
+      <Field
+        label="Confirmar nova senha"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+        placeholder="Digite a nova senha novamente"
+      />
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <Info text="Cada alteração fica registrada com data e hora no seu histórico." />
     </FormScreen>
@@ -618,6 +715,9 @@ function LocationScreen({
   const [city, setCity] = useState(draft.city);
   const [uf, setUf] = useState(draft.uf);
   const [address, setAddress] = useState(draft.address);
+  const [number, setNumber] = useState(draft.number);
+  const [district, setDistrict] = useState(draft.district);
+  const [complement, setComplement] = useState(draft.complement);
   const [allow, setAllow] = useState(draft.allowLocation);
   const [hint, setHint] = useState('');
   const [loading, setLoading] = useState(false);
@@ -631,12 +731,19 @@ function LocationScreen({
     setLoading(true);
     try {
       const response = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
-      const data = (await response.json()) as { erro?: boolean; logradouro?: string; localidade?: string; uf?: string };
+      const data = (await response.json()) as {
+        erro?: boolean;
+        logradouro?: string;
+        bairro?: string;
+        localidade?: string;
+        uf?: string;
+      };
       if (data.erro) {
         setHint('CEP não encontrado.');
         return;
       }
       setAddress(data.logradouro ?? '');
+      setDistrict(data.bairro ?? '');
       setCity(data.localidade ?? '');
       setUf(data.uf ?? '');
       setHint('');
@@ -648,9 +755,16 @@ function LocationScreen({
   }
 
   function save() {
-    const changed = cep !== draft.cep || city !== draft.city || uf !== draft.uf;
+    const changed =
+      cep !== draft.cep ||
+      city !== draft.city ||
+      uf !== draft.uf ||
+      address !== draft.address ||
+      number !== draft.number ||
+      district !== draft.district ||
+      complement !== draft.complement;
     onSave(
-      { cep, city, uf, address, allowLocation: allow },
+      { cep, city, uf, address, number, district, complement, allowLocation: allow },
       changed ? [event('person', 'Localização atualizada', city && uf ? `${city}/${uf}` : 'CEP atualizado')] : [],
     );
   }
@@ -673,7 +787,10 @@ function LocationScreen({
       </View>
       <Field label="Cidade" value={city} onChangeText={setCity} />
       <Field label="UF" value={uf} onChangeText={setUf} autoCapitalize="characters" maxLength={2} />
-      {address ? <Field label="Endereço" value={address} onChangeText={setAddress} /> : null}
+      <Field label="Endereço" value={address} onChangeText={setAddress} placeholder="Preenchido após o CEP" />
+      <Field label="Número" value={number} onChangeText={setNumber} />
+      <Field label="Bairro" value={district} onChangeText={setDistrict} />
+      <Field label="Complemento" value={complement} onChangeText={setComplement} placeholder="Opcional" />
       {hint ? <Text style={styles.error}>{hint}</Text> : null}
       <View style={styles.switchRow}>
         <View style={styles.noticeCopy}>
@@ -713,6 +830,7 @@ function PrivacyScreen({
   onBack,
   onReadTerm,
   onExport,
+  onEmailCopy,
   onPermissions,
   onInactivate,
 }: {
@@ -721,6 +839,8 @@ function PrivacyScreen({
   onBack: () => void;
   onReadTerm: () => void;
   onExport: () => void;
+  /** Só aparece com e-mail cadastrado. */
+  onEmailCopy?: () => void;
   onPermissions: () => void;
   onInactivate: () => void;
 }) {
@@ -755,7 +875,10 @@ function PrivacyScreen({
         </View>
 
         <Text style={styles.kicker}>SEUS DIREITOS (LGPD)</Text>
-        <Row icon="download-outline" title="Baixar meus dados" caption="Receba uma cópia por e-mail" onPress={onExport} />
+        <Row icon="download-outline" title="Baixar meus dados" caption="Cópia completa em arquivo, na hora" onPress={onExport} />
+        {onEmailCopy ? (
+          <Row icon="mail-outline" title="Enviar cópia por e-mail" caption={shown.emailMasked} onPress={onEmailCopy} />
+        ) : null}
         {exportNote ? <Text style={styles.exportNote}>{exportNote}</Text> : null}
         <Row icon="phone-portrait-outline" title="Permissões do aparelho" caption="Localização e notificações" onPress={onPermissions} />
         <Pressable accessibilityRole="button" onPress={onInactivate} style={styles.dangerRow}>
@@ -823,7 +946,7 @@ function HistoryScreen({ events, onBack }: { events: HistoryEvent[]; onBack: () 
             <View style={styles.noticeCopy}>
               <Text style={styles.rowTitle}>{item.title}</Text>
               <Text style={styles.rowCaption}>{item.detail}</Text>
-              <Text style={styles.historyWhen}>{item.when}</Text>
+              <Text style={styles.historyWhen}>{item.by ? `${item.when} · por ${item.by}` : item.when}</Text>
             </View>
           </View>
         ))}
@@ -913,7 +1036,7 @@ function TermsScreen({
   accepted: boolean;
   when: string;
   onBack: () => void;
-  onAccept: () => void;
+  onAccept: (version: string) => void;
 }) {
   const doc = useConsentDoc('termos');
   return (
@@ -931,7 +1054,7 @@ function TermsScreen({
           ))}
         </View>
         {accepted ? null : (
-          <Pressable accessibilityRole="button" onPress={onAccept} style={[styles.primaryBtn, styles.blockBtn]}>
+          <Pressable accessibilityRole="button" onPress={() => onAccept(doc.version)} style={[styles.primaryBtn, styles.blockBtn]}>
             <Text style={styles.primaryBtnText}>Li e aceito os termos</Text>
           </Pressable>
         )}
@@ -1151,6 +1274,8 @@ type Shown = {
   name: string;
   email: string;
   emailMasked: string;
+  /** E-mail ou, sem e-mail, o telefone com o meio oculto. */
+  contactMasked: string;
   initials: string;
   role: string;
   weight: string;
@@ -1180,6 +1305,7 @@ function present(draft: RegistrationDraft, profile: ProfileType, acceptedAt: str
     name,
     email,
     emailMasked: email ? maskEmail(email) : '',
+    contactMasked: email ? maskEmail(email) : draft.phone ? `${draft.phone.slice(0, 5)}•••••-${draft.phone.slice(-4)}` : '',
     initials: draft.name ? initials(draft.name) : convidado ? 'C' : '?',
     role: roleLabel(profile, sex),
     weight: draft.weight,

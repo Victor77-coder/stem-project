@@ -7,12 +7,21 @@ import { NavPair } from '@/components/NavPair';
 import { Screen } from '@/components/Screen';
 import { StepHeader } from '@/components/StepHeader';
 import { useRegistration } from '@/context/RegistrationContext';
+import { hasErrors, locationErrors, type FieldErrors } from '@/lib/validation';
 import { colors, type } from '@/theme';
 
 export default function LocationScreen() {
   const { draft, update, signedIn, totalSteps } = useRegistration();
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState('Preenchimento automático de endereço via API');
+  const [errors, setErrors] = useState<FieldErrors>({});
+
+  // Endereço é opcional (RF001 nota 6); só não segue com CEP ou UF inválidos.
+  function next() {
+    const found = locationErrors(draft);
+    setErrors(found);
+    if (!hasErrors(found)) router.push(signedIn ? '/review' : '/avisos');
+  }
 
   async function consultarCep() {
     const cep = draft.cep.replace(/\D/g, '');
@@ -26,6 +35,7 @@ export default function LocationScreen() {
       const data = (await response.json()) as {
         erro?: boolean;
         logradouro?: string;
+        bairro?: string;
         localidade?: string;
         uf?: string;
       };
@@ -33,8 +43,10 @@ export default function LocationScreen() {
         setHint('CEP não encontrado.');
         return;
       }
+      // Número e complemento ficam com o usuário; o bairro do ViaCEP pode ser editado.
       update({
         address: data.logradouro ?? '',
+        district: data.bairro ?? '',
         city: data.localidade ?? '',
         uf: data.uf ?? '',
       });
@@ -54,13 +66,13 @@ export default function LocationScreen() {
             if (router.canGoBack()) router.back();
             else router.replace('/physical');
           }}
-          onRight={() => router.push(signedIn ? '/review' : '/avisos')}
+          onRight={next}
         />
       }
     >
       <StepHeader
         title="Localização"
-        subtitle="Informe o CEP para preenchimento automático do endereço"
+        subtitle="Etapa opcional. Informe o CEP para preencher o endereço automaticamente."
         step={5}
         total={totalSteps}
         brand={<Logo />}
@@ -75,7 +87,10 @@ export default function LocationScreen() {
               placeholderTextColor={colors.muted}
               keyboardType="number-pad"
               value={draft.cep}
-              onChangeText={(cep) => update({ cep })}
+              onChangeText={(cep) => {
+                setErrors(({ cep: _removed, ...rest }) => rest);
+                update({ cep });
+              }}
               style={styles.cepInput}
             />
           </View>
@@ -88,7 +103,7 @@ export default function LocationScreen() {
             <Text style={styles.cepBtnText}>{loading ? 'Buscando' : 'Consultar CEP'}</Text>
           </Pressable>
         </View>
-        <Text style={styles.hint}>{hint}</Text>
+        <Text style={[styles.hint, errors.cep ? styles.error : null]}>{errors.cep ?? hint}</Text>
       </View>
 
       <Field
@@ -96,6 +111,22 @@ export default function LocationScreen() {
         placeholder="Preenchido após CEP"
         value={draft.address}
         onChangeText={(address) => update({ address })}
+      />
+
+      <View style={styles.row}>
+        <View style={styles.third}>
+          <Field label="Número" placeholder="Nº" value={draft.number} onChangeText={(number) => update({ number })} />
+        </View>
+        <View style={styles.half}>
+          <Field label="Bairro" placeholder="Bairro" value={draft.district} onChangeText={(district) => update({ district })} />
+        </View>
+      </View>
+
+      <Field
+        label="Complemento"
+        placeholder="Apto, bloco, referência (opcional)"
+        value={draft.complement}
+        onChangeText={(complement) => update({ complement })}
       />
 
       <View style={styles.row}>
@@ -112,8 +143,13 @@ export default function LocationScreen() {
             label="Estado"
             placeholder="------"
             autoCapitalize="characters"
+            maxLength={2}
+            error={errors.uf}
             value={draft.uf}
-            onChangeText={(uf) => update({ uf })}
+            onChangeText={(uf) => {
+              setErrors(({ uf: _removed, ...rest }) => rest);
+              update({ uf });
+            }}
           />
         </View>
       </View>
@@ -146,6 +182,8 @@ const styles = StyleSheet.create({
   },
   cepBtnText: { ...type.caption, color: '#fff', fontWeight: '700' },
   hint: { ...type.caption, color: colors.muted },
+  error: { color: colors.danger },
   row: { flexDirection: 'row', gap: 12 },
   half: { flex: 1 },
+  third: { width: 110 },
 });

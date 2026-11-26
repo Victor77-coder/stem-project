@@ -69,7 +69,9 @@ export default function ReviewScreen() {
       <View style={styles.card}>
         <Row label="Perfil" value={draft.profile ? profileLabel[draft.profile] : ''} />
         <Row label="Nome" value={draft.name} />
+        {!isConvidado ? <Row label="Nascimento" value={draft.birthDate} /> : null}
         <Row label="E-mail" value={draft.email} />
+        {!isConvidado ? <Row label="Telefone" value={draft.phone} /> : null}
         {!isConvidado ? <Row label="CPF" value={draft.cpf} /> : null}
         {!isConvidado ? <Row label="Peso" value={draft.weight ? `${draft.weight} kg` : ''} /> : null}
         {!isConvidado ? <Row label="Altura" value={draft.height ? `${draft.height} m` : ''} /> : null}
@@ -78,7 +80,12 @@ export default function ReviewScreen() {
           <Row label="Comorbidades" value={draft.comorbidities.length ? draft.comorbidities.join(', ') : ''} />
         ) : null}
         {!isConvidado ? <Row label="CEP" value={draft.cep} /> : null}
-        {!isConvidado ? <Row label="Endereço" value={draft.address} /> : null}
+        {!isConvidado ? (
+          <Row
+            label="Endereço"
+            value={[[draft.address, draft.number].filter(Boolean).join(', '), draft.complement, draft.district].filter(Boolean).join(' · ')}
+          />
+        ) : null}
         {!isConvidado ? <Row label="Cidade" value={[draft.city, draft.uf].filter(Boolean).join(' / ')} /> : null}
         <Row label="TCLE" value={draft.tcleAccepted ? `Aceito · v${draft.tcleVersion}` : 'Pendente'} />
         {!signedIn ? <Row label="Avisos" value={noticesSummary(draft.notices, draft.email)} /> : null}

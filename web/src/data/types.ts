@@ -47,7 +47,7 @@ export type PublishStatus = 'rascunho' | 'publicado' | 'inativo'
 export interface JourneyLocal {
   name: string
   address: string
-  distance: string
+  distance?: string
 }
 
 export interface Journey {

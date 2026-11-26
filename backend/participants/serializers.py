@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 
 from rest_framework import serializers
@@ -37,6 +38,7 @@ class ParticipantInputSerializer(serializers.Serializer):
     phone = serializers.CharField(max_length=20, required=False, allow_blank=True)
     password = serializers.CharField(required=False, allow_blank=True, write_only=True, trim_whitespace=False)
     cpf = serializers.CharField(max_length=14, required=False, allow_blank=True)
+    birthDate = serializers.DateField(required=False, allow_null=True, input_formats=['%d/%m/%Y', 'iso-8601'])
     weight = LooseDecimalField(min_value=Decimal(20), max_value=Decimal(350), places=2, label='o peso', required=False, allow_null=True)
     height = LooseDecimalField(min_value=Decimal('0.5'), max_value=Decimal('2.5'), places=2, label='a altura', required=False, allow_null=True)
     sex = serializers.CharField(required=False, allow_blank=True)
@@ -61,6 +63,11 @@ class ParticipantInputSerializer(serializers.Serializer):
 
     def validate_cpf(self, value):
         return digits(value)
+
+    def validate_birthDate(self, value):
+        if value and (value > date.today() or value.year < 1900):
+            raise serializers.ValidationError('Data de nascimento inválida.')
+        return value
 
     def validate_cep(self, value):
         return clean_cep(value)
