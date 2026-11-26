@@ -483,4 +483,9 @@ def export(participant: Participant) -> dict:
     data['logins'] = [
         {'channel': item.channel, 'when': item.created_at.isoformat()} for item in participant.user.logins.all()[:50]
     ]
+    prefs = Preferences.objects.filter(participant=participant).first()
+    data['notices'] = {key: bool(prefs and getattr(prefs, key)) for key in ('campaigns', 'events', 'official', 'push', 'email')}
+    data['saved'] = list(
+        SavedContent.objects.filter(participant=participant).order_by('saved_at').values_list('content__titulo', flat=True)
+    )
     return data

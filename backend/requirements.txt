@@ -34,6 +34,8 @@ certifi==2026.10.23
     #   httpcore
     #   httpx
     #   prefect-client
+charset-normalizer==3.5.3
+    # via reportlab
 click==8.5.0
     # via
     #   celery
@@ -151,6 +153,8 @@ packaging==26.3
     #   prefect-client
 pathspec==1.1.1
     # via prefect-client
+pillow==13.0.0
+    # via reportlab
 prefect-client==3.9.0
     # via -r requirements.in
 prometheus-client==0.26.0
@@ -207,6 +211,8 @@ referencing==0.37.0
     #   jsonschema-specifications
 regex==2026.9.29
     # via dateparser
+reportlab==5.1.2
+    # via -r requirements.in
 rfc3339-validator==0.1.4
     # via prefect-client
 rich==15.0.0

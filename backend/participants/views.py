@@ -3,6 +3,7 @@ import json
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db.models import Q
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
@@ -14,7 +15,7 @@ from accounts.permissions import IsParticipant
 from accounts.services import issue_tokens, record_login
 from accounts.throttling import scoped
 
-from . import services
+from . import copia_pdf, services
 from .serializers import GuestCodeSerializer, LoginSerializer, ParticipantInputSerializer, PasswordConfirmSerializer
 
 INVALID_LOGIN = 'E-mail, telefone/CPF ou senha inválidos.'
@@ -125,9 +126,14 @@ def history(request):
 @api_view(['GET', 'POST'])
 @permission_classes([IsParticipant])
 def export(request):
-    """Portabilidade (LGPD art. 18). GET devolve a cópia direto no app; POST envia por e-mail."""
+    """Acesso e portabilidade (LGPD art. 18, II e V). GET devolve a cópia direto no app: ?formato=pdf é a ficha
+    legível; sem ele, o JSON para levar a outro serviço. POST envia as duas por e-mail."""
     user = request.user
     if request.method == 'GET':
+        if request.query_params.get('formato') == 'pdf':
+            response = HttpResponse(copia_pdf.render(user.participant), content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="meus-dados-stem.pdf"'
+            return response
         response = Response(services.export(user.participant))
         response['Content-Disposition'] = 'attachment; filename="meus-dados-stem.json"'
         return response
@@ -141,6 +147,7 @@ def export(request):
     )
     body = json.dumps(services.export(user.participant), ensure_ascii=False, indent=2)
     message.attach('meus-dados-stem.json', body, 'application/json')
+    message.attach('meus-dados-stem.pdf', copia_pdf.render(user.participant), 'application/pdf')
     message.send(fail_silently=False)
     return Response({'detail': 'Enviamos a cópia dos seus dados para o e-mail cadastrado.'}, status=status.HTTP_202_ACCEPTED)
 
