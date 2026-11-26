@@ -1,6 +1,7 @@
 import re
 from datetime import timedelta
 
+from django.db import transaction
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -93,6 +94,14 @@ class JourneySerializer(serializers.ModelSerializer):
         self._check_steps(value)
         return {step: list(dict.fromkeys(items)) for step, items in value.items() if items}
 
+    def update(self, instance, validated_data):
+        # Só os campos enviados: o app manda o item do checklist e a etapa em PATCHes separados, quase juntos, e
+        # salvar a linha inteira regravaria o campo do outro com o valor lido antes dele.
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        instance.save(update_fields=[*validated_data, 'updated_at'])
+        return instance
+
 
 def _preferences(participant) -> Preferences:
     return Preferences.objects.get_or_create(participant=participant)[0]
@@ -180,13 +189,17 @@ def unsubscribe(request, token):
 @permission_classes([IsParticipant])
 def journey(request):
     participant = request.user.participant
-    progress = JourneyProgress.objects.get_or_create(participant=participant)[0]
-    if request.method != 'GET':
-        if participant.profile == 'convidado':
-            return Response({'detail': 'A jornada é acompanhada por doadores e receptores.'}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = JourneySerializer(progress, data=request.data, partial=True, context={'kind': participant.profile})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    if request.method == 'GET':
+        progress = JourneyProgress.objects.get_or_create(participant=participant)[0]
+    elif participant.profile == 'convidado':
+        return Response({'detail': 'A jornada é acompanhada por doadores e receptores.'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        # A linha travada até o fim do PATCH: dois toques seguidos no app gravam um depois do outro.
+        with transaction.atomic():
+            progress = JourneyProgress.objects.select_for_update().get_or_create(participant=participant)[0]
+            serializer = JourneySerializer(progress, data=request.data, partial=True, context={'kind': participant.profile})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
     return Response({'kind': participant.profile, 'done': progress.done, 'checklist': progress.checklist, 'region': progress.region})
 
 
