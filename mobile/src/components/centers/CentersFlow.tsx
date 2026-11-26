@@ -10,7 +10,6 @@ import {
   filterOf,
   filtersFor,
   listCenters,
-  originFromCity,
   originFromQuery,
   type CenterFilter,
   type CenterKind,
@@ -19,7 +18,7 @@ import {
 } from '@/content/centers';
 import type { ProfileType } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
-import { hasLocationPermission, originFromCep, requestDeviceOrigin } from '@/lib/location';
+import { hasLocationPermission, originFromCep, originFromCityName, requestDeviceOrigin } from '@/lib/location';
 import { colors } from '@/theme';
 import { CentersMap } from './CentersMap';
 import { iconColor, kindIcon, wellColor } from './kind';
@@ -74,10 +73,10 @@ export function CentersFlow({
   const [hint, setHint] = useState('');
   const [locating, setLocating] = useState(false);
   const [blocked, setBlocked] = useState(false);
-  const [origin, setOrigin] = useState<Origin>(() =>
-    savedCity ? originFromCity(savedCity, savedUf) : { ...ORIGINS.maceio, mode: 'cep' },
-  );
+  // Até o endereço do cadastro ser localizado (efeito abaixo), só Maceió e Recife têm origem embarcada.
+  const [origin, setOrigin] = useState<Origin>(() => originFromQuery(savedCity) ?? { ...ORIGINS.maceio, mode: 'cep' });
   const queryRun = useRef(0);
+  const [searchHint, setSearchHint] = useState('');
   const kinds = KINDS_FOR[profile];
   const filters = useMemo(() => filtersFor(profile), [profile]);
   const [filter, setFilter] = useState<CenterFilter>(() => filterOf(profile, initialFilter));
@@ -124,17 +123,53 @@ export function CentersFlow({
     };
   }, [origin, filter, nameQuery, profile]);
 
+  // Origem pelo endereço do cadastro, em qualquer UF. Não passa por cima do GPS nem de uma busca já feita.
+  useEffect(() => {
+    const cepDigits = savedCep.replace(/\D/g, '');
+    const saved = cepDigits.length === 8 ? originFromCep(cepDigits) : savedCity ? originFromCityName(savedCity, savedUf) : null;
+    if (!saved) return;
+    const run = queryRun.current;
+    let active = true;
+    void saved.then((result) => {
+      if (!active || !result.ok || run !== queryRun.current) return;
+      setOrigin((current) => (current.mode === 'gps' ? current : result.origin));
+    });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function onQuery(value: string) {
     setQuery(value);
+    setSearchHint('');
     const digits = value.replace(/\D/g, '');
     const run = ++queryRun.current;
     if (digits.length === 8) {
       void originFromCep(digits).then((result) => {
-        if (result.ok && run === queryRun.current) setOrigin(result.origin);
+        if (run !== queryRun.current) return;
+        if (result.ok) setOrigin(result.origin);
+        else setSearchHint(result.message);
       });
-    } else if (/recife|macei[oó]/i.test(value)) {
-      setOrigin(originFromQuery(value));
     }
+  }
+
+  /** Enter na busca: texto que não é CEP vira cidade (qualquer UF). Se for nome de unidade, segue como filtro. */
+  function onSearch() {
+    const value = query.trim();
+    if (value.replace(/\D/g, '').length === 8 || value.length < 3) return;
+    const run = ++queryRun.current;
+    const matchedByName = results.length > 0;
+    void originFromCityName(value).then((result) => {
+      if (run !== queryRun.current) return;
+      if (!result.ok) {
+        if (!matchedByName) setSearchHint(result.message);
+        return;
+      }
+      setOrigin(result.origin);
+      setQuery('');
+      setSearchHint('');
+    });
   }
 
   function openMap(next: Origin) {
@@ -250,6 +285,8 @@ export function CentersFlow({
         offline={offline}
         onFilter={setFilter}
         onQuery={onQuery}
+        onSearch={onSearch}
+        searchHint={searchHint}
         onOpen={openDetail}
         onMap={() => {
           setBrowse('map');
@@ -270,6 +307,8 @@ export function CentersFlow({
       offline={offline}
       onFilter={setFilter}
       onQuery={onQuery}
+      onSearch={onSearch}
+      searchHint={searchHint}
       onOpen={openDetail}
       onList={() => {
         setBrowse('list');
@@ -432,6 +471,8 @@ function MapScreen({
   offline,
   onFilter,
   onQuery,
+  onSearch,
+  searchHint,
   onOpen,
   onList,
 }: {
@@ -444,6 +485,8 @@ function MapScreen({
   offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
+  onSearch: () => void;
+  searchHint: string;
   onOpen: (id: string) => void;
   onList: () => void;
 }) {
@@ -457,11 +500,14 @@ function MapScreen({
           placeholderTextColor={colors.textTertiary}
           value={query}
           onChangeText={onQuery}
+          onSubmitEditing={onSearch}
+          returnKeyType="search"
           style={styles.searchInput}
         />
       </View>
       <View style={styles.sheet}>
         <View style={styles.handle} />
+        {searchHint ? <Text style={[styles.hint, styles.searchHint]}>{searchHint}</Text> : null}
         {offline ? <OfflineNotice /> : null}
         {outsideRadius ? <OutsideRadiusNotice /> : null}
         <View style={styles.sheetHead}>
@@ -493,6 +539,8 @@ function ListScreen({
   offline,
   onFilter,
   onQuery,
+  onSearch,
+  searchHint,
   onOpen,
   onMap,
 }: {
@@ -505,6 +553,8 @@ function ListScreen({
   offline: boolean;
   onFilter: (value: CenterFilter) => void;
   onQuery: (value: string) => void;
+  onSearch: () => void;
+  searchHint: string;
   onOpen: (id: string) => void;
   onMap: () => void;
 }) {
@@ -527,9 +577,12 @@ function ListScreen({
           placeholderTextColor={colors.textTertiary}
           value={query}
           onChangeText={onQuery}
+          onSubmitEditing={onSearch}
+          returnKeyType="search"
           style={styles.searchInput}
         />
       </View>
+      {searchHint ? <Text style={[styles.hint, styles.searchHint]}>{searchHint}</Text> : null}
       {offline ? <OfflineNotice /> : null}
       {outsideRadius ? <OutsideRadiusNotice /> : null}
       <FilterRow options={filters} value={filter} onChange={onFilter} />
@@ -755,6 +808,7 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   hint: { fontSize: 13, lineHeight: 18, color: colors.danger600 },
+  searchHint: { marginBottom: 8 },
   permissionFooter: { paddingHorizontal: 20, paddingBottom: 16, gap: 8 },
   primary: {
     height: 48,

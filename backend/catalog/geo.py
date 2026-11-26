@@ -1,9 +1,14 @@
+import hashlib
 import json
 import re
+import unicodedata
+from collections import Counter
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from django.core.cache import cache
+
+from .models import Center, PublishStatus
 
 BRASILAPI_URL = 'https://brasilapi.com.br/api/cep/v2/{cep}'
 NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search'
@@ -56,7 +61,8 @@ def _nominatim(city: str, uf: str) -> tuple[float, float] | None:
 
 
 def city_point(city: str, uf: str) -> tuple[float, float] | None:
-    key = f'geo:cidade:{uf.upper()}:{city.lower()}'
+    # O nome vem digitado pela pessoa (espaço, acento, tamanho livre): a chave do cache é um hash dele.
+    key = 'geo:cidade:' + hashlib.sha1(f'{uf.upper()}:{fold(city)}'.encode()).hexdigest()
     point = cache.get(key)
     if point is None:
         point = _nominatim(city, uf)
@@ -89,3 +95,30 @@ def locate_cep(cep: str) -> dict | None:
         found['precision'] = 'cidade'
     cache.set(key, found, CACHE_SECONDS)
     return found
+
+
+def fold(text: str) -> str:
+    """Sem acento, minúsculo e sem espaço nas pontas: 'Maceió' e ' maceio ' são a mesma cidade."""
+    return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode().lower().strip()
+
+
+def locate_city(name: str, uf: str = '') -> dict | None:
+    """Coordenadas de uma cidade digitada (RF009). Sem UF, ela vem dos centros publicados com esse nome; com o
+    Nominatim fora do ar, a origem é o ponto médio desses centros (RNF08)."""
+    wanted = fold(name)
+    published = Center.objects.filter(status=PublishStatus.PUBLICADO).values_list('cidade', 'uf', 'lat', 'lng')
+    rows = [row for row in published if fold(row[0]) == wanted and (not uf or row[1] == uf)]
+    if rows:
+        # Mesmo nome em duas UFs: fica a que tem mais centros. O nome volta como está no cadastro (com acento).
+        city, uf = Counter((cidade, state) for cidade, state, _, _ in rows).most_common(1)[0][0]
+    elif uf:
+        city = name.strip()
+    else:
+        return None
+    point = city_point(city, uf)
+    if point is None:
+        coords = [(lat, lng) for cidade, state, lat, lng in rows if (cidade, state) == (city, uf) and None not in (lat, lng)]
+        if not coords:
+            return None
+        point = (sum(lat for lat, _ in coords) / len(coords), sum(lng for _, lng in coords) / len(coords))
+    return {'city': city, 'uf': uf, 'lat': point[0], 'lng': point[1], 'precision': 'cidade'}

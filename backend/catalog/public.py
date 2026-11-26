@@ -1,4 +1,5 @@
 import math
+import re
 import uuid
 
 from django.db.models import Q
@@ -13,7 +14,7 @@ from accounts.throttling import scoped
 from consent.models import ConsentDocument
 
 from .cache import cached_response
-from .geo import locate_cep, normalize_cep
+from .geo import locate_cep, locate_city, normalize_cep
 from .models import AppSettings, Attachment, Center, Content, EstimateRule, GlossaryTerm, JourneyStep, PublishStatus, Statistic
 
 RADIUS_KM = 50
@@ -270,6 +271,28 @@ def cep_location(request, cep):
     found = locate_cep(digits)
     if found is None:
         return Response({'detail': 'Não encontramos a localização deste CEP.'}, status=404)
+    return Response(found)
+
+
+# "Feira de Santana, BA", "Feira de Santana/BA" ou "Feira de Santana - BA": a UF digitada junto com o nome.
+CITY_WITH_UF = re.compile(r'^(?P<name>.+?)\s*[,/-]\s*(?P<uf>[A-Za-z]{2})$')
+
+
+@scoped('geo')
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def city_location(request):
+    """RF009: cidade digitada vira ponto de origem para /centros, em qualquer UF. Nada é associado a ninguém aqui."""
+    name = (request.query_params.get('nome') or '').strip()
+    uf = (request.query_params.get('uf') or '').strip().upper()
+    typed = CITY_WITH_UF.match(name)
+    if not uf and typed and typed['uf'].upper() in REGION_OF:
+        name, uf = typed['name'].strip(), typed['uf'].upper()
+    if len(name) < 3:
+        return Response({'detail': 'Informe o nome da cidade.'}, status=400)
+    found = locate_city(name, uf if uf in REGION_OF else '')
+    if found is None:
+        return Response({'detail': 'Não encontramos essa cidade. Tente pelo CEP.'}, status=404)
     return Response(found)
 
 
