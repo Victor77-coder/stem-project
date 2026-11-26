@@ -185,6 +185,8 @@ export interface Center {
   telefone: string
   observacoes: string
   evento_quando: string
+  /** Último dia da campanha (AAAA-MM-DD). Encerrada ou sem data, não aparece no app. */
+  evento_fim: string | null
   fonte: string
   fonte_data: string | null
   status: PublishStatus

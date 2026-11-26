@@ -179,8 +179,17 @@ def transplant_center(slug, cidade, uf, lat, lng):
     )
 
 
+def running_campaign(slug, cidade, uf, lat, lng):
+    return Center.objects.create(
+        slug=slug, nome=f'{slug} · Mutirão de cadastro', nome_curto=slug, endereco='Endereço', cidade=cidade, uf=uf,
+        tipo='campanha', lat=lat, lng=lng, evento_fim=timezone.localdate() + timedelta(days=10), fonte='Hemoal',
+        fonte_data=date(2026, 10, 1), status='publicado',
+    )
+
+
 def test_centers_follow_the_profile(api, seeded):
     transplant_center('hupaa', 'Maceió', 'AL', -9.5539, -35.7786)
+    running_campaign('mutirao-pajucara', 'Maceió', 'AL', -9.6700, -35.7180)
     maceio = {'lat': -9.6658, 'lng': -35.735}
 
     def kinds(**params):

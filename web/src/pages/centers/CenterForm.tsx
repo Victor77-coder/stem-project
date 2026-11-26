@@ -12,7 +12,7 @@ const input =
 type Draft = Pick<
   Center,
   'tipo' | 'nome' | 'nome_curto' | 'endereco' | 'cidade' | 'uf' | 'telefone' | 'horario' | 'observacoes' | 'evento_quando' | 'fonte' | 'revisar' | 'motivo_revisao'
-> & { lat: string; lng: string; fonte_data: string; status: PublishStatus }
+> & { lat: string; lng: string; fonte_data: string; evento_fim: string; status: PublishStatus }
 
 /** Campos que a coleta mensal do CNES atualiza: no painel ficam travados para centros vindos dela. */
 const CNES_LOCKED = new Set<keyof Draft>(['nome', 'endereco', 'cidade', 'uf', 'tipo', 'fonte', 'fonte_data'])
@@ -28,6 +28,7 @@ const blank = (): Draft => ({
   horario: '',
   observacoes: '',
   evento_quando: '',
+  evento_fim: '',
   fonte: '',
   fonte_data: today(),
   revisar: false,
@@ -48,6 +49,7 @@ const fromCenter = (c: Center): Draft => ({
   horario: c.horario,
   observacoes: c.observacoes,
   evento_quando: c.evento_quando,
+  evento_fim: c.evento_fim ?? '',
   fonte: c.fonte,
   fonte_data: c.fonte_data ?? '',
   revisar: c.revisar,
@@ -113,6 +115,7 @@ export default function CenterForm() {
         lat: number(form.lat),
         lng: number(form.lng),
         fonte_data: form.fonte_data || null,
+        evento_fim: form.evento_fim || null,
         motivo_revisao: form.revisar ? form.motivo_revisao : '',
         status,
       }).filter(([key]) => !locked(key as keyof Draft)),
@@ -189,9 +192,14 @@ export default function CenterForm() {
           </select>
         </Row>
         {form.tipo === 'campanha' && (
-          <Row label="Quando" hint="Data e horário da campanha, como aparece no app (ex.: 06/12 · 8h às 16h).">
-            <input {...text('evento_quando')} maxLength={80} />
-          </Row>
+          <>
+            <Row label="Quando" hint="Data e horário da campanha, como aparece no app (ex.: 06/12 · 8h às 16h).">
+              <input {...text('evento_quando')} maxLength={80} />
+            </Row>
+            <Row label="Último dia" hint="Depois dessa data a campanha sai do app sozinha. Obrigatório para publicar.">
+              <input type="date" {...text('evento_fim')} />
+            </Row>
+          </>
         )}
         <Row label="Telefone">
           <input {...text('telefone')} maxLength={20} />

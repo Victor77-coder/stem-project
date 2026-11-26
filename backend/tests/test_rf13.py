@@ -1,6 +1,6 @@
 """RF13: telas do painel — cadastros de centros e campanhas, relatórios agregados, log de ações e pedidos de acesso."""
 
-from datetime import date
+from datetime import date, timedelta
 
 from rest_framework.test import APIClient
 
@@ -17,6 +17,8 @@ CAMPAIGN = {
     'uf': 'AL',
     'tipo': 'campanha',
     'evento_quando': '06/12 · 8h às 16h',
+    # Relativa a hoje: com data fixa o teste quebraria quando ela passasse.
+    'evento_fim': (date.today() + timedelta(days=10)).isoformat(),
     'fonte': 'Hemoal',
     'fonte_data': '2026-11-20',
     'status': 'publicado',

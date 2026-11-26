@@ -120,22 +120,7 @@ export const CENTERS: Center[] = [
     services: HEMO_SERVICES,
     openNow: true,
   },
-  {
-    id: 'mutirao-hemoal',
-    name: 'Mutirão de cadastro de doadores de medula',
-    shortName: 'Mutirão de cadastro',
-    address: 'Hemoal · Av. Jorge de Lima, 58 · Trapiche da Barra',
-    listAddress: 'Hemoal · Trapiche',
-    city: 'Maceió',
-    uf: 'AL',
-    kind: 'campanha',
-    lat: -9.6724,
-    lng: -35.7578,
-    eventWhen: '25 out · 8h–16h',
-    source: 'Ministério da Saúde',
-    sourceDate: '12/10/2026',
-    services: ['Cadastro de medula (REDOME)'],
-  },
+  // Sem campanhas: elas têm data de término e o dado embarcado não expira. Campanha só vem da API.
   {
     id: 'hemope',
     cnes: '0000809',

@@ -201,6 +201,12 @@ def _float(value):
         return None
 
 
+def visible_centers():
+    """Publicados, menos campanha encerrada ou sem data de término: sem a data não dá para saber se já passou."""
+    ended = Q(evento_fim__isnull=True) | Q(evento_fim__lt=timezone.localdate())
+    return Center.objects.filter(status=PublishStatus.PUBLICADO).exclude(Q(tipo=Center.Kind.CAMPANHA) & ended)
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def centers(request):
@@ -213,7 +219,7 @@ def centers(request):
     radius = min(_float(params.get('raio')) or RADIUS_KM, MAX_RADIUS_KM)
 
     def build():
-        query = Center.objects.filter(status=PublishStatus.PUBLICADO)
+        query = visible_centers()
         if kinds := CENTER_KINDS_BY_PROFILE.get(params.get('perfil')):
             query = query.filter(tipo__in=kinds)
         if params.get('kind') in Center.Kind.values:
@@ -247,7 +253,7 @@ def _last_update(query) -> str:
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def center_detail(request, slug):
-    item = get_object_or_404(Center, slug=slug, status=PublishStatus.PUBLICADO)
+    item = get_object_or_404(visible_centers(), slug=slug)
     lat, lng = _float(request.query_params.get('lat')), _float(request.query_params.get('lng'))
     km = haversine_km(lat, lng, item.lat, item.lng) if None not in (lat, lng, item.lat, item.lng) else None
     return Response(center(item, km))
