@@ -76,7 +76,9 @@ export function CentersFlow({
   // Até o endereço do cadastro ser localizado (efeito abaixo), só Maceió e Recife têm origem embarcada.
   const [origin, setOrigin] = useState<Origin>(() => originFromQuery(savedCity) ?? { ...ORIGINS.maceio, mode: 'cep' });
   const queryRun = useRef(0);
-  const [searchHint, setSearchHint] = useState('');
+  // CEP ou cidade não encontrados. A cidade só vira aviso se o texto também não achou unidade pelo nome: no Enter
+  // a lista ainda é a da busca anterior, então a decisão fica para a hora de desenhar, com os resultados atuais.
+  const [searchMiss, setSearchMiss] = useState<{ message: string; city: boolean } | null>(null);
   const kinds = KINDS_FOR[profile];
   const filters = useMemo(() => filtersFor(profile), [profile]);
   const [filter, setFilter] = useState<CenterFilter>(() => filterOf(profile, initialFilter));
@@ -93,6 +95,7 @@ export function CentersFlow({
   const [remote, setRemote] = useState<{ results: CenterResult[]; outsideRadius: boolean } | null>(null);
   const [offline, setOffline] = useState(false);
   const results = remote?.results ?? local;
+  const searchHint = searchMiss && (!searchMiss.city || results.length === 0) ? searchMiss.message : '';
   // Nada no raio (ex.: centro de transplante em Alagoas): a API manda os mais próximos fora dele.
   const outsideRadius = remote?.outsideRadius ?? false;
   const selected = selectedId ? (results.find((item) => item.id === selectedId) ?? centerById(selectedId, origin)) : undefined;
@@ -142,14 +145,14 @@ export function CentersFlow({
 
   function onQuery(value: string) {
     setQuery(value);
-    setSearchHint('');
+    setSearchMiss(null);
     const digits = value.replace(/\D/g, '');
     const run = ++queryRun.current;
     if (digits.length === 8) {
       void originFromCep(digits).then((result) => {
         if (run !== queryRun.current) return;
         if (result.ok) setOrigin(result.origin);
-        else setSearchHint(result.message);
+        else setSearchMiss({ message: result.message, city: false });
       });
     }
   }
@@ -159,16 +162,15 @@ export function CentersFlow({
     const value = query.trim();
     if (value.replace(/\D/g, '').length === 8 || value.length < 3) return;
     const run = ++queryRun.current;
-    const matchedByName = results.length > 0;
     void originFromCityName(value).then((result) => {
       if (run !== queryRun.current) return;
       if (!result.ok) {
-        if (!matchedByName) setSearchHint(result.message);
+        setSearchMiss({ message: result.message, city: true });
         return;
       }
       setOrigin(result.origin);
       setQuery('');
-      setSearchHint('');
+      setSearchMiss(null);
     });
   }
 
