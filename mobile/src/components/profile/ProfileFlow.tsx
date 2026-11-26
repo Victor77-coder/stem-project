@@ -27,6 +27,7 @@ import { hasEmailContact, useRegistration, type ProfileType, type RegistrationDr
 import { api } from '@/lib/api';
 import { useConsentDoc } from '@/lib/consent';
 import { requestLocationPermission } from '@/lib/location';
+import { resetTo } from '@/lib/navigation';
 import { colors } from '@/theme';
 
 type Screen =
@@ -116,7 +117,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
 
   async function leave() {
     await signOut();
-    router.replace('/welcome');
+    resetTo('/welcome');
   }
 
   async function inactivate(password: string) {
@@ -127,7 +128,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       return;
     }
     setConfirm(false);
-    router.replace('/welcome');
+    resetTo('/welcome');
   }
 
   async function removeGuestEmail() {
@@ -138,7 +139,7 @@ export function ProfileFlow({ profile, onNotifications, onCenters, onChooseProfi
       return;
     }
     setRemovingEmail(false);
-    router.replace('/welcome');
+    resetTo('/welcome');
   }
 
   async function exportData() {

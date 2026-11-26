@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
 import { EmailCode } from '@/components/EmailCode';
 import { Screen } from '@/components/Screen';
 import { hasEmailContact, useRegistration, type ProfileType, type Sexo } from '@/context/RegistrationContext';
 import { api } from '@/lib/api';
+import { resetTo } from '@/lib/navigation';
 import { colors, type } from '@/theme';
 
 type Step = { icon: keyof typeof Ionicons.glyphMap; text: string };
@@ -80,7 +80,7 @@ export default function ConclusionScreen() {
       footer={
         <Button
           label="Ir para o início"
-          onPress={() => router.replace('/home')}
+          onPress={() => resetTo('/home')}
         />
       }
     >
