@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
-from accounts.models import Channel
+from accounts.models import Channel, digits
 
 from .models import Profile
 from .validators import LooseDecimalField, clean_cep, clean_phone, clean_uf
@@ -53,6 +53,14 @@ class ParticipantInputSerializer(serializers.Serializer):
     tcleVersion = serializers.CharField(max_length=10, required=False, allow_blank=True)
     channel = serializers.ChoiceField(Channel.choices, required=False)
     notices = NoticeChoicesSerializer(required=False)
+
+    # E-mail e CPF chegam como o banco guarda (User.save): a checagem de duplicidade e o histórico comparam
+    # valor com valor. O app manda o CPF mascarado e o e-mail como foi digitado.
+    def validate_email(self, value):
+        return value.strip().lower()
+
+    def validate_cpf(self, value):
+        return digits(value)
 
     def validate_cep(self, value):
         return clean_cep(value)
