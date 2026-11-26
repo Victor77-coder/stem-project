@@ -1,25 +1,43 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Field } from '@/components/Field';
+import { Field, FieldError, FieldLabel } from '@/components/Field';
 import { Logo } from '@/components/Logo';
 import { NavPair } from '@/components/NavPair';
 import { Screen } from '@/components/Screen';
 import { StepHeader } from '@/components/StepHeader';
 import { useRegistration, type Sexo } from '@/context/RegistrationContext';
+import { hasErrors, physicalErrors, type FieldErrors } from '@/lib/validation';
 import { colors, type } from '@/theme';
 
-const sexos: { id: Exclude<Sexo, 'outro' | ''>; label: string }[] = [
+const sexos: { id: Exclude<Sexo, ''>; label: string }[] = [
   { id: 'feminino', label: 'Feminino' },
   { id: 'masculino', label: 'Masculino' },
+  { id: 'outro', label: 'Outro' },
 ];
 
 const COMORBIDITIES = ['Nenhuma', 'Hipertensão', 'Diabetes', 'Cardiopatia', 'Doença autoimune', 'Outra'];
 
 export default function PhysicalScreen() {
   const { draft, update, totalSteps } = useRegistration();
+  const [errors, setErrors] = useState<FieldErrors>({});
+  // O * só aparece depois de uma tentativa de seguir com campos faltando.
+  const [tried, setTried] = useState(false);
+
+  function clear(field: string) {
+    if (errors[field]) setErrors(({ [field]: _removed, ...rest }) => rest);
+  }
+
+  function next() {
+    const found = physicalErrors(draft);
+    setErrors(found);
+    if (hasErrors(found)) setTried(true);
+    else router.push('/location');
+  }
 
   function toggleComorbidity(item: string) {
+    clear('comorbidities');
     if (item === 'Nenhuma') {
       update({ comorbidities: draft.comorbidities.includes('Nenhuma') ? [] : ['Nenhuma'] });
       return;
@@ -37,7 +55,7 @@ export default function PhysicalScreen() {
             if (router.canGoBack()) router.back();
             else router.replace('/register');
           }}
-          onRight={() => router.push('/location')}
+          onRight={next}
         />
       }
     >
@@ -49,14 +67,21 @@ export default function PhysicalScreen() {
         brand={<Logo />}
       />
 
+      {tried ? <Text style={styles.legend}>Campos com * são obrigatórios.</Text> : null}
+
       <View style={styles.row}>
         <View style={styles.half}>
           <Field
             label="Peso"
             placeholder="kg"
             keyboardType="decimal-pad"
+            required={tried}
+            error={errors.weight}
             value={draft.weight}
-            onChangeText={(weight) => update({ weight })}
+            onChangeText={(weight) => {
+              clear('weight');
+              update({ weight });
+            }}
           />
         </View>
         <View style={styles.half}>
@@ -64,13 +89,18 @@ export default function PhysicalScreen() {
             label="Altura"
             placeholder="m"
             keyboardType="decimal-pad"
+            required={tried}
+            error={errors.height}
             value={draft.height}
-            onChangeText={(height) => update({ height })}
+            onChangeText={(height) => {
+              clear('height');
+              update({ height });
+            }}
           />
         </View>
       </View>
 
-      <Text style={styles.label}>Sexo biológico</Text>
+      <FieldLabel text="Sexo biológico" required={tried} />
       <View style={styles.row}>
         {sexos.map((item) => {
           const on = draft.sex === item.id;
@@ -79,7 +109,10 @@ export default function PhysicalScreen() {
               key={item.id}
               accessibilityRole="button"
               accessibilityState={{ selected: on }}
-              onPress={() => update({ sex: item.id })}
+              onPress={() => {
+                clear('sex');
+                update({ sex: item.id });
+              }}
               style={[styles.sex, on && styles.sexOn]}
             >
               <Text style={[styles.sexText, on && styles.sexTextOn]}>{item.label}</Text>
@@ -88,7 +121,9 @@ export default function PhysicalScreen() {
         })}
       </View>
 
-      <Text style={styles.label}>Comorbidades</Text>
+      <FieldError text={errors.sex} />
+
+      <FieldLabel text="Comorbidades" required={tried} />
       <View style={styles.chips}>
         {COMORBIDITIES.map((item) => {
           const on = draft.comorbidities.includes(item);
@@ -106,6 +141,8 @@ export default function PhysicalScreen() {
         })}
       </View>
 
+      <FieldError text={errors.comorbidities} />
+
       <View style={styles.info}>
         <Ionicons name="information-circle" size={20} color={colors.primary} />
         <Text style={styles.infoText}>
@@ -119,7 +156,7 @@ export default function PhysicalScreen() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 12 },
   half: { flex: 1 },
-  label: { ...type.secondary, color: colors.ink, fontWeight: '600' },
+  legend: { ...type.caption, color: colors.muted },
   sex: {
     flex: 1,
     minHeight: 48,

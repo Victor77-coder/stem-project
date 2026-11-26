@@ -84,7 +84,6 @@ export default function TermsScreen() {
         <Text style={styles.link}>Ler o documento na íntegra</Text>
       </Pressable>
 
-      <Text style={styles.caption}>O aceite vem antes de qualquer dado. Sem ele, nada é pedido nem gravado.</Text>
     </Screen>
   );
 }
