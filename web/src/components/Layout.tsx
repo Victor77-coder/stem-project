@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import logo from '../assets/logo.png'
 import { useStore } from '../data/store'
 
 const NAV: { to: string; label: string; icon: LucideIcon }[] = [
@@ -47,7 +48,7 @@ function Sidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-36 shrink-0 flex-col bg-white">
       <div className="flex flex-col items-center gap-6 border-b border-ink/10 pt-7 pb-9">
-        <div className="flex size-12 items-center justify-center rounded-full bg-[#d9d9d9] text-[10px]">LOGO</div>
+        <img src={logo} alt="STEM Project" className="w-28" />
         <span className="text-xs">Gerenciador WEB</span>
       </div>
       <nav className="mt-12 flex flex-col gap-2 pl-3.5">
@@ -128,9 +129,7 @@ const YEAR = new Date().getFullYear()
 export function Footer({ className = '' }: { className?: string }) {
   return (
     <footer className={`flex items-center justify-center gap-3 rounded-t-2xl py-4 text-[10px] ${className}`}>
-      <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[7px] font-bold text-primary">
-        STEM
-      </span>
+      <img src="/favicon.png" alt="" className="size-6" />
       © {YEAR} STEM Project. Todos os direitos reservados.
     </footer>
   )
