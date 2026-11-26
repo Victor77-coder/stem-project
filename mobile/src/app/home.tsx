@@ -517,9 +517,9 @@ export default function HomeScreen() {
     setTab('centros');
   }
 
+  /** Abre por cima da aba atual: ao fechar, volta para onde a pessoa estava (Início ou o hub do Perfil). */
   function openInsight(screen: InsightScreen) {
     setOrientation(false);
-    setTab('inicio');
     setInsight(screen);
   }
 
@@ -536,7 +536,7 @@ export default function HomeScreen() {
   return (
     <View style={shell.shell}>
       <SafeAreaView style={shell.phone} edges={['top']}>
-        {tab === 'inicio' && insight ? (
+        {insight ? (
           <InsightsFlow
             initial={insight}
             profile={profile}

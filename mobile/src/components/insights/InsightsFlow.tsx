@@ -182,7 +182,8 @@ export function InsightsFlow({ initial, profile, email = '', onClose, onUnread }
         onChange={changePrefs}
         onPush={togglePush}
         onEmail={toggleEmail}
-        onBack={() => setScreen('inbox')}
+        // Vindo da caixa de entrada, volta para ela; aberta direto (Perfil, convite da Início), fecha.
+        onBack={() => (initial === 'prefs' ? onClose() : setScreen('inbox'))}
       />
     );
   }
